@@ -1,7 +1,6 @@
-package Pages.CustomerAuthentication;
+package Pages.Samples.Magento;
 
 import Pages.BasePage;
-import ie.curiositysoftware.TestModeller.TestModellerModuleId;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;

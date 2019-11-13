@@ -1,18 +1,20 @@
-package Tests;
+package Tests.Samples;
 
+import Pages.Samples.Magento.CustomerLoginPage;
+import Tests.TestBase;
 import Utilities.TestModeller.TestNGListener;
 import ie.curiositysoftware.RunResult.Entities.UseTestModellerId;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 @Listeners(TestNGListener.class)
-public class Login_DefaultProfile extends TestBase 
+public class Login_DefaultProfile extends TestBase
 {
 	@Test  (groups= {"6e672af7-7b79-4cde-9a03-975446b64a2e","Login","Login - Default Profile"})
 	@UseTestModellerId(testModellerGuid = "6e672af7-7b79-4cde-9a03-975446b64a2e")
 	public void DefaultProfileLoginPageUnauthenticated1()
 	{
-		Pages.CustomerAuthentication.CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new Pages.CustomerAuthentication.CustomerLoginPage(driver);
+		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(driver);
 			_PagesCustomerAuthenticationCustomerLoginPage.GoToUrl();
 
 
@@ -29,7 +31,7 @@ public class Login_DefaultProfile extends TestBase
 	@UseTestModellerId(testModellerGuid = "3e955b5a-7cff-4397-95ee-e22e1b0aa7f1")
 	public void DefaultProfileLoginPageUnauthenticated2()
 	{
-		Pages.CustomerAuthentication.CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new Pages.CustomerAuthentication.CustomerLoginPage(driver);
+		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(driver);
 			_PagesCustomerAuthenticationCustomerLoginPage.GoToUrl();
 
 
@@ -46,7 +48,7 @@ public class Login_DefaultProfile extends TestBase
 	@UseTestModellerId(testModellerGuid = "bab14917-9382-44d2-ba44-b8a8e9c50ca6")
 	public void DefaultProfileLoginPageUnauthenticated3()
 	{
-		Pages.CustomerAuthentication.CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new Pages.CustomerAuthentication.CustomerLoginPage(driver);
+		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(driver);
 			_PagesCustomerAuthenticationCustomerLoginPage.GoToUrl();
 
 
@@ -63,7 +65,7 @@ public class Login_DefaultProfile extends TestBase
 	@UseTestModellerId(testModellerGuid = "0498f348-5acf-42fa-840b-ab90df7f2986")
 	public void DefaultProfileLoginPageAuthenticated4()
 	{
-		Pages.CustomerAuthentication.CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new Pages.CustomerAuthentication.CustomerLoginPage(driver);
+		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(driver);
 			_PagesCustomerAuthenticationCustomerLoginPage.GoToUrl();
 
 
