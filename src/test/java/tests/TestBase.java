@@ -1,20 +1,19 @@
-package Tests;
+package tests;
 
-import Utilities.CapabilityLoader;
-import Utilities.PropertiesLoader;
-import Utilities.Reports.ExtentReportManager;
-import ie.curiositysoftware.DataAllocation.Engine.DataAllocation;
-import ie.curiositysoftware.DataAllocation.Engine.DataAllocationEngine;
-import ie.curiositysoftware.DataAllocation.Entities.AllocationType;
-import ie.curiositysoftware.JobEngine.Services.ConnectionProfile;
-import org.openqa.selenium.Alert;
-import org.openqa.selenium.NoAlertPresentException;
+import utilities.CapabilityLoader;
+import utilities.PropertiesLoader;
+import utilities.reports.ExtentReportManager;
+import ie.curiositysoftware.allocation.dto.AllocationType;
+import ie.curiositysoftware.allocation.engine.DataAllocation;
+import ie.curiositysoftware.allocation.engine.DataAllocationEngine;
+import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -69,7 +68,7 @@ public class TestBase {
         }
 
         // Publish and allocate data
-        if (!dataAllocationEngine.ResolvePools(PropertiesLoader.getProperties().getProperty("testModeller.serverName"), allocationTypes)) {
+        if (!dataAllocationEngine.resolvePools(PropertiesLoader.getProperties().getProperty("testModeller.serverName"), allocationTypes)) {
             System.out.println("Error - " + dataAllocationEngine.getErrorMessage());
         }
     }

@@ -1,8 +1,8 @@
-package Reports;
+package reports;
 
-import Tests.TestBase;
-import Utilities.Reports.ExtentReportManager;
-import Utilities.TestModeller.GetScreenShot;
+import tests.TestBase;
+import utilities.reports.ExtentReportManager;
+import utilities.testmodeller.GetScreenShot;
 import com.aventstack.extentreports.Status;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;

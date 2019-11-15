@@ -1,12 +1,14 @@
-package Pages.Samples.Splendid;
+package pages.samples.splendid;
 
-import Pages.BasePage;
+import ie.curiositysoftware.testmodeller.TestModellerModule;
+import pages.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 import org.testng.Assert;
 
+@TestModellerModule
 public class OpportunitiesPage  extends BasePage {
 
     public OpportunitiesPage(WebDriver driver) {

@@ -1,12 +1,12 @@
-package Utilities.TestModeller;
+package utilities.testmodeller;
 
-import Utilities.PropertiesLoader;
-import ie.curiositysoftware.JobEngine.Services.ConnectionProfile;
-import ie.curiositysoftware.RunResult.Entities.TestPathRunEntity;
-import ie.curiositysoftware.RunResult.Entities.TestPathRunStatusEnum;
-import ie.curiositysoftware.RunResult.Entities.UseTestModellerId;
-import ie.curiositysoftware.RunResult.Services.TestRunIdGenerator;
-import ie.curiositysoftware.RunResult.Services.TestRunService;
+import utilities.PropertiesLoader;
+import ie.curiositysoftware.jobengine.services.ConnectionProfile;
+import ie.curiositysoftware.runresult.dto.TestPathRun;
+import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
+import ie.curiositysoftware.runresult.services.TestRunIdGenerator;
+import ie.curiositysoftware.runresult.services.TestRunService;
+import ie.curiositysoftware.testmodeller.TestModellerPath;
 import org.testng.IClass;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
@@ -37,18 +37,18 @@ public class TestNGListener implements ITestListener {
     @Override
     public void onTestFailure(ITestResult testResult) {
         // Get guid
-        String guid = GetTestModellerGuid(testResult);
+        String guid = GetTestModellerPathGuid(testResult);
 
         if (guid == null)
             return;
 
         // Create TestPath run entity
-        TestPathRunEntity testPathRun = new TestPathRunEntity();
+        TestPathRun testPathRun = new TestPathRun();
         testPathRun.setMessage(testResult.getThrowable().getMessage());
         testPathRun.setRunTime(toIntExact(testResult.getEndMillis() - testResult.getStartMillis()));
         testPathRun.setRunTimeStamp(new Date(testResult.getStartMillis()));
         testPathRun.setTestPathGuid(guid);
-        testPathRun.setVipRunId(TestRunIdGenerator.GetRunId());
+        testPathRun.setVipRunId(TestRunIdGenerator.getRunId());
         testPathRun.setTestStatus(TestPathRunStatusEnum.Failed);
 
         // Post it
@@ -73,17 +73,17 @@ public class TestNGListener implements ITestListener {
         System.out.println("Test success");
 
         // Get guid
-        String guid = GetTestModellerGuid(testResult);
+        String guid = GetTestModellerPathGuid(testResult);
 
         if (guid == null)
             return;
 
         // Create TestPath run entity
-        TestPathRunEntity testPathRun = new TestPathRunEntity();
+        TestPathRun testPathRun = new TestPathRun();
         testPathRun.setRunTime(toIntExact(testResult.getEndMillis() - testResult.getStartMillis()));
         testPathRun.setRunTimeStamp(new Date(testResult.getStartMillis()));
         testPathRun.setTestPathGuid(guid);
-        testPathRun.setVipRunId(TestRunIdGenerator.GetRunId());
+        testPathRun.setVipRunId(TestRunIdGenerator.getRunId());
         testPathRun.setTestStatus(TestPathRunStatusEnum.Passed);
 
         // Post it
@@ -93,9 +93,9 @@ public class TestNGListener implements ITestListener {
         }
     }
 
-    private String GetTestModellerGuid(ITestResult testResult)
+    private String GetTestModellerPathGuid(ITestResult testResult)
     {
-        String TestID = null;
+        String pathGuid = null;
 
         IClass obj = testResult.getTestClass();
 
@@ -108,15 +108,15 @@ public class TestNGListener implements ITestListener {
             e.printStackTrace();
         }
 
-        if (testMethod != null && testMethod.isAnnotationPresent(UseTestModellerId.class))
+        if (testMethod != null && testMethod.isAnnotationPresent(TestModellerPath.class))
         {
-            UseTestModellerId useAsTestName = testMethod.getAnnotation(UseTestModellerId.class);
+            TestModellerPath useAsTestName = testMethod.getAnnotation(TestModellerPath.class);
 
-            TestID = useAsTestName.testModellerGuid();
+            pathGuid = useAsTestName.guid();
 
-            System.out.println("Test Modeller ID = " + TestID);
+            System.out.println("Test Modeller ID = " + pathGuid);
         }
 
-        return TestID;
+        return pathGuid;
     }
 }

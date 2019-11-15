@@ -1,7 +1,7 @@
-package Utilities.Reports;
+package utilities.reports;
 
 
-import Utilities.TestModeller.GetScreenShot;
+import utilities.testmodeller.GetScreenShot;
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
