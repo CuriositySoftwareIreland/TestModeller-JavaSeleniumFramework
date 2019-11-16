@@ -1,12 +1,14 @@
-package Pages.Samples.Splendid;
+package pages.samples.splendid;
 
-import Pages.BasePage;
-import Utilities.Reports.ExtentReportManager;
+import ie.curiositysoftware.testmodeller.TestModellerModule;
+import pages.BasePage;
+import utilities.reports.ExtentReportManager;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
+@TestModellerModule
 public class LoginPage extends BasePage {
 
     public LoginPage(WebDriver driver) {

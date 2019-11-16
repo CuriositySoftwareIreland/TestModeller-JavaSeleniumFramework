@@ -1,4 +1,4 @@
-package Utilities.TestModeller;
+package utilities.testmodeller;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;

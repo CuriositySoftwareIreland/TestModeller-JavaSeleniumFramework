@@ -1,11 +1,13 @@
-package Pages.Samples.Magento;
+package pages.samples.magento;
 
-import Pages.BasePage;
+import ie.curiositysoftware.testmodeller.TestModellerModule;
+import pages.BasePage;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 
+@TestModellerModule
 public class CustomerLoginPage extends BasePage
 {
     // Login page URL
