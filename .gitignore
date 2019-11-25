@@ -29,3 +29,5 @@ target/
 .idea/workspace.xml
 *.iml
 *.DS_Store
+test-output/
+report/

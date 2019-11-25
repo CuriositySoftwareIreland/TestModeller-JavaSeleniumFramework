@@ -1,5 +1,7 @@
 package utilities;
 
+import ie.curiositysoftware.jobengine.services.job.CodeGenerationService;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -26,7 +28,9 @@ public class PropertiesLoader {
         Properties defaults = new Properties();
         defaults.setProperty("testModeller.uploadResults", "true");
         defaults.setProperty("testModeller.analyseFailures", "false");
-        defaults.setProperty("testModeller.jobTimeout", "30000");
+        defaults.setProperty("testModeller.analyser.jobTimeout", "120000");
+        defaults.setProperty("testModeller.analyser.codeTemplateId", CodeGenerationService.DEFAULT_JAVA_TEMPLATE_ID.toString());
+        defaults.setProperty("testModeller.analyser.includeOldTests", "true");
 
         prop = new Properties(defaults);
 

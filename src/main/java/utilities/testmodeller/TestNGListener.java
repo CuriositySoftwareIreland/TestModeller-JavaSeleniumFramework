@@ -1,18 +1,16 @@
 package utilities.testmodeller;
 
-import ie.curiositysoftware.jobengine.services.job.TestGenerationService;
-import ie.curiositysoftware.jobengine.utils.JobExecutor;
-import ie.curiositysoftware.testmodeller.TestModellerSuite;
-import org.testng.*;
-import utilities.PropertiesLoader;
 import ie.curiositysoftware.jobengine.services.ConnectionProfile;
+import ie.curiositysoftware.jobengine.services.job.FailureAnalysisService;
 import ie.curiositysoftware.runresult.dto.TestPathRun;
 import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
 import ie.curiositysoftware.runresult.services.TestRunIdGenerator;
 import ie.curiositysoftware.runresult.services.TestRunService;
 import ie.curiositysoftware.testmodeller.TestModellerPath;
+import ie.curiositysoftware.testmodeller.TestModellerSuite;
+import org.testng.*;
+import utilities.PropertiesLoader;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,33 +20,31 @@ import static java.lang.Math.toIntExact;
 
 public class TestNGListener implements ITestListener, IClassListener {
 
-    private TestRunService runService;
-    private TestGenerationService generationService;
-    private JobExecutor jobExecutor;
+    private final TestRunService runService;
+    private final FailureAnalysisService failureService;
 
     private int failedTestsInClass = 0;
     private List<ITestClass> testsClassesToAnalyse = new ArrayList<>();
 
     private final boolean uploadResults;
     private final boolean analyseFailures;
-    private final long jobTimeout;
+
+    private static boolean runningGeneratedTests = false;
 
     public TestNGListener() {
         uploadResults = Boolean.parseBoolean(PropertiesLoader.getProperties().getProperty("testModeller.uploadResults"));
-        analyseFailures = Boolean.parseBoolean(PropertiesLoader.getProperties().getProperty("testModeller.analyseFailures"));
-        jobTimeout = Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.jobTimeout"));
+        analyseFailures = !runningGeneratedTests && Boolean.parseBoolean(PropertiesLoader.getProperties().getProperty("testModeller.analyseFailures"));
 
         String apiHost = PropertiesLoader.getProperties().getProperty("testModeller.apiHost");
         String apiKey = PropertiesLoader.getProperties().getProperty("testModeller.apiKey");
         ConnectionProfile profile = new ConnectionProfile(apiHost, apiKey);
+        runService = new TestRunService(profile);
 
-        if (uploadResults) {
-            runService = new TestRunService(profile);
-        }
-        if(analyseFailures) {
-            generationService = new TestGenerationService(profile);
-            jobExecutor = new JobExecutor(profile);
-        }
+        String serverName = PropertiesLoader.getProperties().getProperty("testModeller.serverName");
+        Long jobTimeout = Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.analyser.jobTimeout"));
+        Long codeTemplateId = Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.analyser.codeTemplateId"));
+        Boolean includeOldTests = Boolean.parseBoolean(PropertiesLoader.getProperties().getProperty("testModeller.analyser.includeOldTests"));
+        failureService = new FailureAnalysisService(profile, jobTimeout, serverName, codeTemplateId, includeOldTests);
     }
 
     @Override
@@ -107,7 +103,8 @@ public class TestNGListener implements ITestListener, IClassListener {
     private void postAnalysisJob(ITestClass testClass) {
         TestModellerSuite suite = getTestModellerSuite(testClass);
         if(suite != null && suite.profileId() > 0) {
-            generationService.startAnalysisAndGenerationJob(suite.profileId());
+            if(failureService.analyseFailures(suite.profileId()))
+                executeNewTests(failureService.getNewTests());
         }
     }
 
@@ -131,5 +128,16 @@ public class TestNGListener implements ITestListener, IClassListener {
         } else {
             return null;
         }
+    }
+
+    private void executeNewTests(List<Class<?>> newTests) {
+        boolean previousValue = runningGeneratedTests;
+        runningGeneratedTests = true;
+
+        TestNG testNG = new TestNG();
+        testNG.setTestClasses(newTests.toArray(new Class[0]));
+        testNG.run();
+
+        runningGeneratedTests = previousValue;
     }
 }
