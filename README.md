@@ -1,6 +1,8 @@
 # Java Selenium Framework for use with TestModeller.io
 Open source repository of Java based selenium tests. For use with [TestModeller.io](http://www.testmodeller.io)
 
+**NOTE:** Targets Java 8 only out of the box.
+
 # Getting started
 1. Clone this repository.
 2. Install the Java Development Kit
