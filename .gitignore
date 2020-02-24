@@ -23,11 +23,10 @@
 hs_err_pid*
 
 
-target/
-
-.idea/
-.idea/workspace.xml
+Framework/target/
+Framework/.idea/
+Framework/.idea/workspace.xml
 *.iml
 *.DS_Store
-test-output/
-report/
+Framework/test-output/
+Framework/report/
