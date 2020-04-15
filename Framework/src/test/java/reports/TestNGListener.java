@@ -1,16 +1,17 @@
-package utilities.testmodeller;
+package reports;
 
-import ie.curiositysoftware.jobengine.dto.job.TestCoverageEnum;
 import ie.curiositysoftware.jobengine.services.ConnectionProfile;
-import ie.curiositysoftware.jobengine.services.job.FailureAnalysisService;
 import ie.curiositysoftware.runresult.dto.TestPathRun;
 import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
 import ie.curiositysoftware.runresult.services.TestRunIdGenerator;
 import ie.curiositysoftware.runresult.services.TestRunService;
 import ie.curiositysoftware.testmodeller.TestModellerPath;
 import ie.curiositysoftware.testmodeller.TestModellerSuite;
+import org.openqa.selenium.WebDriver;
 import org.testng.*;
+import tests.TestBase;
 import utilities.PropertiesLoader;
+import utilities.testmodeller.TestModellerLogger;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -19,12 +20,9 @@ import java.util.List;
 
 import static java.lang.Math.toIntExact;
 
-// Depreciated - Use reports.TestNGListener instead
-@Deprecated
 public class TestNGListener implements ITestListener, IClassListener {
 
     private final TestRunService runService;
-    private final FailureAnalysisService failureService;
 
     private int failedTestsInClass = 0;
     private List<ITestClass> testsClassesToAnalyse = new ArrayList<>();
@@ -47,11 +45,19 @@ public class TestNGListener implements ITestListener, IClassListener {
         Long jobTimeout = Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.analyser.jobTimeout"));
         Long codeTemplateId = Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.analyser.codeTemplateId"));
         Boolean includeOldTests = Boolean.parseBoolean(PropertiesLoader.getProperties().getProperty("testModeller.analyser.includeOldTests"));
-        failureService = new FailureAnalysisService(profile, jobTimeout, serverName, codeTemplateId, includeOldTests, TestCoverageEnum.Medium);
     }
 
     @Override
     public void onTestFailure(ITestResult testResult) {
+        Object testClass = testResult.getInstance();
+        WebDriver webDriver = ((TestBase) testClass).getDriver();
+
+        if(testResult.getThrowable() != null) {
+            TestModellerLogger.FailStepWithScreenshot(webDriver, "Test Failed", testResult.getThrowable().getMessage());
+        } else {
+            TestModellerLogger.FailStepWithScreenshot(webDriver, "Test Failed");
+        }
+
         System.out.println("Test failure");
         failedTestsInClass++;
         if(uploadResults)
@@ -59,7 +65,19 @@ public class TestNGListener implements ITestListener, IClassListener {
     }
 
     @Override
+    public void onTestStart(ITestResult result) {
+        TestModellerLogger.ClearMessages();
+    }
+
+
+    @Override
     public void onTestSuccess(ITestResult testResult) {
+        Object testClass = testResult.getInstance();
+
+        WebDriver webDriver = ((TestBase) testClass).getDriver();
+
+        TestModellerLogger.PassStepWithScreenshot(webDriver, "Test Passed");
+
         System.out.println("Test success");
         if(uploadResults)
             postRunResult(testResult, TestPathRunStatusEnum.Passed);
@@ -94,6 +112,7 @@ public class TestNGListener implements ITestListener, IClassListener {
         testPathRun.setTestPathGuid(path.guid());
         testPathRun.setVipRunId(TestRunIdGenerator.getRunId());
         testPathRun.setTestStatus(status);
+        testPathRun.setTestPathRunSteps(TestModellerLogger.steps);
         if(testResult.getThrowable() != null)
             testPathRun.setMessage(testResult.getThrowable().getMessage());
 
@@ -104,11 +123,7 @@ public class TestNGListener implements ITestListener, IClassListener {
     }
 
     private void postAnalysisJob(ITestClass testClass) {
-        TestModellerSuite suite = getTestModellerSuite(testClass);
-        if(suite != null && suite.profileId() > 0) {
-            if(failureService.analyseFailures(suite.profileId()))
-                executeNewTests(failureService.getNewTests());
-        }
+
     }
 
     private TestModellerPath getTestModellerPath(ITestResult testResult) {
