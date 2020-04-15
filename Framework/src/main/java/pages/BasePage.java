@@ -4,10 +4,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utilities.testmodeller.TestModellerLogger;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class BasePage {
@@ -17,6 +20,7 @@ public class BasePage {
 
     protected JavascriptExecutor jsExec;
 
+
     public BasePage(WebDriver driver)
     {
         this.m_Driver = driver;
@@ -24,6 +28,60 @@ public class BasePage {
         jsWait = new WebDriverWait(this.m_Driver, 10);
 
         jsExec = (JavascriptExecutor) this.m_Driver;
+    }
+
+    public RemoteWebElement expandRootElement(WebElement element) {
+        RemoteWebElement ele = (RemoteWebElement) ((JavascriptExecutor) m_Driver).executeScript("return arguments[0].shadowRoot", element);
+
+        return ele;
+    }
+
+    protected RemoteWebElement expandShadowRoots(List<By> elems)
+    {
+        if (elems.isEmpty())
+            return null;
+
+        RemoteWebElement element = expandRootElement(getWebElement(elems.get(0)));
+
+        for (int i = 1; i < elems.size(); i++) {
+            element = expandRootElement(getWebElement(element, elems.get(i)));
+        }
+
+        return element;
+    }
+
+    protected WebElement getWebElement(WebElement elem, final By by)
+    {
+        waitForLoaded(elem, by, 5);
+        waitForVisible(elem, by, 5);
+
+        return elem.findElement(by);
+    }
+
+    protected void waitForLoaded(WebElement elem, final By by, int waitTime) {
+        WebDriverWait wait = new WebDriverWait(m_Driver, waitTime);
+
+        for (int attempt = 0; attempt < waitTime; attempt++) {
+            try {
+                elem.findElement(by);
+                break;
+            } catch (Exception e) {
+                m_Driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+            }
+        }
+    }
+
+    protected void waitForVisible(WebElement selem, final By by, int waitTime)
+    {
+        try {
+            WebElement elem = selem.findElement(by);
+
+            WebDriverWait wait = new WebDriverWait(m_Driver, waitTime);
+
+            wait.until(ExpectedConditions.visibilityOf(elem));
+        } catch (Exception e) {
+
+        }
     }
 
     protected WebElement getWebElement(final By by)
