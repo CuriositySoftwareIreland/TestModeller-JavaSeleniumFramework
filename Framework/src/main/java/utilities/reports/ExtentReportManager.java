@@ -8,6 +8,8 @@ import com.aventstack.extentreports.Status;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import org.openqa.selenium.WebDriver;
 
+import java.io.IOException;
+
 public class ExtentReportManager {
     public static ExtentReports extentReport;
 
@@ -48,12 +50,29 @@ public class ExtentReportManager {
 
     public static void passStepWithScreenshot(WebDriver driver, String stepName)
     {
-        extentTest.log(Status.PASS, stepName).addScreenCaptureFromBase64String(GetScreenShot.captureAsBase64(driver));//.addScreenCaptureFromBase64String(GetScreenShot.captureAsBase64(driver));
+        passStepWithScreenshot(driver, stepName, stepName);
+    }
+
+    public static void passStepWithScreenshot(WebDriver driver, String stepName, String details)
+    {
+        try {
+            extentTest.log(Status.PASS, stepName).addScreenCaptureFromPath(GetScreenShot.captureAsImage(driver,  extentTest.getModel().getName() + "_" + stepName));//.addScreenCaptureFromBase64String(GetScreenShot.captureAsBase64(driver));//.addScreenCaptureFromBase64String(GetScreenShot.captureAsBase64(driver));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void failStepWithScreenshot(WebDriver driver, String stepName)
     {
-        extentTest.log(Status.FAIL, stepName).addScreenCaptureFromBase64String(GetScreenShot.captureAsBase64(driver));
+        failStepWithScreenshot(driver, stepName, stepName);
+    }
 
+    public static void failStepWithScreenshot(WebDriver driver, String stepName, String details)
+    {
+        try {
+            extentTest.log(Status.FAIL, details).addScreenCaptureFromPath(GetScreenShot.captureAsImage(driver,  extentTest.getModel().getName() + "_" + stepName));//.addScreenCaptureFromBase64String(GetScreenShot.captureAsBase64(driver));//.addScreenCaptureFromBase64String(GetScreenShot.captureAsBase64(driver));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
