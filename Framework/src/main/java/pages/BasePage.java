@@ -82,6 +82,17 @@ public class BasePage {
         } catch (Exception e) {
 
         }
+
+        try {
+            WebElement elem = selem.findElement(by);
+
+            WebDriverWait wait = new WebDriverWait(m_Driver, waitTime);
+
+            wait.until(ExpectedConditions.elementToBeClickable(elem));
+        } catch (Exception e) {
+
+        }
+
     }
 
     protected WebElement getWebElement(final By by)
