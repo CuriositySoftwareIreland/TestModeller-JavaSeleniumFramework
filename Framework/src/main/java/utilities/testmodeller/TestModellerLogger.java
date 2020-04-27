@@ -10,6 +10,8 @@ import java.util.List;
 public class TestModellerLogger {
     public static List<TestPathRunStep> steps = new ArrayList<TestPathRunStep>();
 
+    public static String LastNodeGuid;
+
     public static void LogMessage(String name, String description, TestPathRunStatusEnum status)
     {
         TestPathRunStep step = new TestPathRunStep();
@@ -17,6 +19,7 @@ public class TestModellerLogger {
         step.setStepName(name);
         step.setStepDescription(description);
         step.setTestStatus(status);
+        step.setNodeGuid(LastNodeGuid);
 
         steps.add(step);
     }
@@ -29,6 +32,7 @@ public class TestModellerLogger {
         step.setStepDescription(description);
         step.setImage(image);
         step.setTestStatus(status);
+        step.setNodeGuid(LastNodeGuid);
 
         steps.add(step);
     }
@@ -40,6 +44,7 @@ public class TestModellerLogger {
         step.setStepName(stepName);
         step.setStepDescription(details);
         step.setTestStatus(TestPathRunStatusEnum.Failed);
+        step.setNodeGuid(LastNodeGuid);
 
         steps.add(step);
     }
@@ -50,6 +55,7 @@ public class TestModellerLogger {
 
         step.setStepName(stepName);
         step.setTestStatus(TestPathRunStatusEnum.Passed);
+        step.setNodeGuid(LastNodeGuid);
 
         steps.add(step);
     }
@@ -67,6 +73,7 @@ public class TestModellerLogger {
         step.setStepDescription(details);
         step.setImage(GetScreenShot.captureAsByteArray(driver));
         step.setTestStatus(TestPathRunStatusEnum.Passed);
+        step.setNodeGuid(LastNodeGuid);
 
         steps.add(step);
     }
@@ -84,8 +91,14 @@ public class TestModellerLogger {
         step.setStepDescription(details);
         step.setImage(GetScreenShot.captureAsByteArray(driver));
         step.setTestStatus(TestPathRunStatusEnum.Failed);
+        step.setNodeGuid(LastNodeGuid);
 
         steps.add(step);
+    }
+
+    public static void SetLastNodeGuid(String guid)
+    {
+        LastNodeGuid = guid;
     }
 
     public static void ClearMessages()
