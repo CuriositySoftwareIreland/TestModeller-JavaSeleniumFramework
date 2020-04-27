@@ -58,6 +58,18 @@ public class BasePage {
         return elem.findElement(by);
     }
 
+    protected List<WebElement> getWebElements(final By by)
+    {
+        waitForLoaded(by, 2);
+        waitForVisible(by, 2);
+
+        try {
+            return m_Driver.findElements(by);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
     protected void waitForLoaded(WebElement elem, final By by, int waitTime) {
         WebDriverWait wait = new WebDriverWait(m_Driver, waitTime);
 

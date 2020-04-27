@@ -76,7 +76,7 @@ public class TestBase {
     @BeforeMethod(alwaysRun = true)
     public void initDriver(Method method)
     {
-        ExtentReportManager.createNewTest(method.getName());
+        ExtentReportManager.createNewTest(method);
 
         driver = CapabilityLoader.createWebDriver();
     }

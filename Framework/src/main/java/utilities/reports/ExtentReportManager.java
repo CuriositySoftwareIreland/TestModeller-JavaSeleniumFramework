@@ -9,11 +9,16 @@ import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
 import org.openqa.selenium.WebDriver;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 public class ExtentReportManager {
     public static ExtentReports extentReport;
 
     public static ExtentTest extentTest;
+
+    public static String currentTestGuid;
+
+    public static String currentTestName;
 
     public static String extentDir = System.getProperty("user.dir") +"/report";
 
@@ -33,9 +38,11 @@ public class ExtentReportManager {
         extentReport.flush();
     }
 
-    public static void createNewTest(String testName)
+    public static void createNewTest(Method method)
     {
-        extentTest = extentReport.createTest(testName);
+        extentTest = extentReport.createTest(method.getName());
+
+        currentTestName = method.getName();
     }
 
     public static void passStep(WebDriver driver, String stepName)

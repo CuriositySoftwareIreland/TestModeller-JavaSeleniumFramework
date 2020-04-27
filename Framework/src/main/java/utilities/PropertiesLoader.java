@@ -1,5 +1,6 @@
 package utilities;
 
+import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import ie.curiositysoftware.jobengine.services.job.CodeGenerationService;
 
 import java.io.IOException;
@@ -38,5 +39,10 @@ public class PropertiesLoader {
         {
             prop.load(inputStream);
         }
+    }
+
+    public static ConnectionProfile getConnectionProfile()
+    {
+        return new ConnectionProfile(PropertiesLoader.getProperties().getProperty("testModeller.apiHost"), PropertiesLoader.getProperties().getProperty("testModeller.apiKey"));
     }
 }
