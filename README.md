@@ -13,7 +13,7 @@ Follow along with this [Tutorial](https://testmodeller.io/tutorials/selenium-jav
 4. Install Maven - this is used to manage the build process of our automation framework.
 
 5. Register the code templates to Test Modeller following this [tutorial](https://curiositysoftware.ie/Resources/tutorials/ConfigureTMFramework.mp4)
-6. Copy generated page objects into the 'Framework\src\main\java\pages' directory. 
-7. Copy generated tests into the 'Framework\src\test\java\tests' directory.
+6. Copy generated `page objects` into the `Framework\src\main\java\pages` directory. 
+7. Copy generated `tests` into the `Framework\src\test\java\tests` directory.
 
-8. To execute all tests navigate to the Framework directory and run 'mvn test'. To execute a specific test run 'mvn -Dtest=[filename] test' where [filename] is the name of the test file to execute.
+8. To execute all tests navigate to the Framework directory and run `mvn test`. To execute a specific test run `mvn -Dtest=[filename] test` where [filename] is the name of the test file to execute.
