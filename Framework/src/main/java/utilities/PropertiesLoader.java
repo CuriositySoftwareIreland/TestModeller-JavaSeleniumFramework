@@ -45,4 +45,9 @@ public class PropertiesLoader {
     {
         return new ConnectionProfile(PropertiesLoader.getProperties().getProperty("testModeller.apiHost"), PropertiesLoader.getProperties().getProperty("testModeller.apiKey"));
     }
+
+    public static String getRunSource()
+    {
+        return PropertiesLoader.getProperties().getProperty("testModeller.automationSource");
+    }
 }

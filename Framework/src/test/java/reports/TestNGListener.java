@@ -113,6 +113,7 @@ public class TestNGListener implements ITestListener, IClassListener {
         testPathRun.setVipRunId(TestRunIdGenerator.getRunId());
         testPathRun.setTestStatus(status);
         testPathRun.setTestPathRunSteps(TestModellerLogger.steps);
+        testPathRun.setRunSource(PropertiesLoader.getRunSource());
         if(testResult.getThrowable() != null)
             testPathRun.setMessage(testResult.getThrowable().getMessage());
 
