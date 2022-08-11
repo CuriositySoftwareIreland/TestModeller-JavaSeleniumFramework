@@ -11,6 +11,7 @@ import ie.curiositysoftware.pageobjects.services.PageObjectService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.testng.annotations.Ignore;
 import pages.BasePage;
 import utilities.PropertiesLoader;
 import utilities.reports.ExtentReportManager;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+@Ignore
 public class IntelligentMultiObjectPageBase extends BasePage {
     protected HashMap<ObjectIdentifier, PageObjectParameterEntity> objectIdentifierHash;
 
@@ -33,7 +35,7 @@ public class IntelligentMultiObjectPageBase extends BasePage {
     }
 
     // Get element from a list of identifiers
-    public WebElement getWebElement(PageObjectEntity po, List<ObjectIdentifier> elementIdentifiers)
+    protected WebElement getWebElement(PageObjectEntity po, List<ObjectIdentifier> elementIdentifiers)
     {
         // Create a hash with maintains our votes
         HashMap<WebElement, Double> noVotes = new HashMap<WebElement, Double>();
@@ -78,8 +80,8 @@ public class IntelligentMultiObjectPageBase extends BasePage {
         PageObjectHistoryEntity poHis = new PageObjectHistoryEntity();
         poHis.setLatestRun(new Date());
         poHis.setPageObject(po.getId());
-        poHis.setTestGuid(ExtentReportManager.currentTestGuid);
-        poHis.setTestName(ExtentReportManager.currentTestName);
+        poHis.setTestGuid(ExtentReportManager.currentTestGuid.get());
+        poHis.setTestName(ExtentReportManager.currentTestName.get());
 
         Boolean containsChanges = false;
         if (curElem != null) {
@@ -87,7 +89,7 @@ public class IntelligentMultiObjectPageBase extends BasePage {
             poHis.setPageObjectStatus(PageObjectParameterStateEnum.Active);
 
             for(ObjectIdentifier iden : identiferNodeHash.keySet()) {
-                if (!identiferNodeHash.get(iden).contains(curElem)) {
+                if (identiferNodeHash.get(iden) == null || !identiferNodeHash.get(iden).contains(curElem)) {
                     updateElement(curElem, objectIdentifierHash.get(iden));
 
                     poHis.setPageObjectStatus(PageObjectParameterStateEnum.IntelligentPass);
@@ -131,7 +133,7 @@ public class IntelligentMultiObjectPageBase extends BasePage {
         return curElem;
     }
 
-    public WebElement getWebElement(ModellerObjectIdentifier elementIdentifier)
+    protected WebElement getWebElement(ModellerObjectIdentifier elementIdentifier)
     {
         // Get the object and parameters
         List<ObjectIdentifier> objectIdentifiers = new ArrayList<ObjectIdentifier>();
@@ -161,7 +163,7 @@ public class IntelligentMultiObjectPageBase extends BasePage {
     }
 
     // Update the element reference
-    public void updateElement(WebElement elem, PageObjectParameterEntity pageObjectParameter)
+    protected void updateElement(WebElement elem, PageObjectParameterEntity pageObjectParameter)
     {
         // Update the page object references
         if (!ElementExtractor.updateParameter(pageObjectParameter, elem, m_Driver)) {

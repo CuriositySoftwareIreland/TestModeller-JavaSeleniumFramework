@@ -8,11 +8,15 @@ import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.Ignore;
+import utilities.reports.ExtentReportManager;
 import utilities.testmodeller.TestModellerLogger;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+@Ignore
 public class BasePage {
     protected WebDriver m_Driver;
 
@@ -30,7 +34,36 @@ public class BasePage {
         jsExec = (JavascriptExecutor) this.m_Driver;
     }
 
-    public RemoteWebElement expandRootElement(WebElement element) {
+    protected void failStep(String msg, String details)
+    {
+        ExtentReportManager.failStepWithScreenshot(m_Driver, msg, details);
+
+        TestModellerLogger.FailStepWithScreenshot(m_Driver, msg, details);
+
+        Assert.fail(msg);
+    }
+
+    protected void failStep(String msg)
+    {
+        ExtentReportManager.failStepWithScreenshot(m_Driver, msg);
+        TestModellerLogger.FailStepWithScreenshot(m_Driver, msg);
+
+        Assert.fail(msg);
+    }
+
+    protected void passStep(String msg)
+    {
+        ExtentReportManager.passStep(msg);
+        TestModellerLogger.PassStep(msg);
+    }
+
+    protected void passStepWithScreenshot(String msg)
+    {
+        ExtentReportManager.passStepWithScreenshot(m_Driver, msg);
+        TestModellerLogger.PassStepWithScreenshot(m_Driver, msg);
+    }
+
+    protected RemoteWebElement expandRootElement(WebElement element) {
         RemoteWebElement ele = (RemoteWebElement) ((JavascriptExecutor) m_Driver).executeScript("return arguments[0].shadowRoot", element);
 
         return ele;
@@ -55,6 +88,10 @@ public class BasePage {
         waitForLoaded(elem, by, 5);
         waitForVisible(elem, by, 5);
 
+        if (m_Driver.getCurrentUrl() == null || m_Driver.getCurrentUrl().isEmpty() || m_Driver.getCurrentUrl().equals("data:,")) {
+            Assert.fail("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
+        }
+
         return elem.findElement(by);
     }
 
@@ -62,6 +99,10 @@ public class BasePage {
     {
         waitForLoaded(by, 2);
         waitForVisible(by, 2);
+
+        if (m_Driver.getCurrentUrl() == null || m_Driver.getCurrentUrl().isEmpty() || m_Driver.getCurrentUrl().equals("data:,")) {
+            Assert.fail("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
+        }
 
         try {
             return m_Driver.findElements(by);
@@ -111,6 +152,10 @@ public class BasePage {
     {
         waitForLoaded(by, 5);
         waitForVisible(by, 5);
+
+        if (m_Driver.getCurrentUrl() == null || m_Driver.getCurrentUrl().isEmpty() || m_Driver.getCurrentUrl().equals("data:,")) {
+            Assert.fail("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
+        }
 
         try {
             return m_Driver.findElement(by);

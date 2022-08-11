@@ -20,16 +20,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestBase {
-    /********** Replace with your own details ***********/
-    protected WebDriver driver;
-
     protected ConnectionProfile cp = new ConnectionProfile(PropertiesLoader.getProperties().getProperty("testModeller.apiHost"), PropertiesLoader.getProperties().getProperty("testModeller.apiKey"));
 
     protected DataAllocationEngine dataAllocationEngine = new DataAllocationEngine(cp);
 
     public WebDriver getDriver()
     {
-        return driver;
+        return CapabilityLoader.getDriver();
     }
 
     @BeforeSuite(alwaysRun = true)
@@ -78,13 +75,16 @@ public class TestBase {
     {
         ExtentReportManager.createNewTest(method);
 
-        driver = CapabilityLoader.createWebDriver();
+        CapabilityLoader.setDriver(CapabilityLoader.createWebDriver());
     }
 
     @AfterMethod(alwaysRun = true)
     public void closerDriver()
     {
-        driver.quit();
+        try {
+            if (CapabilityLoader.getDriver() != null)
+                CapabilityLoader.getDriver().quit();
+        } catch (Exception e) {}
     }
 
     @AfterSuite

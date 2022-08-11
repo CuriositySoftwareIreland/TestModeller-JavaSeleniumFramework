@@ -1,6 +1,8 @@
 package reports;
 
+import ie.curiositysoftware.jobengine.dto.job.TestCoverageEnum;
 import ie.curiositysoftware.jobengine.services.ConnectionProfile;
+import ie.curiositysoftware.jobengine.services.job.FailureAnalysisService;
 import ie.curiositysoftware.runresult.dto.TestPathRun;
 import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
 import ie.curiositysoftware.runresult.services.TestRunIdGenerator;
@@ -24,6 +26,8 @@ public class TestNGListener implements ITestListener, IClassListener {
 
     private final TestRunService runService;
 
+    private final FailureAnalysisService failureService;
+
     private int failedTestsInClass = 0;
     private List<ITestClass> testsClassesToAnalyse = new ArrayList<>();
 
@@ -45,6 +49,7 @@ public class TestNGListener implements ITestListener, IClassListener {
         Long jobTimeout = Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.analyser.jobTimeout"));
         Long codeTemplateId = Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.analyser.codeTemplateId"));
         Boolean includeOldTests = Boolean.parseBoolean(PropertiesLoader.getProperties().getProperty("testModeller.analyser.includeOldTests"));
+        failureService = new FailureAnalysisService(profile, jobTimeout, serverName, codeTemplateId, includeOldTests, TestCoverageEnum.Medium);
     }
 
     @Override
@@ -110,10 +115,15 @@ public class TestNGListener implements ITestListener, IClassListener {
         testPathRun.setRunTime(toIntExact(testResult.getEndMillis() - testResult.getStartMillis()));
         testPathRun.setRunTimeStamp(new Date(testResult.getStartMillis()));
         testPathRun.setTestPathGuid(path.guid());
+        testPathRun.setRunSource("Selenium");
         testPathRun.setVipRunId(TestRunIdGenerator.getRunId());
         testPathRun.setTestStatus(status);
-        testPathRun.setTestPathRunSteps(TestModellerLogger.steps);
-        testPathRun.setRunSource(PropertiesLoader.getRunSource());
+        testPathRun.setTestPathRunSteps(TestModellerLogger.steps.get());
+
+        try {
+            testPathRun.setJobId(Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.jobId")));
+        } catch (Exception e) {}
+
         if(testResult.getThrowable() != null)
             testPathRun.setMessage(testResult.getThrowable().getMessage());
 
@@ -124,7 +134,14 @@ public class TestNGListener implements ITestListener, IClassListener {
     }
 
     private void postAnalysisJob(ITestClass testClass) {
-
+        TestModellerSuite suite = getTestModellerSuite(testClass);
+        if(suite != null && suite.profileId() > 0) {
+            if(failureService.analyseFailures(suite.profileId())) {
+                executeNewTests(failureService.getNewTests());
+            } else {
+                System.out.println(failureService.getErrorMessage());
+            }
+        }
     }
 
     private TestModellerPath getTestModellerPath(ITestResult testResult) {

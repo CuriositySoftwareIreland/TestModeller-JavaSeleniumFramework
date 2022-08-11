@@ -93,6 +93,11 @@ public class TestNGListener implements ITestListener, IClassListener {
         testPathRun.setRunTimeStamp(new Date(testResult.getStartMillis()));
         testPathRun.setTestPathGuid(path.guid());
         testPathRun.setVipRunId(TestRunIdGenerator.getRunId());
+
+        try {
+            testPathRun.setJobId(Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.jobId")));
+        } catch (Exception e) {}
+
         testPathRun.setTestStatus(status);
         if(testResult.getThrowable() != null)
             testPathRun.setMessage(testResult.getThrowable().getMessage());

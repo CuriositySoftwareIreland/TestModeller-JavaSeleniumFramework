@@ -12,6 +12,9 @@ public class GetScreenShot {
 
     public static String captureAsImage(WebDriver driver,String screenShotName) throws IOException
     {
+		if (driver == null)
+			return "";
+		
         TakesScreenshot ts = (TakesScreenshot) driver;
         File source = ts.getScreenshotAs(OutputType.FILE);
         String dest = "report/"  +"/ErrorScreenshots/"+screenShotName+".png";
@@ -23,11 +26,17 @@ public class GetScreenShot {
 
     public static String captureAsBase64(WebDriver driver)
     {
-        return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64);
+		if (driver == null)
+			return "";
+
+        return "data:image/png;base64," + ((TakesScreenshot) driver).getScreenshotAs(OutputType.BASE64);
     }
 
     public static byte[] captureAsByteArray(WebDriver driver)
     {
+		if (driver == null)
+			return null;
+
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
     }
 }

@@ -12,6 +12,16 @@ import java.net.URL;
 
 public class CapabilityLoader
 {
+    private static final ThreadLocal<WebDriver> threadLocal = new ThreadLocal<WebDriver>();
+
+    public static WebDriver getDriver() {
+        return threadLocal.get();
+    }
+
+    public static void setDriver(WebDriver driver) {
+        threadLocal.set(driver);
+    }
+
     private static String browserNameEnv = "selenium.browserType";
     private static String runScopeEnv = "selenium.runLocation";
     private static String sauceLabsPlatformEnv = "sauceLabs.platform";
@@ -43,7 +53,7 @@ public class CapabilityLoader
             if (PropertiesLoader.getProperties().getProperty(browserNameEnv).toLowerCase().equals("chrome")) {
                 ChromeOptions options = new ChromeOptions();
 
-                options.addArguments(new String[]{"--start-maximized"});
+                options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
 
                 WebDriver driver = new ChromeDriver(options);
 

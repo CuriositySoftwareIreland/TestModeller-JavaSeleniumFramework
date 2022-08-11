@@ -35,7 +35,7 @@ public class PropertiesLoader {
 
         prop = new Properties(defaults);
 
-        try (InputStream inputStream = ClassLoader.getSystemResourceAsStream("project.properties"))
+        try (InputStream inputStream = PropertiesLoader.class.getResourceAsStream("/project.properties"))
         {
             prop.load(inputStream);
         }
@@ -44,10 +44,5 @@ public class PropertiesLoader {
     public static ConnectionProfile getConnectionProfile()
     {
         return new ConnectionProfile(PropertiesLoader.getProperties().getProperty("testModeller.apiHost"), PropertiesLoader.getProperties().getProperty("testModeller.apiKey"));
-    }
-
-    public static String getRunSource()
-    {
-        return PropertiesLoader.getProperties().getProperty("testModeller.automationSource");
     }
 }
