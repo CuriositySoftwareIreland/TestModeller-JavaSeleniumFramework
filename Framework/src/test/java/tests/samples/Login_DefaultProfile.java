@@ -16,7 +16,7 @@ public class Login_DefaultProfile extends TestBase
 	@TestModellerPath(guid = "6e672af7-7b79-4cde-9a03-975446b64a2e")
 	public void DefaultProfileLoginPageUnauthenticated1()
 	{
-		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(driver);
+		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(getDriver());
 			_PagesCustomerAuthenticationCustomerLoginPage.GoToUrl();
 
 
@@ -33,7 +33,7 @@ public class Login_DefaultProfile extends TestBase
 	@TestModellerPath(guid = "3e955b5a-7cff-4397-95ee-e22e1b0aa7f1")
 	public void DefaultProfileLoginPageUnauthenticated2()
 	{
-		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(driver);
+		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(getDriver());
 			_PagesCustomerAuthenticationCustomerLoginPage.GoToUrl();
 
 
@@ -50,7 +50,7 @@ public class Login_DefaultProfile extends TestBase
 	@TestModellerPath(guid = "bab14917-9382-44d2-ba44-b8a8e9c50ca6")
 	public void DefaultProfileLoginPageUnauthenticated3()
 	{
-		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(driver);
+		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(getDriver());
 			_PagesCustomerAuthenticationCustomerLoginPage.GoToUrl();
 
 
@@ -67,7 +67,7 @@ public class Login_DefaultProfile extends TestBase
 	@TestModellerPath(guid = "0498f348-5acf-42fa-840b-ab90df7f2986")
 	public void DefaultProfileLoginPageAuthenticated4()
 	{
-		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(driver);
+		CustomerLoginPage _PagesCustomerAuthenticationCustomerLoginPage = new CustomerLoginPage(getDriver());
 			_PagesCustomerAuthenticationCustomerLoginPage.GoToUrl();
 
 

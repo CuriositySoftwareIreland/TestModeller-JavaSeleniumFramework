@@ -22,7 +22,7 @@ public class CreateOppertunity_DataAllocation extends TestBase
     {
         DataAllocationResult CreateOppertunity_AccountName =  dataAllocationEngine.getDataResult("SplendidUAT", "Create Oppertunity", "Default Profile_GoToUrl_PositiveName_PositiveAccountName_NegativeAmount_Save1:::Create Oppertunity_AccountName");
 
-        LoginPage _LoginPage = new LoginPage(driver);
+        LoginPage _LoginPage = new LoginPage(getDriver());
         _LoginPage.GoToUrl();
 
         _LoginPage.Enter_UsernameInput("admin");
@@ -31,7 +31,7 @@ public class CreateOppertunity_DataAllocation extends TestBase
 
         _LoginPage.Click_LoginButton();
 
-        OpportunitiesPage _PagesOpportunities = new OpportunitiesPage(driver);
+        OpportunitiesPage _PagesOpportunities = new OpportunitiesPage(getDriver());
         _PagesOpportunities.GoToUrl();
 
         _PagesOpportunities.Enter_Name("omnis");
