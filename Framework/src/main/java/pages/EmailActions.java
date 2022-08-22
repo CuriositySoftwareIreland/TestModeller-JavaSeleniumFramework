@@ -28,7 +28,6 @@ public class EmailActions extends BasePage {
         props.put("mail.smtp.ssl.trust","true");
 
         Session session = Session.getInstance(props);
-        Store store = null;
         try {
             store = session.getStore("imap");
 
