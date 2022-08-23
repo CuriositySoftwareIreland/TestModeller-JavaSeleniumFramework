@@ -20,6 +20,10 @@ public class EmailActions extends BasePage {
         super(driver);
     }
 
+    /**
+     * Connect to an IMAP mail server with the given credentials
+     * @name Connect to Mail Server
+     */
     public void ConnectToMail(String username, String password, String server, int serverPort)
     {
         Properties props = System.getProperties();
@@ -41,7 +45,10 @@ public class EmailActions extends BasePage {
         }
     }
 
-
+    /**
+     * Get latest email in the Inbox
+     * @name Get Latest Mail
+     */
     public jakarta.mail.Message GetLatestMail()
     {
         try {
@@ -63,6 +70,10 @@ public class EmailActions extends BasePage {
         return null;
     }
 
+    /**
+     * Get latest message in the Inbox from the specified sender
+     * @name Get Latest Message From
+     */
     public jakarta.mail.Message GetLatestMessageFrom(String fromMail)
     {
         try {
@@ -97,6 +108,10 @@ public class EmailActions extends BasePage {
         return null;
     }
 
+    /**
+     * Get latest message in the Inbox containing the specified subject
+     * @name Get Latest Message Containing Subject
+     */
     public jakarta.mail.Message GetLatestMessageContainingSubject(String subject)
     {
         try {
@@ -131,6 +146,10 @@ public class EmailActions extends BasePage {
         return null;
     }
 
+    /**
+     * Assert the specified message subject contains the value
+     * @name Assert Mail Subject Contains
+     */
     public void AssertMailSubjectContentContains(jakarta.mail.Message message, String content)
     {
         try {
@@ -146,6 +165,10 @@ public class EmailActions extends BasePage {
         }
     }
 
+    /**
+     * Assert the specified message content contains the value
+     * @name Assert Mail Content Contains
+     */
     public void AssertMailContentContains(jakarta.mail.Message message, String content)
     {
         try {
