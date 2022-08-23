@@ -42,7 +42,7 @@ public class EmailActions extends BasePage {
     }
 
 
-    public Message GetLatestMail()
+    public jakarta.mail.Message GetLatestMail()
     {
         try {
             Folder inbox = store.getFolder("Inbox");
@@ -63,7 +63,7 @@ public class EmailActions extends BasePage {
         return null;
     }
 
-    public Message GetLatestMessageFrom(String fromMail)
+    public jakarta.mail.Message GetLatestMessageFrom(String fromMail)
     {
         try {
             Folder inbox = store.getFolder("Inbox");
@@ -97,7 +97,7 @@ public class EmailActions extends BasePage {
         return null;
     }
 
-    public Message GetLatestMessageContainingSubject(String subject)
+    public jakarta.mail.Message GetLatestMessageContainingSubject(String subject)
     {
         try {
             Folder inbox = store.getFolder("Inbox");
@@ -131,7 +131,7 @@ public class EmailActions extends BasePage {
         return null;
     }
 
-    public void AssertMailSubjectContentContains(Message message, String content)
+    public void AssertMailSubjectContentContains(jakarta.mail.Message message, String content)
     {
         try {
             if (!message.getSubject().contains(content)) {
@@ -146,7 +146,7 @@ public class EmailActions extends BasePage {
         }
     }
 
-    public void AssertMailContentContains(Message message, String content)
+    public void AssertMailContentContains(jakarta.mail.Message message, String content)
     {
         try {
             String mailBody = getEmailBody(message);
@@ -163,7 +163,7 @@ public class EmailActions extends BasePage {
         }
     }
 
-    public void logEmail(Message mail)
+    private void logEmail(Message mail)
     {
         String mailLogMessage = "";
 
@@ -184,7 +184,7 @@ public class EmailActions extends BasePage {
         passStep("Found email - " + mailLogMessage);
     }
 
-    private String getEmailBody(Message email) throws IOException, MessagingException {
+    private String getEmailBody(jakarta.mail.Message email) throws IOException, MessagingException {
 
         String line, emailContentEncoded;
         StringBuffer bufferEmailContentEncoded = new StringBuffer();
