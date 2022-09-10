@@ -1097,6 +1097,24 @@ public class WebGeneralActions extends BasePage {
     }
 
     /**
+     * Click the element identified by element text.
+     * @name Click By Text
+     */
+    public void ClickByText(String text)
+    {
+        String xPath = "//*[contains(text(), \"" + text + "\")]";
+        WebElement elem = getWebElement(By.xpath(xPath));
+
+        if (elem == null) {
+            failStep("Click", "Click failed. Unable to locate object by text: " + text + " with xpath " + xPath);
+        }
+
+        elem.click();
+
+        passStepWithScreenshot("Click");
+    }
+
+    /**
      * Types the given text into the element identified by locator.
      * @name Enter Text
      */
