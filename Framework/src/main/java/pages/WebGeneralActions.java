@@ -1079,6 +1079,31 @@ public class WebGeneralActions extends BasePage {
         passStepWithScreenshot("Go to URL - " + url);
     }
 
+	/**
+     * Switch tab by index. Index 0 is always the main window.
+     * @name Switch tab
+     */
+    public void SwitchTab(int tabIndex)
+    {
+        ArrayList<String> tabs = new ArrayList<String>(m_Driver.getWindowHandles());
+        m_Driver.switchTo().window(tabs.get(tabIndex));
+
+        passStepWithScreenshot("Switch tab with index " + tabIndex);
+    }
+	
+	/**
+     * Opens a new browser window / tab
+     * @name New Window
+     */
+    public void NewWindow()
+    {
+        ((JavascriptExecutor) m_Driver).executeScript("window.open()");
+        ArrayList<String> tabs = new ArrayList<String>(m_Driver.getWindowHandles());
+        m_Driver.switchTo().window(tabs.get(1));
+
+        passStepWithScreenshot("New Window");
+    }
+	
     /**
      * Click the element identified by locator.
      * @name Click
