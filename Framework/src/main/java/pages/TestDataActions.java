@@ -8,8 +8,10 @@ import ie.curiositysoftware.datacatalogue.DataListRowDto;
 import ie.curiositysoftware.datacatalogue.services.DataCatalogueTestCriteriaExecutionService;
 import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import ie.curiositysoftware.tdm.services.DataListService;
+import ie.curiositysoftware.testdata.TestDataResolver;
 import ie.curiositysoftware.utils.PageImplToHashMap;
 import ie.curiositysoftware.utils.UnirestHelper;
+import org.apache.poi.ss.formula.functions.T;
 import org.openqa.selenium.WebDriver;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,17 @@ public class TestDataActions extends BasePage
         super(driver);
     }
 
+    /**
+     * @name Resolve Test Data Expression
+     */
+    public String resolveDataExpression(String expression)
+    {
+        ConnectionProfile connectionProfile = new ConnectionProfile(PropertiesLoader.getProperties().getProperty("testModeller.apiHost"), PropertiesLoader.getProperties().getProperty("testModeller.apiKey"));
+
+        TestDataResolver dataResolver = new TestDataResolver(connectionProfile);
+
+        return dataResolver.ResolveTestDataValue(expression);
+    }
     /**
      * @name Get Data Using List Test Criteria for Row and Column
      */
