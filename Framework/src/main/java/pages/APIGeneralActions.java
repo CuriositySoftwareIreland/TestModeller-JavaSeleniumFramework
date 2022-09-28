@@ -2,11 +2,9 @@ package pages;
 
 import com.jayway.jsonpath.JsonPath;
 import io.restassured.response.Response;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.openqa.selenium.WebDriver;
 
 public class APIGeneralActions extends BasePage {
-    @Ignore
     public APIGeneralActions(WebDriver driver) {
         super(driver);
     }

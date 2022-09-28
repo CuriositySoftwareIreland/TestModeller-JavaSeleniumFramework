@@ -1,7 +1,6 @@
 package pages;
 
 import jakarta.mail.*;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ArrayUtils;
 import org.openqa.selenium.WebDriver;
@@ -15,7 +14,6 @@ import java.util.Properties;
 public class EmailActions extends BasePage {
     private Store store;
 
-    @Ignore
     public EmailActions(WebDriver driver) {
         super(driver);
     }

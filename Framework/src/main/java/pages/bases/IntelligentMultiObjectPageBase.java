@@ -11,7 +11,6 @@ import ie.curiositysoftware.pageobjects.services.PageObjectService;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.testng.annotations.Ignore;
 import pages.BasePage;
 import utilities.PropertiesLoader;
 import utilities.reports.ExtentReportManager;
@@ -21,7 +20,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-@Ignore
 public class IntelligentMultiObjectPageBase extends BasePage {
     protected HashMap<ObjectIdentifier, PageObjectParameterEntity> objectIdentifierHash;
 

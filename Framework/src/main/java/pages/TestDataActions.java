@@ -10,7 +10,6 @@ import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import ie.curiositysoftware.tdm.services.DataListService;
 import ie.curiositysoftware.utils.PageImplToHashMap;
 import ie.curiositysoftware.utils.UnirestHelper;
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.openqa.selenium.WebDriver;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +24,6 @@ import java.util.*;
 
 public class TestDataActions extends BasePage
 {
-    @Ignore
     public TestDataActions(WebDriver driver) {
         super(driver);
     }
