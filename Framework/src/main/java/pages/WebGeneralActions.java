@@ -1,5 +1,6 @@
 package pages;
 
+import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WebGeneralActions extends BasePage {
+    @TestModellerIgnore
     public WebGeneralActions(WebDriver driver) {
         super(driver);
     }

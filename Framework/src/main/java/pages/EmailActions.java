@@ -1,5 +1,6 @@
 package pages;
 
+import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import jakarta.mail.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.ArrayUtils;
@@ -14,6 +15,7 @@ import java.util.Properties;
 public class EmailActions extends BasePage {
     private Store store;
 
+    @TestModellerIgnore
     public EmailActions(WebDriver driver) {
         super(driver);
     }

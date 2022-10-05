@@ -1,8 +1,10 @@
 package pages;
 
+import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import org.openqa.selenium.WebDriver;
 
 public class WaitActions extends BasePage {
+    @TestModellerIgnore
     public WaitActions(WebDriver driver) {
         super(driver);
     }

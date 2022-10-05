@@ -1,10 +1,12 @@
 package pages;
 
 import com.jayway.jsonpath.JsonPath;
+import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import io.restassured.response.Response;
 import org.openqa.selenium.WebDriver;
 
 public class APIGeneralActions extends BasePage {
+    @TestModellerIgnore
     public APIGeneralActions(WebDriver driver) {
         super(driver);
     }

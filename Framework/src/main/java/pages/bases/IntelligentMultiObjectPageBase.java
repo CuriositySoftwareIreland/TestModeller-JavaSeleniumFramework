@@ -8,6 +8,7 @@ import ie.curiositysoftware.pageobjects.dto.PageObjectParameterEntity;
 import ie.curiositysoftware.pageobjects.dto.PageObjectParameterStateEnum;
 import ie.curiositysoftware.pageobjects.elementscanner.ElementExtractor;
 import ie.curiositysoftware.pageobjects.services.PageObjectService;
+import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+@TestModellerIgnore
 public class IntelligentMultiObjectPageBase extends BasePage {
     protected HashMap<ObjectIdentifier, PageObjectParameterEntity> objectIdentifierHash;
 
