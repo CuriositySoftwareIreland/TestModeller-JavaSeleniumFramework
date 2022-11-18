@@ -1,6 +1,9 @@
 package pages;
 
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
+import io.restassured.http.Header;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -32,6 +35,32 @@ public class BasePage {
         jsWait = new WebDriverWait(this.m_Driver, 10);
 
         jsExec = (JavascriptExecutor) this.m_Driver;
+    }
+
+    protected void printResponse(Response rsp)
+    {
+        System.out.println("----------- Response Details ----------");
+
+        // Response time
+        System.out.println("Response Time: " + rsp.getTime());
+
+        // Status
+        System.out.println("Status: " + rsp.getStatusLine());
+
+        // Headers
+        if (rsp.getHeaders() != null) {
+            for (Header header : rsp.getHeaders().asList()) {
+                System.out.println("Header " + header.getName() + " value " + header.getValue());
+            }
+        }
+
+        // Body
+        if (rsp.getBody() != null) {
+            System.out.println("Body:");
+            System.out.println(rsp.getBody().prettyPrint());
+        }
+
+        System.out.println("----------- End Response Details ----------");
     }
 
     protected void failStep(String msg, String details)
