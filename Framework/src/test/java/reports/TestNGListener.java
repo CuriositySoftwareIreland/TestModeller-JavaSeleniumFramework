@@ -55,9 +55,10 @@ public class TestNGListener implements ITestListener, IClassListener {
     @Override
     public void onTestFailure(ITestResult testResult) {
         Object testClass = testResult.getInstance();
-        WebDriver webDriver = ((TestBase) testClass).getDriver();
 
         if (testClass instanceof TestBase) {
+            WebDriver webDriver = ((TestBase) testClass).getDriver();
+
             if (testResult.getThrowable() != null) {
                 TestModellerLogger.FailStepWithScreenshot(webDriver, "Test Failed", testResult.getThrowable().getMessage());
             } else {
