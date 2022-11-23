@@ -32,9 +32,11 @@ public class BasePage {
     {
         this.m_Driver = driver;
 
-        jsWait = new WebDriverWait(this.m_Driver, 10);
+        if (m_Driver != null) {
+            jsWait = new WebDriverWait(this.m_Driver, 10);
 
-        jsExec = (JavascriptExecutor) this.m_Driver;
+            jsExec = (JavascriptExecutor) this.m_Driver;
+        }
     }
 
     protected void printResponse(Response rsp)
