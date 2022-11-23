@@ -57,10 +57,18 @@ public class TestNGListener implements ITestListener, IClassListener {
         Object testClass = testResult.getInstance();
         WebDriver webDriver = ((TestBase) testClass).getDriver();
 
-        if(testResult.getThrowable() != null) {
-            TestModellerLogger.FailStepWithScreenshot(webDriver, "Test Failed", testResult.getThrowable().getMessage());
+        if (testClass instanceof TestBase) {
+            if (testResult.getThrowable() != null) {
+                TestModellerLogger.FailStepWithScreenshot(webDriver, "Test Failed", testResult.getThrowable().getMessage());
+            } else {
+                TestModellerLogger.FailStepWithScreenshot(webDriver, "Test Failed");
+            }
         } else {
-            TestModellerLogger.FailStepWithScreenshot(webDriver, "Test Failed");
+            if (testResult.getThrowable() != null) {
+                TestModellerLogger.FailStep("Test Failed", testResult.getThrowable().getMessage());
+            } else {
+                TestModellerLogger.FailStep("Test Failed");
+            }
         }
 
         System.out.println("Test failure");
@@ -79,9 +87,13 @@ public class TestNGListener implements ITestListener, IClassListener {
     public void onTestSuccess(ITestResult testResult) {
         Object testClass = testResult.getInstance();
 
-        WebDriver webDriver = ((TestBase) testClass).getDriver();
+        if (testClass instanceof TestBase) {
+            WebDriver webDriver = ((TestBase) testClass).getDriver();
 
-        TestModellerLogger.PassStepWithScreenshot(webDriver, "Test Passed");
+            TestModellerLogger.PassStepWithScreenshot(webDriver, "Test Passed");
+        } else {
+            TestModellerLogger.PassStep("Test Passed");
+        }
 
         System.out.println("Test success");
         if(uploadResults)

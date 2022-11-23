@@ -29,17 +29,26 @@ public class ModellerTestListener  extends TestBase implements ITestListener {
     public void onTestSuccess(ITestResult iTestResult) {
         Object testClass = iTestResult.getInstance();
 
-        WebDriver webDriver = ((TestBase) testClass).getDriver();
+        if (testClass instanceof TestBase) {
+            WebDriver webDriver = ((TestBase) testClass).getDriver();
 
-        TestModellerLogger.PassStepWithScreenshot(webDriver, "Test Passed");
+            TestModellerLogger.PassStepWithScreenshot(webDriver, "Test Passed");
+        } else {
+            TestModellerLogger.PassStep("Test Passed");
+        }
     }
 
     @Override
     public void onTestFailure(ITestResult iTestResult) {
         Object testClass = iTestResult.getInstance();
-        WebDriver webDriver = ((TestBase) testClass).getDriver();
 
-        TestModellerLogger.FailStepWithScreenshot(webDriver, "Test Failed");
+        if (testClass instanceof TestBase) {
+            WebDriver webDriver = ((TestBase) testClass).getDriver();
+
+            TestModellerLogger.FailStepWithScreenshot(webDriver, "Test Failed");
+        } else {
+            TestModellerLogger.FailStep("Test Failed");
+        }
     }
 
     @Override

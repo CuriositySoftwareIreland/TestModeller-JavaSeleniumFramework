@@ -32,22 +32,28 @@ public class ExtentTestListener extends TestBase implements ITestListener {
     @Override
     public void onTestSuccess(ITestResult iTestResult) {
         Object testClass = iTestResult.getInstance();
-        WebDriver webDriver = ((TestBase) testClass).getDriver();
-        ExtentReportManager.passStepWithScreenshot(webDriver, "Test Passed");
 
-//        ExtentReportManager.getCurrentTest().log(Status.PASS, "Test Passed");
+        if (testClass instanceof TestBase) {
+            WebDriver webDriver = ((TestBase) testClass).getDriver();
+            ExtentReportManager.passStepWithScreenshot(webDriver, "Test Passed");
+        } else {
+            ExtentReportManager.getCurrentTest().log(Status.PASS, "Test Passed");
+        }
     }
 
     @Override
     public void onTestFailure(ITestResult iTestResult) {
         Object testClass = iTestResult.getInstance();
-        WebDriver webDriver = ((TestBase) testClass).getDriver();
-        ExtentReportManager.failStepWithScreenshot(webDriver, "Test Failure");
 
-        //ExtentReports log and screenshot operations for failed tests.
-//        ExtentReportManager.getCurrentTest().log(Status.FAIL, iTestResult.getThrowable());
-
+        if (testClass instanceof TestBase) {
+            WebDriver webDriver = ((TestBase) testClass).getDriver();
+            ExtentReportManager.failStepWithScreenshot(webDriver, "Test Failure");
+        } else {
+            //ExtentReports log and screenshot operations for failed tests.
+            ExtentReportManager.getCurrentTest().log(Status.FAIL, iTestResult.getThrowable());
+        }
         ExtentReportManager.extentReport.flush();
+
     }
 
     @Override
