@@ -110,17 +110,17 @@ public class ExtentReportManager {
     public static void passStep(Response rsp, String stepName)
     {
         reportThreadLocal.get().log(Status.PASS, stepName + "\n" +
-                                    "Status Code: " + rsp.getStatusCode() + "\n" +
-                                    "Status: " + rsp.getStatusLine() + "\n" +
-                                    "Message: " + rsp.getBody().asString());
+                "Status Code: " + rsp.getStatusCode() + "\n" +
+                "Status: " + rsp.getStatusLine() + "\n" +
+                "Message: " + rsp.getBody().asString());
     }
 
     public static void failStep(Response rsp, String stepName)
     {
         reportThreadLocal.get().log(Status.FAIL, stepName + "\n" +
-                                    "Status Code: " + rsp.getStatusCode() + "\n" +
-                                    "Status: " + rsp.getStatusLine() + "\n" +
-                                    "Message: " + rsp.getBody().asString());
+                "Status Code: " + rsp.getStatusCode() + "\n" +
+                "Status: " + rsp.getStatusLine() + "\n" +
+                "Message: " + rsp.getBody().asString());
     }
 
     public static void passStep(String stepName)
@@ -147,7 +147,7 @@ public class ExtentReportManager {
     {
         Media m = ScreenCapture.builder().base64(GetScreenShot.captureAsBase64(driver)).title(stepName).build();
 
-        reportThreadLocal.get().log(Status.PASS, m);
+        reportThreadLocal.get().log(Status.PASS, stepName + "\n" + details, m);
     }
 
     public static void failStepWithScreenshot(WebDriver driver, String stepName)
@@ -159,6 +159,6 @@ public class ExtentReportManager {
     {
         Media m = ScreenCapture.builder().base64(GetScreenShot.captureAsBase64(driver)).title(stepName).build();
 
-        reportThreadLocal.get().log(Status.FAIL, m);
+        reportThreadLocal.get().log(Status.FAIL, stepName + "\n" + details, m);
     }
 }
