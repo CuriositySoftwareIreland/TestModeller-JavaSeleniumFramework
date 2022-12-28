@@ -16,6 +16,11 @@ import org.testng.Assert;
 import utilities.reports.ExtentReportManager;
 import utilities.testmodeller.TestModellerLogger;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +42,22 @@ public class BasePage {
 
             jsExec = (JavascriptExecutor) this.m_Driver;
         }
+    }
+
+    protected File getFileFromURL(String url)
+    {
+        URL urlFile = null;
+        try {
+            urlFile = new URL(url);
+
+            return Paths.get(urlFile.toURI()).toFile();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     protected void printResponse(Response rsp)
