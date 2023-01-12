@@ -58,7 +58,7 @@ public class RemoteDataParser {
 
     public static String getCellValue(Cell curCell)
     {
-        CellType cellType = curCell.getCellTypeEnum();
+        CellType cellType = curCell.getCellType();
 
         switch(cellType) {
             case NUMERIC:

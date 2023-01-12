@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -1014,7 +1015,7 @@ public class WebGeneralActions extends BasePage {
         }
 
         try {
-            WebDriverWait wait = new WebDriverWait(m_Driver, 10);
+            WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(15));
 
             wait.until(ExpectedConditions.elementToBeClickable(elem));
         } catch (Exception e) {
@@ -1036,7 +1037,7 @@ public class WebGeneralActions extends BasePage {
         }
 
         try {
-            WebDriverWait wait = new WebDriverWait(m_Driver, 10);
+            WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(10));
 
             wait.until(ExpectedConditions.invisibilityOf(elem));
         } catch (Exception e) {

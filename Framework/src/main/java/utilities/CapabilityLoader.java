@@ -33,7 +33,7 @@ public class CapabilityLoader
         if (PropertiesLoader.getProperties().getProperty(runScopeEnv).toLowerCase().equals("saucelabs")) {
             if (PropertiesLoader.getProperties().getProperty(browserNameEnv).toLowerCase().equals("chrome")) {
 
-                DesiredCapabilities caps = DesiredCapabilities.chrome();
+                DesiredCapabilities caps = new DesiredCapabilities();//.chrome();
                 caps.setCapability("platform", PropertiesLoader.getProperties().getProperty(sauceLabsPlatformEnv));
                 caps.setCapability("version", PropertiesLoader.getProperties().getProperty(sauceLabsVersionEnv));
                 caps.setCapability("extendedDebugging", true);

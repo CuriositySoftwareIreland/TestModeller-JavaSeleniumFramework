@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +39,7 @@ public class BasePage {
         this.m_Driver = driver;
 
         if (m_Driver != null) {
-            jsWait = new WebDriverWait(this.m_Driver, 10);
+            jsWait = new WebDriverWait(this.m_Driver, Duration.ofSeconds(10));
 
             jsExec = (JavascriptExecutor) this.m_Driver;
         }
@@ -164,7 +165,7 @@ public class BasePage {
     }
 
     protected void waitForLoaded(WebElement elem, final By by, int waitTime) {
-        WebDriverWait wait = new WebDriverWait(m_Driver, waitTime);
+        WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime));
 
         for (int attempt = 0; attempt < waitTime; attempt++) {
             try {
@@ -181,7 +182,7 @@ public class BasePage {
         try {
             WebElement elem = selem.findElement(by);
 
-            WebDriverWait wait = new WebDriverWait(m_Driver, waitTime);
+            WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime));
 
             wait.until(ExpectedConditions.visibilityOf(elem));
         } catch (Exception e) {
@@ -191,7 +192,7 @@ public class BasePage {
         try {
             WebElement elem = selem.findElement(by);
 
-            WebDriverWait wait = new WebDriverWait(m_Driver, waitTime);
+            WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime));
 
             wait.until(ExpectedConditions.elementToBeClickable(elem));
         } catch (Exception e) {
@@ -217,7 +218,7 @@ public class BasePage {
     }
 
     protected void waitForLoaded(final By by, int waitTime) {
-        WebDriverWait wait = new WebDriverWait(m_Driver, waitTime);
+        WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime));
 
         for (int attempt = 0; attempt < waitTime; attempt++) {
             try {
@@ -234,7 +235,7 @@ public class BasePage {
         try {
             WebElement elem = m_Driver.findElement(by);
 
-            WebDriverWait wait = new WebDriverWait(m_Driver, waitTime);
+            WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime));
 
             wait.until(ExpectedConditions.visibilityOf(elem));
         } catch (Exception e) {
@@ -274,7 +275,7 @@ public class BasePage {
 
     //Wait for Angular Load
     protected void waitForAngularLoad() {
-        WebDriverWait wait = new WebDriverWait(m_Driver,15);
+        WebDriverWait wait = new WebDriverWait(m_Driver,Duration.ofSeconds(15));
         JavascriptExecutor jsExec = (JavascriptExecutor) m_Driver;
 
         final String angularReadyScript = "return angular.element(document).injector().get('$http').pendingRequests.length === 0";
@@ -308,7 +309,7 @@ public class BasePage {
 
     //Wait Until JS Ready
     protected void waitUntilJSReady() {
-        WebDriverWait wait = new WebDriverWait(m_Driver,15);
+        WebDriverWait wait = new WebDriverWait(m_Driver,Duration.ofSeconds(15));
         JavascriptExecutor jsExec = (JavascriptExecutor) m_Driver;
 
         //Wait for Javascript to load
