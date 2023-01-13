@@ -16,7 +16,6 @@
                     <version>3.0.0-M8</version>
 
                     <configuration>
-						<forkMode>once</forkMode>
 						<useSystemClassLoader>false</useSystemClassLoader>
 						<forkCount>0</forkCount>    
                         <suiteXmlFiles>

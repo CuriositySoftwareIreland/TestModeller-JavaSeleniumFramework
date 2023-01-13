@@ -40,15 +40,19 @@ public class ExtentReportManager {
 
     public static String extentDir = System.getProperty("user.dir") +"/report";
 
+    public static Boolean runColPosted = false;
+
     public static void setupReporter()
     {
         ExtentSparkReporter avent = new ExtentSparkReporter(extentDir +  "/index.html");
-
-        System.out.println("Report location - " + extentDir +  "/index.html");
         if (extentReport == null) {
+            System.out.println("Report location - " + extentDir +  "/index.html");
+
             extentReport = new ExtentReports();
             extentReport.attachReporter(avent);
         }
+
+        runColPosted = false;
     }
 
     public static ExtentTest getCurrentTest()
@@ -85,14 +89,18 @@ public class ExtentReportManager {
         ConnectionProfile profile = new ConnectionProfile(apiHost, apiKey);
         TestPathRunCollectionService runColService = new TestPathRunCollectionService(profile);
 
-        TestPathRunCollectionEntity testRunCol = new TestPathRunCollectionEntity();
-        testRunCol.setCreated(Calendar.getInstance().getTime());
-        testRunCol.setFileByte(baos.toByteArray());
-        testRunCol.setFileName("report.zip");
-        testRunCol.setGuid(TestRunIdGenerator.getRunId());
-        testRunCol.setName("Selenium framework");
+        if (!runColPosted) {
+            runColPosted = true;
 
-        runColService.saveTestPathRun(testRunCol);
+            TestPathRunCollectionEntity testRunCol = new TestPathRunCollectionEntity();
+            testRunCol.setCreated(Calendar.getInstance().getTime());
+            testRunCol.setFileByte(baos.toByteArray());
+            testRunCol.setFileName("report.zip");
+            testRunCol.setGuid(TestRunIdGenerator.getRunId());
+            testRunCol.setName("Selenium framework");
+
+            runColService.saveTestPathRun(testRunCol);
+        }
     }
 
     public static void createNewTest(Method method)
