@@ -93,6 +93,8 @@ public class BasePage {
 
         TestModellerLogger.FailStepWithScreenshot(m_Driver, msg, details);
 
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg + " - " + details);
+
         Assert.fail(msg);
     }
 
@@ -101,6 +103,8 @@ public class BasePage {
         ExtentReportManager.failStepWithScreenshot(m_Driver, msg);
         TestModellerLogger.FailStepWithScreenshot(m_Driver, msg);
 
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
+
         Assert.fail(msg);
     }
 
@@ -108,12 +112,16 @@ public class BasePage {
     {
         ExtentReportManager.passStep(msg);
         TestModellerLogger.PassStep(msg);
+
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Pass Step: " + msg);
     }
 
     protected void passStepWithScreenshot(String msg)
     {
         ExtentReportManager.passStepWithScreenshot(m_Driver, msg);
         TestModellerLogger.PassStepWithScreenshot(m_Driver, msg);
+
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Pass Step: " + msg);
     }
 
     protected RemoteWebElement expandRootElement(WebElement element) {

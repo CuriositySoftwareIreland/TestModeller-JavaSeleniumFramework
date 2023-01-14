@@ -110,6 +110,16 @@ public class ExtentReportManager {
         currentTestName.set(method.getName());
     }
 
+    public static String getTestName()
+    {
+        String name = currentTestName.get();
+
+        if (name == null)
+            return "";
+
+        return name;
+    }
+
     public static void passStep(WebDriver driver, String stepName)
     {
         reportThreadLocal.get().log(Status.PASS, stepName);

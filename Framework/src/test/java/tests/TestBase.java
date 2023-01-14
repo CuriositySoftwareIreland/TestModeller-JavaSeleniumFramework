@@ -76,11 +76,15 @@ public class TestBase {
         ExtentReportManager.createNewTest(method);
 
         CapabilityLoader.setDriver(CapabilityLoader.createWebDriver());
+
+        System.out.println("Creating test: " + ExtentReportManager.getTestName());
     }
 
     @AfterMethod(alwaysRun = true)
     public void closerDriver()
     {
+        System.out.println("Finished test: " + ExtentReportManager.getTestName());
+
         try {
             if (CapabilityLoader.getDriver() != null)
                 CapabilityLoader.getDriver().quit();
