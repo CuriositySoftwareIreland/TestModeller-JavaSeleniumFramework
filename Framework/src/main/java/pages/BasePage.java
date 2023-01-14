@@ -150,7 +150,7 @@ public class BasePage {
         waitForVisible(elem, by, 5);
 
         if (m_Driver.getCurrentUrl() == null || m_Driver.getCurrentUrl().isEmpty() || m_Driver.getCurrentUrl().equals("data:,")) {
-            Assert.fail("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
+            failStep("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
         }
 
         return elem.findElement(by);
@@ -162,7 +162,7 @@ public class BasePage {
         waitForVisible(by, 2);
 
         if (m_Driver.getCurrentUrl() == null || m_Driver.getCurrentUrl().isEmpty() || m_Driver.getCurrentUrl().equals("data:,")) {
-            Assert.fail("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
+            failStep("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
         }
 
         try {
@@ -215,7 +215,7 @@ public class BasePage {
         waitForVisible(by, 5);
 
         if (m_Driver.getCurrentUrl() == null || m_Driver.getCurrentUrl().isEmpty() || m_Driver.getCurrentUrl().equals("data:,")) {
-            Assert.fail("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
+            failStep("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
         }
 
         try {
