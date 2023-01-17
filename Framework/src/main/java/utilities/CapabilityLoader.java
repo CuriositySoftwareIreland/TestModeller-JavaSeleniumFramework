@@ -4,6 +4,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -52,8 +53,8 @@ public class CapabilityLoader
         } else {
             if (PropertiesLoader.getProperties().getProperty(browserNameEnv).toLowerCase().equals("chrome")) {
                 ChromeOptions options = new ChromeOptions();
-
-                options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
+                options.setAcceptInsecureCerts(true);
+                options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--ignore-certificate-errors", "--ignore-ssl-errors", "--allow-running-insecure-content", "--disable-web-security",  "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
 
                 WebDriver driver = new ChromeDriver(options);
 
