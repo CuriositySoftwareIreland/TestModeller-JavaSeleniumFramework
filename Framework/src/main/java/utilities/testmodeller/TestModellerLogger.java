@@ -203,5 +203,7 @@ public class TestModellerLogger {
 
             httpResponse.setHeaders(headers);
         }
+
+        runStep.setHttpResponse(httpResponse);
     }
 }
