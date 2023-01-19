@@ -3,10 +3,13 @@ package utilities.testmodeller;
 import com.aventstack.extentreports.ExtentTest;
 import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
 import ie.curiositysoftware.runresult.dto.TestPathRunStep;
+import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPResponse;
+import io.restassured.http.Header;
 import io.restassured.response.Response;
 import org.openqa.selenium.WebDriver;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TestModellerLogger {
@@ -39,12 +42,12 @@ public class TestModellerLogger {
         addStep(step);
     }
 
-    public static void FailStep(String stepName)
+    public static TestPathRunStep FailStep(String stepName)
     {
-        FailStep(null, stepName);
+        return FailStep(null, stepName);
     }
 
-    public static void FailStep(String stepName, String details)
+    public static TestPathRunStep FailStep(String stepName, String details)
     {
         TestPathRunStep step = new TestPathRunStep();
 
@@ -54,9 +57,11 @@ public class TestModellerLogger {
         step.setNodeGuid(LastNodeGuid.get());
 
         addStep(step);
+
+        return step;
     }
 
-    public static void PassStep(WebDriver driver, String stepName)
+    public static TestPathRunStep PassStep(WebDriver driver, String stepName)
     {
         TestPathRunStep step = new TestPathRunStep();
 
@@ -65,9 +70,11 @@ public class TestModellerLogger {
         step.setNodeGuid(LastNodeGuid.get());
 
         addStep(step);
+
+        return step;
     }
 
-    public static void PassStep(WebDriver driver, String stepName, String details)
+    public static TestPathRunStep PassStep(WebDriver driver, String stepName, String details)
     {
         TestPathRunStep step = new TestPathRunStep();
 
@@ -77,35 +84,44 @@ public class TestModellerLogger {
         step.setNodeGuid(LastNodeGuid.get());
 
         addStep(step);
+
+        return step;
     }
 
-    public static void PassResponseStep(Response rsp, String stepName)
+    public static TestPathRunStep PassResponseStep(Response rsp, String stepName)
     {
-        PassStep(null, stepName,
+        TestPathRunStep runStep = PassStep(null, stepName,
                 "Status Code: " + rsp.getStatusCode() + "\n" +
-                "Status: " + rsp.getStatusLine() + "\n" +
-                "Message: " + rsp.getBody().asString());
+                "Status: " + rsp.getStatusLine());
+
+        populateAPITestStep(runStep, rsp);
+
+        return runStep;
     }
 
-    public static void FailResponseStep(Response rsp, String stepName)
+    public static TestPathRunStep FailResponseStep(Response rsp, String stepName)
     {
-        FailStep(stepName,
+        TestPathRunStep runStep = FailStep(stepName,
                 "Status Code: " + rsp.getStatusCode() + "\n" +
-                "Status: " + rsp.getStatusLine() + "\n" +
-                "Message: " + rsp.getBody().asString());
+                "Status: " + rsp.getStatusLine());
+
+        // Setup
+        populateAPITestStep(runStep, rsp);
+
+        return runStep;
     }
 
-    public static void PassStep(String stepName)
+    public static TestPathRunStep PassStep(String stepName)
     {
-        PassStep(null, stepName);
+        return PassStep(null, stepName);
     }
 
-    public static void PassStepWithScreenshot(WebDriver driver, String stepName)
+    public static TestPathRunStep PassStepWithScreenshot(WebDriver driver, String stepName)
     {
-        PassStepWithScreenshot(driver, stepName, stepName);
+        return PassStepWithScreenshot(driver, stepName, stepName);
     }
 
-    public static void PassStepWithScreenshot(WebDriver driver, String stepName, String details)
+    public static TestPathRunStep PassStepWithScreenshot(WebDriver driver, String stepName, String details)
     {
         TestPathRunStep step = new TestPathRunStep();
 
@@ -116,14 +132,16 @@ public class TestModellerLogger {
         step.setNodeGuid(LastNodeGuid.get());
 
         addStep(step);
+
+        return step;
     }
 
-    public static void FailStepWithScreenshot(WebDriver driver, String stepName)
+    public static TestPathRunStep FailStepWithScreenshot(WebDriver driver, String stepName)
     {
-        FailStepWithScreenshot(driver, stepName, stepName);
+        return FailStepWithScreenshot(driver, stepName, stepName);
     }
 
-    public static void FailStepWithScreenshot(WebDriver driver, String stepName, String details)
+    public static TestPathRunStep FailStepWithScreenshot(WebDriver driver, String stepName, String details)
     {
         TestPathRunStep step = new TestPathRunStep();
 
@@ -134,6 +152,8 @@ public class TestModellerLogger {
         step.setNodeGuid(LastNodeGuid.get());
 
         addStep(step);
+
+        return step;
     }
 
     public static void SetLastNodeGuid(String guid)
@@ -153,5 +173,35 @@ public class TestModellerLogger {
             steps.set(new ArrayList<>());
 
         steps.get().add(step);
+    }
+
+    private static void populateAPITestStep(TestPathRunStep runStep, Response rsp)
+    {
+        if (rsp == null)
+            return;
+
+        runStep.setStepType(TestPathRunStep.TestPathRunStepType.APIStep);
+
+        // Create HTTP Response object
+        TestPathRunStepHTTPResponse httpResponse = new TestPathRunStepHTTPResponse();
+        httpResponse.setStatusCode(rsp.getStatusCode());
+        httpResponse.setStatusText(rsp.getStatusLine());
+
+        httpResponse.setSessionId(rsp.getSessionId());
+        httpResponse.setContentType(rsp.getContentType());
+        httpResponse.setTime(rsp.getTime());
+
+        if (rsp.getBody() != null)
+            httpResponse.setBody(rsp.getBody().prettyPrint());
+
+        if (rsp.getHeaders() != null) {
+            HashMap<String, String> headers = new HashMap<String, String>();
+
+            for (Header h : rsp.getHeaders().asList()) {
+                headers.put(h.getName(), h.getValue());
+            }
+
+            httpResponse.setHeaders(headers);
+        }
     }
 }
