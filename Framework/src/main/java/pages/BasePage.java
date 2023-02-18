@@ -4,6 +4,8 @@ import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -47,14 +49,13 @@ public class BasePage {
 
     protected File getFileFromURL(String url)
     {
-        URL urlFile = null;
         try {
-            urlFile = new URL(url);
+            URL urlSaved = new URL(url);
+            File file = new File(FilenameUtils.getName(urlSaved.getPath()));
+            FileUtils.copyURLToFile(urlSaved, file);
 
-            return Paths.get(urlFile.toURI()).toFile();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (URISyntaxException e) {
+            return file;
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
