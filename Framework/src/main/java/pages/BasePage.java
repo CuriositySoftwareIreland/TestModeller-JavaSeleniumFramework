@@ -88,6 +88,24 @@ public class BasePage {
         System.out.println("----------- End Response Details ----------");
     }
 
+    protected void failStep(Response rsp, String msg)
+    {
+        ExtentReportManager.failStep(rsp, msg);
+        TestModellerLogger.FailResponseStep(rsp, msg);
+
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
+
+        Assert.fail(msg);
+    }
+
+    protected void passStep(Response rsp, String msg)
+    {
+        ExtentReportManager.passStep(rsp, msg);
+        TestModellerLogger.FailResponseStep(rsp, msg);
+
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Pass Step: " + msg);
+    }
+
     protected void failStep(String msg, String details)
     {
         ExtentReportManager.failStepWithScreenshot(m_Driver, msg, details);
