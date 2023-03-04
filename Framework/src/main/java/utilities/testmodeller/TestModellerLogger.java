@@ -272,6 +272,8 @@ public class TestModellerLogger {
                 }
                 httpRequest.setHeaders(headerParams);
             }
+
+            runStep.setHttpRequest(httpRequest);
         }
 
         if (rsp != null) {
