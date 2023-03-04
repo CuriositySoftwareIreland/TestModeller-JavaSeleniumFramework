@@ -118,7 +118,7 @@ public class TestModellerLogger {
         return runStep;
     }
 
-    public static TestPathRunStep PassResponseStep(FilterableRequestSpecification req, Response rsp, String stepName)
+    public static TestPathRunStep PassResponseStep(RequestSpecification req, Response rsp, String stepName)
     {
         TestPathRunStep runStep = PassStep(null, stepName,
                 "Status Code: " + rsp.getStatusCode() + "\n" +
@@ -129,7 +129,7 @@ public class TestModellerLogger {
         return runStep;
     }
 
-    public static TestPathRunStep FailResponseStep(FilterableRequestSpecification req, Response rsp, String stepName)
+    public static TestPathRunStep FailResponseStep(RequestSpecification req, Response rsp, String stepName)
     {
         TestPathRunStep runStep = FailStep(stepName,
                 "Status Code: " + rsp.getStatusCode() + "\n" +
