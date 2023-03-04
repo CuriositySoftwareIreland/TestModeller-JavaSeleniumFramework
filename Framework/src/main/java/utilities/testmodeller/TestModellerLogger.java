@@ -11,6 +11,7 @@ import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.MultiPartSpecification;
+import io.restassured.specification.RequestSpecification;
 import org.openqa.selenium.WebDriver;
 
 import java.util.ArrayList;
@@ -204,11 +205,13 @@ public class TestModellerLogger {
         steps.get().add(step);
     }
 
-    private static void populateAPITestStep(TestPathRunStep runStep, FilterableRequestSpecification req, Response rsp)
+    private static void populateAPITestStep(TestPathRunStep runStep, RequestSpecification rawReq, Response rsp)
     {
         runStep.setStepType(TestPathRunStep.TestPathRunStepType.APIStep);
 
-        if (req != null) {
+        if (rawReq != null) {
+            FilterableRequestSpecification req = (FilterableRequestSpecification) rawReq;
+
             TestPathRunStepHTTPRequest httpRequest = new TestPathRunStepHTTPRequest();
             httpRequest.setEndpoint(req.getURI());
 
