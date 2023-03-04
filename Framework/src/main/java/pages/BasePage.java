@@ -1,8 +1,12 @@
 package pages;
 
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
+import io.restassured.specification.FilterableRequestSpecification;
+import io.restassured.specification.RequestSender;
 import io.restassured.specification.RequestSpecification;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -26,6 +30,8 @@ import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static io.restassured.RestAssured.when;
 
 @TestModellerIgnore
 public class BasePage {
@@ -51,7 +57,7 @@ public class BasePage {
     {
         try {
             URL urlSaved = new URL(url);
-            File file = new File(FilenameUtils.getName(urlSaved.getPath()));
+            File file = new File(org.apache.commons.io.FilenameUtils.getName(urlSaved.getPath()));
             FileUtils.copyURLToFile(urlSaved, file);
 
             return file;
@@ -99,6 +105,24 @@ public class BasePage {
     }
 
     protected void passStep(Response rsp, String msg)
+    {
+        ExtentReportManager.passStep(rsp, msg);
+        TestModellerLogger.FailResponseStep(rsp, msg);
+
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Pass Step: " + msg);
+    }
+
+    protected void failStep(FilterableRequestSpecification req, Response rsp, String msg)
+    {
+        ExtentReportManager.failStep(rsp, msg);
+        TestModellerLogger.FailResponseStep(rsp, msg);
+
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
+
+        Assert.fail(msg);
+    }
+
+    protected void passStep(FilterableRequestSpecification req, Response rsp, String msg)
     {
         ExtentReportManager.passStep(rsp, msg);
         TestModellerLogger.FailResponseStep(rsp, msg);

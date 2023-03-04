@@ -1,16 +1,22 @@
 package utilities.testmodeller;
 
 import com.aventstack.extentreports.ExtentTest;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
 import ie.curiositysoftware.runresult.dto.TestPathRunStep;
+import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPRequest;
 import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPResponse;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
+import io.restassured.specification.FilterableRequestSpecification;
+import io.restassured.specification.MultiPartSpecification;
 import org.openqa.selenium.WebDriver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TestModellerLogger {
     public static final ThreadLocal<List<TestPathRunStep>> steps = new ThreadLocal<List<TestPathRunStep>>();
@@ -94,7 +100,7 @@ public class TestModellerLogger {
                 "Status Code: " + rsp.getStatusCode() + "\n" +
                 "Status: " + rsp.getStatusLine());
 
-        populateAPITestStep(runStep, rsp);
+        populateAPITestStep(runStep, null, rsp);
 
         return runStep;
     }
@@ -106,7 +112,30 @@ public class TestModellerLogger {
                 "Status: " + rsp.getStatusLine());
 
         // Setup
-        populateAPITestStep(runStep, rsp);
+        populateAPITestStep(runStep, null, rsp);
+
+        return runStep;
+    }
+
+    public static TestPathRunStep PassResponseStep(FilterableRequestSpecification req, Response rsp, String stepName)
+    {
+        TestPathRunStep runStep = PassStep(null, stepName,
+                "Status Code: " + rsp.getStatusCode() + "\n" +
+                        "Status: " + rsp.getStatusLine());
+
+        populateAPITestStep(runStep, req, rsp);
+
+        return runStep;
+    }
+
+    public static TestPathRunStep FailResponseStep(FilterableRequestSpecification req, Response rsp, String stepName)
+    {
+        TestPathRunStep runStep = FailStep(stepName,
+                "Status Code: " + rsp.getStatusCode() + "\n" +
+                        "Status: " + rsp.getStatusLine());
+
+        // Setup
+        populateAPITestStep(runStep, req, rsp);
 
         return runStep;
     }
@@ -175,35 +204,100 @@ public class TestModellerLogger {
         steps.get().add(step);
     }
 
-    private static void populateAPITestStep(TestPathRunStep runStep, Response rsp)
+    private static void populateAPITestStep(TestPathRunStep runStep, FilterableRequestSpecification req, Response rsp)
     {
-        if (rsp == null)
-            return;
-
         runStep.setStepType(TestPathRunStep.TestPathRunStepType.APIStep);
 
-        // Create HTTP Response object
-        TestPathRunStepHTTPResponse httpResponse = new TestPathRunStepHTTPResponse();
-        httpResponse.setStatusCode(rsp.getStatusCode());
-        httpResponse.setStatusText(rsp.getStatusLine());
+        if (req != null) {
+            TestPathRunStepHTTPRequest httpRequest = new TestPathRunStepHTTPRequest();
+            httpRequest.setEndpoint(req.getURI());
 
-        httpResponse.setSessionId(rsp.getSessionId());
-        httpResponse.setContentType(rsp.getContentType());
-        httpResponse.setTime(rsp.getTime());
-
-        if (rsp.getBody() != null)
-            httpResponse.setBody(rsp.getBody().prettyPrint());
-
-        if (rsp.getHeaders() != null) {
-            HashMap<String, String> headers = new HashMap<String, String>();
-
-            for (Header h : rsp.getHeaders().asList()) {
-                headers.put(h.getName(), h.getValue());
+            if (req.getMethod() != null) {
+                if (req.getMethod().toLowerCase().equals("get")) {
+                    httpRequest.setRequestType(TestPathRunStepHTTPRequest.RequestType.Get);
+                } else if (req.getMethod().toLowerCase().equals("post")) {
+                    httpRequest.setRequestType(TestPathRunStepHTTPRequest.RequestType.Post);
+                } else if (req.getMethod().toLowerCase().equals("put")) {
+                    httpRequest.setRequestType(TestPathRunStepHTTPRequest.RequestType.Put);
+                } else if (req.getMethod().toLowerCase().equals("patch")) {
+                    httpRequest.setRequestType(TestPathRunStepHTTPRequest.RequestType.Patch);
+                } else if (req.getMethod().toLowerCase().equals("delete")) {
+                    httpRequest.setRequestType(TestPathRunStepHTTPRequest.RequestType.Delete);
+                } else if (req.getMethod().toLowerCase().equals("options")) {
+                    httpRequest.setRequestType(TestPathRunStepHTTPRequest.RequestType.Options);
+                } else if (req.getMethod().toLowerCase().equals("head")) {
+                    httpRequest.setRequestType(TestPathRunStepHTTPRequest.RequestType.Head);
+                } else if (req.getMethod().toLowerCase().equals("copy")) {
+                    httpRequest.setRequestType(TestPathRunStepHTTPRequest.RequestType.Copy);
+                }
             }
 
-            httpResponse.setHeaders(headers);
+            // Get body
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            if (req.getBody() != null) {
+                httpRequest.setBodyType(TestPathRunStepHTTPRequest.BodyType.Raw);
+                try {
+                    httpRequest.setBody(ow.writeValueAsString(req.getBody()));
+                } catch (Exception e) {}
+            }
+
+            // Get form params
+            if (req.getFormParams() != null && req.getFormParams().size() > 0) {
+                httpRequest.setBodyType(TestPathRunStepHTTPRequest.BodyType.FormData);
+
+                try {
+                    httpRequest.setBody(ow.writeValueAsString(req.getFormParams()));
+                } catch (Exception e) {}
+            }
+
+            // Multi part form params
+            if (req.getMultiPartParams() != null && req.getMultiPartParams().size() > 0) {
+                httpRequest.setBodyType(TestPathRunStepHTTPRequest.BodyType.XWWWFormURLEncoded);
+
+                Map<String, String> multiFormParams = new HashMap<>();
+                for (MultiPartSpecification spec : req.getMultiPartParams()) {
+                    multiFormParams.put(spec.getControlName(), spec.getContent().toString());
+                }
+
+                try {
+                    httpRequest.setBody(ow.writeValueAsString(multiFormParams));
+                } catch (Exception e) {}
+            }
+
+            // Headers
+            if (req.getHeaders() != null) {
+                HashMap<String, String> headerParams = new HashMap<>();
+                for (Header header : req.getHeaders().asList()) {
+                    headerParams.put(header.getName(), header.getValue());
+                }
+                httpRequest.setHeaders(headerParams);
+            }
         }
 
-        runStep.setHttpResponse(httpResponse);
+        if (rsp != null) {
+            // Create HTTP Response object
+            TestPathRunStepHTTPResponse httpResponse = new TestPathRunStepHTTPResponse();
+            httpResponse.setStatusCode(rsp.getStatusCode());
+            httpResponse.setStatusText(rsp.getStatusLine());
+
+            httpResponse.setSessionId(rsp.getSessionId());
+            httpResponse.setContentType(rsp.getContentType());
+            httpResponse.setTime(rsp.getTime());
+
+            if (rsp.getBody() != null)
+                httpResponse.setBody(rsp.getBody().prettyPrint());
+
+            if (rsp.getHeaders() != null) {
+                HashMap<String, String> headers = new HashMap<String, String>();
+
+                for (Header h : rsp.getHeaders().asList()) {
+                    headers.put(h.getName(), h.getValue());
+                }
+
+                httpResponse.setHeaders(headers);
+            }
+
+            runStep.setHttpResponse(httpResponse);
+        }
     }
 }
