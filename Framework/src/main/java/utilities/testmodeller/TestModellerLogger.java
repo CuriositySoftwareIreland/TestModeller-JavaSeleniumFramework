@@ -239,9 +239,7 @@ public class TestModellerLogger {
             ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
             if (req.getBody() != null) {
                 httpRequest.setBodyType(TestPathRunStepHTTPRequest.BodyType.Raw);
-                try {
-                    httpRequest.setBody(ow.writeValueAsString(req.getBody()));
-                } catch (Exception e) {}
+                httpRequest.setBody(req.getBody().toString());
             }
 
             // Get form params
