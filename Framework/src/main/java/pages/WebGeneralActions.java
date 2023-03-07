@@ -6,6 +6,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utilities.CapabilityLoader;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public class WebGeneralActions extends BasePage {
     @TestModellerIgnore
     public WebGeneralActions(WebDriver driver) {
         super(driver);
+
+        SetBrowserType( "chrome");
     }
 
     /**
@@ -130,6 +133,70 @@ public class WebGeneralActions extends BasePage {
         elem.clear();
 
         passStepWithScreenshot("Clear Element Text");
+    }
+
+    /**
+     * Sets the browser type
+     * @name Set Browser Name (chrome, firefox, Safari)
+     */
+    public void SetBrowserType(String platformName)
+    {
+        AddCapability("browserName", platformName);
+    }
+
+    /**
+     * Opens a new instance of chrome
+     * @name Open Chrome
+     */
+    public void OpenChrome()
+    {
+        QuitCurrentBrowser();
+
+        setDriver(CapabilityLoader.createChromeDriver());
+    }
+
+    /**
+     * Opens a new instance of chrome
+     * @name Open Firefox
+     */
+    public void OpenFirefox()
+    {
+        QuitCurrentBrowser();
+
+        setDriver(CapabilityLoader.createFirefoxDriver());
+    }
+
+    /**
+     * Closes the current browser
+     * @name Close Browser
+     */
+    public void QuitCurrentBrowser()
+    {
+        if (m_Driver != null) {
+            try {
+                m_Driver.quit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * Opens a new connection to given SauceLabs US server via Appium.
+     * @name Connect SauceLabs (US Server)
+     */
+    public void ConnectSauceLabsUS(String username, String accessKey)
+    {
+        setDriver(CapabilityLoader.createSauceLabsDriver(username, accessKey, "us"));
+    }
+
+    /**
+     * Opens a new connection to given SauceLabs EU server via Appium.
+     * @name Connect SauceLabs (EU Server)
+     */
+    public void ConnectSauceLabsEU(String username, String accessKey)
+    {
+        setDriver(CapabilityLoader.createSauceLabsDriver(username, accessKey, "eu"));
     }
 
     /**
@@ -431,6 +498,24 @@ public class WebGeneralActions extends BasePage {
         } else {
             failStep("Frame does not contain '" + text + "'");
         }
+    }
+
+    /**
+     * Return the desired capability value by desired capability name
+     * @name Get Capability
+     */
+    public String GetCapability(String capability)
+    {
+        return CapabilityLoader.getCapability(capability);
+    }
+
+    /**
+     * Add a desired capability value by desired capability name
+     * @name Add Capability
+     */
+    public void AddCapability(String capabilityName, String value)
+    {
+        CapabilityLoader.addCapability(capabilityName, value);
     }
 
     /**
@@ -1104,6 +1189,28 @@ public class WebGeneralActions extends BasePage {
         m_Driver.switchTo().window(tabs.get(1));
 
         passStepWithScreenshot("New Window");
+    }
+
+    /**
+     * Maximise browser window
+     * @name Maximise Window
+     */
+    public void MaximiseWindow()
+    {
+        m_Driver.manage().window().maximize();
+
+        passStepWithScreenshot("Maximise Window");
+    }
+
+    /**
+     * Set browser window size
+     * @name Set Window Size
+     */
+    public void SetWindowSize(int width, int height)
+    {
+        m_Driver.manage().window().setSize(new Dimension(width, height));
+
+        passStepWithScreenshot("Set Window Size");
     }
 	
     /**

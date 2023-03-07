@@ -4,9 +4,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import utilities.reports.ExtentReportManager;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,6 +16,8 @@ import java.net.URL;
 public class CapabilityLoader
 {
     private static final ThreadLocal<WebDriver> threadLocal = new ThreadLocal<WebDriver>();
+
+    private static final ThreadLocal<DesiredCapabilities> capabilitiesThreadLocal = new ThreadLocal<DesiredCapabilities>();
 
     public static WebDriver getDriver() {
         return threadLocal.get();
@@ -24,46 +28,87 @@ public class CapabilityLoader
     }
 
     private static String browserNameEnv = "selenium.browserType";
-    private static String runScopeEnv = "selenium.runLocation";
-    private static String sauceLabsPlatformEnv = "sauceLabs.platform";
-    private static String sauceLabsVersionEnv = "sauceLabs.version";
-    private static String sauceLabsUsernameEnv = "sauceLabs.username";
-    private static String sauceLabsAccessKeyEnv = "sauceLabs.accessKey";
 
-    public static WebDriver createWebDriver() {
-        if (PropertiesLoader.getProperties().getProperty(runScopeEnv).toLowerCase().equals("saucelabs")) {
-            if (PropertiesLoader.getProperties().getProperty(browserNameEnv).toLowerCase().equals("chrome")) {
+    public static DesiredCapabilities getDesiredCapabilities() {
+        DesiredCapabilities desiredCapabilities = capabilitiesThreadLocal.get();
 
-                DesiredCapabilities caps = new DesiredCapabilities();//.chrome();
-                caps.setCapability("platform", PropertiesLoader.getProperties().getProperty(sauceLabsPlatformEnv));
-                caps.setCapability("version", PropertiesLoader.getProperties().getProperty(sauceLabsVersionEnv));
-                caps.setCapability("extendedDebugging", true);
+        if (desiredCapabilities == null) {
+            desiredCapabilities = new DesiredCapabilities();
 
-                WebDriver driver = null;
-                try {
-                    driver = new RemoteWebDriver(new URL("http://" + PropertiesLoader.getProperties().getProperty(sauceLabsUsernameEnv) + ":" + PropertiesLoader.getProperties().getProperty(sauceLabsAccessKeyEnv) + "@ondemand.saucelabs.com:80/wd/hub"), caps);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
+            capabilitiesThreadLocal.set(desiredCapabilities);
+        }
 
-                return driver;
-            } else {
-                return null;
-            }
+        return desiredCapabilities;
+    }
+
+    public static void addCapability(String capabilityName, String value)
+    {
+        getDesiredCapabilities().setCapability(capabilityName, value);
+    }
+
+    public static String getCapability(String capabilityName)
+    {
+        return getDesiredCapabilities().getCapability(capabilityName).toString();
+    }
+
+    public static WebDriver createSauceLabsDriver(String username, String accesskey, String region)
+    {
+        String sauceUrl;
+        if (region.equalsIgnoreCase("eu")) {
+            sauceUrl = "@ondemand.eu-central-1.saucelabs.com:443";
         } else {
-            if (PropertiesLoader.getProperties().getProperty(browserNameEnv).toLowerCase().equals("chrome")) {
-                ChromeOptions options = new ChromeOptions();
-                options.setAcceptInsecureCerts(true);
-                options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--ignore-certificate-errors", "--ignore-ssl-errors", "--allow-running-insecure-content", "--disable-web-security",  "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
+            sauceUrl = "@ondemand.us-west-1.saucelabs.com:443";
+        }
 
-                WebDriver driver = new ChromeDriver(options);
+        String SAUCE_REMOTE_URL = "https://" + username + ":" + accesskey + sauceUrl +"/wd/hub";
 
-                return driver;
-            } else {
-                WebDriver driver = new FirefoxDriver();
+        try {
+            return new RemoteWebDriver(new URL(SAUCE_REMOTE_URL), getDesiredCapabilities());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
 
-                return driver;
-            }
+            return null;
+        }
+    }
+
+    public static WebDriver createFirefoxDriver()
+    {
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+        firefoxOptions.merge(getDesiredCapabilities());
+
+        WebDriver driver = new FirefoxDriver(firefoxOptions);
+
+        return driver;
+    }
+
+    public static WebDriver createChromeDriver()
+    {
+        ChromeOptions options = new ChromeOptions();
+        options.setAcceptInsecureCerts(true);
+        options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--ignore-certificate-errors", "--ignore-ssl-errors", "--allow-running-insecure-content", "--disable-web-security",  "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
+        options.merge(getDesiredCapabilities());
+
+        WebDriver driver = new ChromeDriver(options);
+
+        return driver;
+    }
+
+    public static WebDriver createWebDriver()
+    {
+        if (PropertiesLoader.getProperties().getProperty(browserNameEnv).toLowerCase().equals("chrome")) {
+
+            ChromeOptions options = new ChromeOptions();
+            options.setAcceptInsecureCerts(true);
+            options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--ignore-certificate-errors", "--ignore-ssl-errors", "--allow-running-insecure-content", "--disable-web-security",  "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
+            options.merge(getDesiredCapabilities());
+
+            WebDriver driver = new ChromeDriver(options);
+
+            return driver;
+        } else {
+            WebDriver driver = new FirefoxDriver();
+
+            return driver;
         }
     }
 }

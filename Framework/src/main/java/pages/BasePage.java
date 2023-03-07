@@ -44,6 +44,11 @@ public class BasePage {
     @TestModellerIgnore
     public BasePage(WebDriver driver)
     {
+        setDriver(driver);
+    }
+
+    protected void setDriver(WebDriver driver)
+    {
         this.m_Driver = driver;
 
         if (m_Driver != null) {
