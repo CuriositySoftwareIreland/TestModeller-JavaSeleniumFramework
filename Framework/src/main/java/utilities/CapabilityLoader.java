@@ -63,7 +63,11 @@ public class CapabilityLoader
         String SAUCE_REMOTE_URL = "https://" + username + ":" + accesskey + sauceUrl +"/wd/hub";
 
         try {
-            return new RemoteWebDriver(new URL(SAUCE_REMOTE_URL), getDesiredCapabilities());
+            WebDriver d = new RemoteWebDriver(new URL(SAUCE_REMOTE_URL), getDesiredCapabilities());
+
+            setDriver(d);
+
+            return d;
         } catch (MalformedURLException e) {
             e.printStackTrace();
 
@@ -78,6 +82,8 @@ public class CapabilityLoader
 
         WebDriver driver = new FirefoxDriver(firefoxOptions);
 
+        setDriver(driver);
+
         return driver;
     }
 
@@ -89,6 +95,8 @@ public class CapabilityLoader
         options.merge(getDesiredCapabilities());
 
         WebDriver driver = new ChromeDriver(options);
+
+        setDriver(driver);
 
         return driver;
     }
@@ -104,9 +112,13 @@ public class CapabilityLoader
 
             WebDriver driver = new ChromeDriver(options);
 
+            setDriver(driver);
+
             return driver;
         } else {
             WebDriver driver = new FirefoxDriver();
+
+            setDriver(driver);
 
             return driver;
         }

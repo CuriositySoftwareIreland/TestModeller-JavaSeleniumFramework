@@ -187,6 +187,8 @@ public class WebGeneralActions extends BasePage {
      */
     public void ConnectSauceLabsUS(String username, String accessKey)
     {
+        QuitCurrentBrowser();
+
         setDriver(CapabilityLoader.createSauceLabsDriver(username, accessKey, "us"));
     }
 
@@ -196,6 +198,8 @@ public class WebGeneralActions extends BasePage {
      */
     public void ConnectSauceLabsEU(String username, String accessKey)
     {
+        QuitCurrentBrowser();
+
         setDriver(CapabilityLoader.createSauceLabsDriver(username, accessKey, "eu"));
     }
 
