@@ -93,7 +93,8 @@ public class CapabilityLoader
         options.setAcceptInsecureCerts(true);
         options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--ignore-certificate-errors", "--ignore-ssl-errors", "--allow-running-insecure-content", "--disable-web-security",  "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
         options.merge(getDesiredCapabilities());
-
+		options.addArguments("--remote-allow-origins=*");
+		
         WebDriver driver = new ChromeDriver(options);
 
         setDriver(driver);
@@ -103,24 +104,6 @@ public class CapabilityLoader
 
     public static WebDriver createWebDriver()
     {
-        if (PropertiesLoader.getProperties().getProperty(browserNameEnv).toLowerCase().equals("chrome")) {
-
-            ChromeOptions options = new ChromeOptions();
-            options.setAcceptInsecureCerts(true);
-            options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--ignore-certificate-errors", "--ignore-ssl-errors", "--allow-running-insecure-content", "--disable-web-security",  "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
-            options.merge(getDesiredCapabilities());
-
-            WebDriver driver = new ChromeDriver(options);
-
-            setDriver(driver);
-
-            return driver;
-        } else {
-            WebDriver driver = new FirefoxDriver();
-
-            setDriver(driver);
-
-            return driver;
-        }
+        return createChromeDriver();
     }
 }
