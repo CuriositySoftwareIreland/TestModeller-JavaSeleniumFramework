@@ -61,8 +61,33 @@ public class BasePage {
     protected File getFileFromURL(String url)
     {
         try {
+            String fileName = "file";
+
             URL urlSaved = new URL(url);
-            File file = new File(org.apache.commons.io.FilenameUtils.getName(urlSaved.getPath()));
+            java.net.HttpURLConnection connection = (java.net.HttpURLConnection) urlSaved.openConnection();
+            connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+            if (responseCode == java.net.HttpURLConnection.HTTP_OK) {
+                String disposition = connection.getHeaderField("Content-Disposition");
+                if (disposition != null) {
+                    int index = disposition.indexOf("filename=");
+                    if (index > 0) {
+                        fileName = disposition.substring(index + 9).replace("\"","");
+                        System.out.println("Filename: " + fileName);
+                    }
+                } else {
+                    System.out.println("Content-Disposition header not found.");
+                }
+            } else {
+                System.out.println("HTTP response code: " + responseCode);
+            }
+
+            int extensionIndex = fileName.lastIndexOf(".");
+            String extension = fileName.substring(extensionIndex);
+
+            File file = File.createTempFile(org.apache.commons.io.FilenameUtils.removeExtension(fileName), extension);
+
             FileUtils.copyURLToFile(urlSaved, file);
 
             return file;
