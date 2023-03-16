@@ -61,33 +61,8 @@ public class BasePage {
     protected File getFileFromURL(String url)
     {
         try {
-            String fileName = "file";
-
             URL urlSaved = new URL(url);
-            java.net.HttpURLConnection connection = (java.net.HttpURLConnection) urlSaved.openConnection();
-            connection.setRequestMethod("GET");
-
-            int responseCode = connection.getResponseCode();
-            if (responseCode == java.net.HttpURLConnection.HTTP_OK) {
-                String disposition = connection.getHeaderField("Content-Disposition");
-                if (disposition != null) {
-                    int index = disposition.indexOf("filename=");
-                    if (index > 0) {
-                        fileName = disposition.substring(index + 9).replace("\"","");
-                        System.out.println("Filename: " + fileName);
-                    }
-                } else {
-                    System.out.println("Content-Disposition header not found.");
-                }
-            } else {
-                System.out.println("HTTP response code: " + responseCode);
-            }
-
-            int extensionIndex = fileName.lastIndexOf(".");
-            String extension = fileName.substring(extensionIndex);
-
-            File file = File.createTempFile(org.apache.commons.io.FilenameUtils.removeExtension(fileName), extension);
-
+            File file = new File(org.apache.commons.io.FilenameUtils.getName(urlSaved.getPath()));
             FileUtils.copyURLToFile(urlSaved, file);
 
             return file;
@@ -144,7 +119,7 @@ public class BasePage {
 
     protected void failStep(RequestSpecification req, Response rsp, String msg)
     {
-        ExtentReportManager.failStep(rsp, msg);
+        ExtentReportManager.failStep(req, rsp, msg);
         TestModellerLogger.FailResponseStep(req, rsp, msg);
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
@@ -154,7 +129,25 @@ public class BasePage {
 
     protected void passStep(RequestSpecification req, Response rsp, String msg)
     {
-        ExtentReportManager.passStep(rsp, msg);
+        ExtentReportManager.passStep(req, rsp, msg);
+        TestModellerLogger.PassResponseStep(req, rsp, msg);
+
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Pass Step: " + msg);
+    }
+
+    protected void failStep(RequestSpecification req, Response rsp, String msg, String detail)
+    {
+        ExtentReportManager.failStep(req, rsp, msg, detail);
+        TestModellerLogger.FailResponseStep(req, rsp, msg);
+
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
+
+        Assert.fail(msg);
+    }
+
+    protected void passStep(RequestSpecification req, Response rsp, String msg, String detail)
+    {
+        ExtentReportManager.passStep(req, rsp, msg, detail);
         TestModellerLogger.PassResponseStep(req, rsp, msg);
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Pass Step: " + msg);
