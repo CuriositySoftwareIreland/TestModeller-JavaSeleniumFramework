@@ -1,15 +1,26 @@
 package utilities.reports;
 
 
+import com.aventstack.extentreports.markuputils.ExtentColor;
+import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.aventstack.extentreports.model.Media;
 import com.aventstack.extentreports.model.ScreenCapture;
 import com.aventstack.extentreports.reporter.ExtentSparkReporter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import ie.curiositysoftware.runresult.dto.TestPathRunCollectionEntity;
+import ie.curiositysoftware.runresult.dto.TestPathRunStep;
+import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPRequest;
+import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPResponse;
 import ie.curiositysoftware.runresult.services.TestPathRunCollectionService;
 import ie.curiositysoftware.runresult.services.TestRunIdGenerator;
 import ie.curiositysoftware.runresult.services.TestRunService;
+import io.restassured.http.Header;
 import io.restassured.response.Response;
+import io.restassured.specification.FilterableRequestSpecification;
+import io.restassured.specification.MultiPartSpecification;
+import io.restassured.specification.RequestSpecification;
 import utilities.PropertiesLoader;
 import utilities.testmodeller.GetScreenShot;
 import com.aventstack.extentreports.ExtentReports;
@@ -23,9 +34,7 @@ import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
+import java.util.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -125,20 +134,50 @@ public class ExtentReportManager {
         reportThreadLocal.get().log(Status.PASS, stepName);
     }
 
-    public static void passStep(Response rsp, String stepName)
+    public static void passStep(RequestSpecification req, Response rsp, String stepName)
     {
-        reportThreadLocal.get().log(Status.PASS, stepName + "\n" +
+        ExtentTest passSection = reportThreadLocal.get().log(Status.PASS, stepName + "\n" +
                 "Status Code: " + rsp.getStatusCode() + "\n" +
                 "Status: " + rsp.getStatusLine() + "\n" +
                 "Message: " + rsp.getBody().asString());
+
+        populateAPITestStep(stepName, passSection, Status.PASS, req, rsp);
+    }
+
+    public static void failStep(RequestSpecification req, Response rsp, String stepName)
+    {
+        ExtentTest failSection = reportThreadLocal.get().log(Status.FAIL, stepName + "\n" +
+                "Status Code: " + rsp.getStatusCode() + "\n" +
+                "Status: " + rsp.getStatusLine() + "\n" +
+                "Message: " + rsp.getBody().asString());
+
+        populateAPITestStep(stepName, failSection, Status.FAIL, req, rsp);
+    }
+
+    public static void passStep(RequestSpecification req, Response rsp, String stepName, String message)
+    {
+        ExtentTest passSection = reportThreadLocal.get().log(Status.PASS, stepName + "\n" +
+                message);
+
+        populateAPITestStep(stepName, passSection,Status.PASS, req, rsp);
+    }
+
+    public static void failStep(RequestSpecification req, Response rsp, String stepName, String message)
+    {
+        ExtentTest failSection = reportThreadLocal.get().log(Status.FAIL, stepName + "\n" +
+                message);
+
+        populateAPITestStep(stepName, failSection, Status.FAIL, req, rsp);
+    }
+
+    public static void passStep(Response rsp, String stepName)
+    {
+        passStep(null, rsp, stepName);
     }
 
     public static void failStep(Response rsp, String stepName)
     {
-        reportThreadLocal.get().log(Status.FAIL, stepName + "\n" +
-                "Status Code: " + rsp.getStatusCode() + "\n" +
-                "Status: " + rsp.getStatusLine() + "\n" +
-                "Message: " + rsp.getBody().asString());
+        failStep(null, rsp, stepName);
     }
 
     public static void passStep(String stepName)
@@ -178,5 +217,99 @@ public class ExtentReportManager {
         Media m = ScreenCapture.builder().base64(GetScreenShot.captureAsBase64(driver)).title(stepName).build();
 
         reportThreadLocal.get().log(Status.FAIL, stepName + "\n" + details, m);
+    }
+
+    private static void populateAPITestStep(String stepName, ExtentTest section, Status status, RequestSpecification rawReq, Response rsp)
+    {
+        ExtentTest apiDetailsSection = section.createNode("API Details - " + stepName);
+
+        if (rawReq != null) {
+            ExtentTest reqDetailsSection = apiDetailsSection.createNode("API Request", "Details of the API Request");
+
+            FilterableRequestSpecification req = (FilterableRequestSpecification) rawReq;
+
+            String markupText = "";
+            String reqType = req.getMethod();
+            String url = req.getURI();
+
+            // Request URL
+            markupText += MarkupHelper.createLabel("Request - " + reqType + " " + url, ExtentColor.GREY).getMarkup() + "<br><br>";
+
+            // Headers
+            if (req.getHeaders() != null) {
+                ArrayList<List<String>> mainList = new ArrayList<List<String>>();
+                mainList.add(Arrays.asList("Header", "Value"));
+                for (Header h : req.getHeaders().asList()) {
+                    mainList.add(Arrays.asList(h.getName(), h.getValue()));
+                }
+                String[][] stringArray = mainList.stream().map(u -> u.toArray(new String[0])).toArray(String[][]::new);
+
+                markupText += MarkupHelper.createLabel("Headers", ExtentColor.GREY).getMarkup() + "<br>";
+                markupText += MarkupHelper.createTable(stringArray).getMarkup();
+            }
+
+            // Get body
+            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+            if (req.getBody() != null) {
+                markupText += MarkupHelper.createLabel("JSON Body", ExtentColor.GREY).getMarkup() + "<br>";
+                markupText += MarkupHelper.createCodeBlock(req.getBody().toString()).getMarkup() + "<br><br>";
+            }
+
+            // Get form params
+            if (req.getFormParams() != null && req.getFormParams().size() > 0) {
+                try {
+                    markupText += MarkupHelper.createLabel("Form Parameters", ExtentColor.GREY).getMarkup() + "<br>";
+
+                    markupText += MarkupHelper.createCodeBlock(ow.writeValueAsString(req.getFormParams())).getMarkup() + "<br><br>";
+                } catch (Exception e) {}
+            }
+
+            // Multi part form params
+            if (req.getMultiPartParams() != null && req.getMultiPartParams().size() > 0) {
+                Map<String, String> multiFormParams = new HashMap<>();
+                for (MultiPartSpecification spec : req.getMultiPartParams()) {
+                    multiFormParams.put(spec.getControlName(), spec.getContent().toString());
+                }
+
+                try {
+                    markupText += MarkupHelper.createLabel("Multi-Form Parameters", ExtentColor.GREY).getMarkup() + "<br>";
+                    markupText += MarkupHelper.createCodeBlock(ow.writeValueAsString(multiFormParams)).getMarkup();
+                } catch (Exception e) {}
+            }
+
+            reqDetailsSection.log(status, markupText);
+
+        }
+
+        if (rsp != null) {
+            ExtentTest rspDetailsSection = apiDetailsSection.createNode("API Response", "Details of the API Response");
+
+            String markupText = "";
+            markupText += MarkupHelper.createLabel("Status Code: " + rsp.getStatusCode(), ExtentColor.GREY).getMarkup() + "<br>";
+            markupText += MarkupHelper.createLabel("Status Line: " + rsp.getStatusLine(), ExtentColor.GREY).getMarkup() + "<br>";
+            markupText += MarkupHelper.createLabel("Session ID: " + rsp.getStatusLine(), ExtentColor.GREY).getMarkup() + "<br>";
+            markupText += MarkupHelper.createLabel("Context Type: " + rsp.getContentType(), ExtentColor.GREY).getMarkup() + "<br>";
+            markupText += MarkupHelper.createLabel("Duration: " + rsp.getTime(), ExtentColor.GREY).getMarkup() + "<br><br>";
+
+            // Headers
+            if (rsp.getHeaders() != null) {
+                ArrayList<List<String>> mainList = new ArrayList<List<String>>();
+                mainList.add(Arrays.asList("Header", "Value"));
+                for (Header h : rsp.getHeaders().asList()) {
+                    mainList.add(Arrays.asList(h.getName(), h.getValue()));
+                }
+                String[][] stringArray = mainList.stream().map(u -> u.toArray(new String[0])).toArray(String[][]::new);
+
+                markupText += MarkupHelper.createLabel("Headers", ExtentColor.GREY).getMarkup() + "<br>";
+                markupText += MarkupHelper.createTable(stringArray).getMarkup();
+            }
+
+            if (rsp.getBody() != null) {
+                markupText += MarkupHelper.createLabel("Body", ExtentColor.GREY).getMarkup() + "<br>";
+                markupText += MarkupHelper.createCodeBlock(rsp.getBody().prettyPrint()).getMarkup() + "<br><br>";
+            }
+
+            rspDetailsSection.log(status, markupText);
+        }
     }
 }
