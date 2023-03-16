@@ -91,10 +91,10 @@ public class CapabilityLoader
     {
         ChromeOptions options = new ChromeOptions();
         options.setAcceptInsecureCerts(true);
-        options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--ignore-certificate-errors", "--ignore-ssl-errors", "--allow-running-insecure-content", "--disable-web-security",  "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
+        options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--ignore-certificate-errors", "--ignore-ssl-errors", "--allow-running-insecure-content",  "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
         options.merge(getDesiredCapabilities());
 		options.addArguments("--remote-allow-origins=*");
-		
+		// "--disable-web-security"
         WebDriver driver = new ChromeDriver(options);
 
         setDriver(driver);
