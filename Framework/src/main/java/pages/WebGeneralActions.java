@@ -156,6 +156,24 @@ public class WebGeneralActions extends BasePage {
     }
 
     /**
+     * Disable Stop On Fail
+     * @name Disable Stop On Fail
+     */
+    public void DisableStopOnFail()
+    {
+        BasePage.StopOnFail = false;
+    }
+
+    /**
+     * Enable Stop On Fail
+     * @name Enable Stop On Fail
+     */
+    public void EnableStopOnFail()
+    {
+        BasePage.StopOnFail = true;
+    }
+
+    /**
      * Opens a new instance of chrome
      * @name Open Firefox
      */
@@ -172,35 +190,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void QuitCurrentBrowser()
     {
-        if (m_Driver != null) {
-            try {
-                m_Driver.quit();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    /**
-     * Opens a new connection to given SauceLabs US server via Appium.
-     * @name Connect SauceLabs (US Server)
-     */
-    public void ConnectSauceLabsUS(String username, String accessKey)
-    {
-        QuitCurrentBrowser();
-
-        setDriver(CapabilityLoader.createSauceLabsDriver(username, accessKey, "us"));
-    }
-
-    /**
-     * Opens a new connection to given SauceLabs EU server via Appium.
-     * @name Connect SauceLabs (EU Server)
-     */
-    public void ConnectSauceLabsEU(String username, String accessKey)
-    {
-        QuitCurrentBrowser();
-
-        setDriver(CapabilityLoader.createSauceLabsDriver(username, accessKey, "eu"));
+        quitCurrentBrowser();
     }
 
     /**

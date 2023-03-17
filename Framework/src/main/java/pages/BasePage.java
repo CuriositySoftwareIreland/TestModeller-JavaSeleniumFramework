@@ -41,6 +41,8 @@ public class BasePage {
 
     protected JavascriptExecutor jsExec;
 
+    public static Boolean StopOnFail = true;
+
     @TestModellerIgnore
     public BasePage(WebDriver driver)
     {
@@ -106,7 +108,9 @@ public class BasePage {
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
 
-        Assert.fail(msg);
+        if (BasePage.StopOnFail) {
+            Assert.fail(msg);
+        }
     }
 
     protected void passStep(Response rsp, String msg)
@@ -124,7 +128,9 @@ public class BasePage {
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
 
-        Assert.fail(msg);
+        if (BasePage.StopOnFail) {
+            Assert.fail(msg);
+        }
     }
 
     protected void passStep(RequestSpecification req, Response rsp, String msg)
@@ -142,7 +148,9 @@ public class BasePage {
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
 
-        Assert.fail(msg);
+        if (BasePage.StopOnFail) {
+            Assert.fail(msg);
+        }
     }
 
     protected void passStep(RequestSpecification req, Response rsp, String msg, String detail)
@@ -161,7 +169,9 @@ public class BasePage {
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg + " - " + details);
 
-        Assert.fail(msg);
+        if (BasePage.StopOnFail) {
+            Assert.fail(msg);
+        }
     }
 
     protected void failStep(String msg)
@@ -171,7 +181,9 @@ public class BasePage {
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
 
-        Assert.fail(msg);
+        if (BasePage.StopOnFail) {
+            Assert.fail(msg);
+        }
     }
 
     protected void passStep(String msg)
@@ -188,6 +200,17 @@ public class BasePage {
         TestModellerLogger.PassStepWithScreenshot(m_Driver, msg);
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Pass Step: " + msg);
+    }
+
+    protected void quitCurrentBrowser()
+    {
+        if (m_Driver != null) {
+            try {
+                m_Driver.quit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     protected RemoteWebElement expandRootElement(WebElement element) {

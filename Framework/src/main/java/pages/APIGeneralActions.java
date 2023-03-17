@@ -16,7 +16,16 @@ public class APIGeneralActions extends BasePage {
      */
     public String ExtractValueByJSONPath(Response rsp, String jsonPath)
     {
-        return JsonPath.read(rsp.getBody().asString(), jsonPath).toString();
+        try {
+            String value = JsonPath.read(rsp.getBody().asString(), jsonPath).toString();
+            passStep("Extracted value '" + value + "'");
+
+            return value;
+        } catch (Exception e) {
+            failStep("Unable to extract json path '" + jsonPath + "' from response " + rsp.getBody().asString());
+        }
+
+        return "";
     }
 
     /**
