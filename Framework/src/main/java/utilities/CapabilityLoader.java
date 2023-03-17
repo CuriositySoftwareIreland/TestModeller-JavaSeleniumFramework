@@ -75,6 +75,44 @@ public class CapabilityLoader
         }
     }
 
+    public static WebDriver createBrowserStackDriver(String username, String accesskey)
+    {
+        String browserURL = "https://" + username + ":" + accesskey + "@hub.browserstack.com/wd/hub";
+
+
+        try {
+            WebDriver d = new RemoteWebDriver(new URL(browserURL), getDesiredCapabilities());
+
+            setDriver(d);
+
+            return d;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
+    public static WebDriver createLambdaTestDriver(String username, String accesskey)
+    {
+        getDesiredCapabilities().setCapability("username", username);
+        getDesiredCapabilities().setCapability("accessKey", accesskey);
+
+        String browserURL = "https://hub.lambdatest.com/wd/hub";
+
+        try {
+            WebDriver d = new RemoteWebDriver(new URL(browserURL), getDesiredCapabilities());
+
+            setDriver(d);
+
+            return d;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+    }
+
     public static WebDriver createFirefoxDriver()
     {
         FirefoxOptions firefoxOptions = new FirefoxOptions();

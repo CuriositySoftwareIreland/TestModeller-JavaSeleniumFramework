@@ -468,6 +468,24 @@ public class WebGeneralActions extends BasePage {
     }
 
     /**
+     * Switch the context to the specified IFrame.
+     * @name Switch to IFrame
+     */
+    public void SwitchToIframe(String identifier)
+    {
+        m_Driver.switchTo().frame(getWebElement(getLocatorFromString(identifier)));
+    }
+
+    /**
+     * Selects either the first frame on the page, or the main document when a page contains iframes.
+     * @name Switch to Default Context
+     */
+    public void SwitchToDefaultContext()
+    {
+        m_Driver.switchTo().defaultContent();
+    }
+
+    /**
      * Executes the given JavaScript code with possible arguments.
      * @name Execute Javascript
      */
