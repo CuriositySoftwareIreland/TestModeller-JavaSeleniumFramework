@@ -129,10 +129,22 @@ public class CapabilityLoader
     {
         ChromeOptions options = new ChromeOptions();
         options.setAcceptInsecureCerts(true);
-        options.addArguments(new String[]{"--start-maximized", "disable-gpu", "--ignore-certificate-errors", "--ignore-ssl-errors", "--allow-running-insecure-content",  "--headless", "--no-sandbox", "--disable-dev-shm-usage", "--window-size=1920,1080"});
-        options.merge(getDesiredCapabilities());
+
+        if (PropertiesLoader.isHeadless()) {
+            options.addArguments("disable-gpu");
+            options.addArguments("--headless");
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-dev-shm-usage");
+        }
+
+        options.addArguments("--start-maximized");
+        options.addArguments("--ignore-certificate-errors");
+        options.addArguments("--ignore-ssl-errors");
+        options.addArguments("--allow-running-insecure-content");
+        options.addArguments("--window-size=1920,1080");
 		options.addArguments("--remote-allow-origins=*");
-		// "--disable-web-security"
+        options.merge(getDesiredCapabilities());
+
         WebDriver driver = new ChromeDriver(options);
 
         setDriver(driver);

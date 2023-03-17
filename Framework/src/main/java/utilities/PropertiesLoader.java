@@ -41,6 +41,16 @@ public class PropertiesLoader {
         }
     }
 
+    public static Boolean isDebug()
+    {
+        return Boolean.parseBoolean(getProperties().getProperty("testModeller.debug"));
+    }
+
+    public static Boolean isHeadless()
+    {
+        return Boolean.parseBoolean(getProperties().getProperty("testModeller.headless"));
+    }
+
     public static ConnectionProfile getConnectionProfile()
     {
         return new ConnectionProfile(PropertiesLoader.getProperties().getProperty("testModeller.apiHost"), PropertiesLoader.getProperties().getProperty("testModeller.apiKey"));

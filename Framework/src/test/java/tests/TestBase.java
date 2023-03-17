@@ -85,10 +85,13 @@ public class TestBase {
     {
         System.out.println("Finished test: " + ExtentReportManager.getTestName());
 
-        try {
-            if (CapabilityLoader.getDriver() != null)
-                CapabilityLoader.getDriver().quit();
-        } catch (Exception e) {}
+        if (!PropertiesLoader.isDebug()) {
+            try {
+                if (CapabilityLoader.getDriver() != null)
+                    CapabilityLoader.getDriver().quit();
+            } catch (Exception e) {
+            }
+        }
     }
 
     @AfterSuite
