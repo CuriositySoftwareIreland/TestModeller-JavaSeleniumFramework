@@ -12,7 +12,7 @@ public class SauceLabs extends BasePage {
     }
 
     /**
-     * Opens a new connection to given SauceLabs US server via Appium.
+     * Opens a new connection to given SauceLabs US server.
      * @name Connect SauceLabs (US Server)
      */
     public void ConnectSauceLabsUS(String username, String accessKey)
@@ -23,7 +23,7 @@ public class SauceLabs extends BasePage {
     }
 
     /**
-     * Opens a new connection to given SauceLabs EU server via Appium.
+     * Opens a new connection to given SauceLabs EU server.
      * @name Connect SauceLabs (EU Server)
      */
     public void ConnectSauceLabsEU(String username, String accessKey)
