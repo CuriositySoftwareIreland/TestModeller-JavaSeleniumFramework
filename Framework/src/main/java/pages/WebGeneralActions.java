@@ -477,6 +477,15 @@ public class WebGeneralActions extends BasePage {
     }
 
     /**
+     * Set the timeout to way for elements while locating.
+     * @name Set Locator Timeout
+     */
+    public void SetDefaultTimeout(int timeout)
+    {
+        BasePage.LocatorTimeout = timeout;
+    }
+
+    /**
      * Selects either the first frame on the page, or the main document when a page contains iframes.
      * @name Switch to Default Context
      */

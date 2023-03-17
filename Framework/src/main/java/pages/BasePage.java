@@ -43,6 +43,8 @@ public class BasePage {
 
     public static Boolean StopOnFail = true;
 
+    public static int LocatorTimeout = 5;
+
     @TestModellerIgnore
     public BasePage(WebDriver driver)
     {
@@ -280,8 +282,8 @@ public class BasePage {
 
     protected WebElement getWebElement(WebElement elem, final By by)
     {
-        waitForLoaded(elem, by, 5);
-        waitForVisible(elem, by, 5);
+        waitForLoaded(elem, by, LocatorTimeout);
+        waitForVisible(elem, by, LocatorTimeout);
 
         if (m_Driver.getCurrentUrl() == null || m_Driver.getCurrentUrl().isEmpty() || m_Driver.getCurrentUrl().equals("data:,")) {
             failStep("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
@@ -292,8 +294,8 @@ public class BasePage {
 
     protected List<WebElement> getWebElements(final By by)
     {
-        waitForLoaded(by, 2);
-        waitForVisible(by, 2);
+        waitForLoaded(by, LocatorTimeout);
+        waitForVisible(by, LocatorTimeout);
 
         if (m_Driver.getCurrentUrl() == null || m_Driver.getCurrentUrl().isEmpty() || m_Driver.getCurrentUrl().equals("data:,")) {
             failStep("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
@@ -345,8 +347,8 @@ public class BasePage {
 
     protected WebElement getWebElement(final By by)
     {
-        waitForLoaded(by, 5);
-        waitForVisible(by, 5);
+        waitForLoaded(by, LocatorTimeout);
+        waitForVisible(by, LocatorTimeout);
 
         if (m_Driver.getCurrentUrl() == null || m_Driver.getCurrentUrl().isEmpty() || m_Driver.getCurrentUrl().equals("data:,")) {
             failStep("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
