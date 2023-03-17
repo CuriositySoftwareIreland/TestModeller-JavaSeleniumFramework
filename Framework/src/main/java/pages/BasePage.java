@@ -75,6 +75,51 @@ public class BasePage {
         return null;
     }
 
+    public WebElement searchInAllIframes(By by) {
+        // Search for the desired element on the main page
+        WebElement element = null;
+        try {
+            element = m_Driver.findElement(by);
+
+            System.out.println("Element found on main page: " + by.toString());
+
+            return element;
+        } catch (org.openqa.selenium.NoSuchElementException e) {
+            // Element not found on main page
+        }
+
+        // Get a list of all iframes on the page
+        List<WebElement> iframes = m_Driver.findElements(By.tagName("iframe"));
+
+        // Loop through each iframe and search for the desired element within it
+        for (WebElement iframe : iframes) {
+            try {
+                m_Driver.switchTo().frame(iframe);
+            } catch (Exception e) {
+                continue;
+            }
+
+            try {
+                element = m_Driver.findElement(by);
+
+                return element;
+            } catch (org.openqa.selenium.NoSuchElementException e) {
+                // Element not found in iframe
+            }
+
+            // Recursively search within any nested iframes
+            WebElement elem = searchInAllIframes(by);
+            if (elem != null)
+                return elem;
+
+            try {
+                m_Driver.switchTo().defaultContent();
+            } catch (Exception e) {}
+        }
+
+        return null;
+    }
+
     protected void printResponse(Response rsp)
     {
         System.out.println("----------- Response Details ----------");
@@ -310,7 +355,7 @@ public class BasePage {
         try {
             return m_Driver.findElement(by);
         } catch (Exception e) {
-            return null;
+            return searchInAllIframes(by);
         }
     }
 
