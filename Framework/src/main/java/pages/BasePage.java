@@ -163,7 +163,7 @@ public class BasePage {
     protected void passStep(Response rsp, String msg)
     {
         ExtentReportManager.passStep(rsp, msg);
-        TestModellerLogger.FailResponseStep(rsp, msg);
+        TestModellerLogger.PassResponseStep(rsp, msg);
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Pass Step: " + msg);
     }
@@ -178,6 +178,16 @@ public class BasePage {
         if (BasePage.StopOnFail) {
             Assert.fail(msg);
         }
+    }
+
+    protected void failStep(Response rsp, String msg, String desc)
+    {
+        failStep(null, rsp, msg, desc);
+    }
+
+    protected void passStep(Response rsp, String msg, String desc)
+    {
+        passStep(null, rsp, msg, desc);
     }
 
     protected void passStep(RequestSpecification req, Response rsp, String msg)
