@@ -86,7 +86,7 @@ public class APIGeneralActions extends BasePage {
         if (rsp.getHeaders().get(headerKey) == null) {
             failStep(rsp, "Response does not contain a header '" + headerKey + "'.");
         } else {
-            if (rsp.getHeaders().get(headerKey).getValue().equals(headerKey)) {
+            if (rsp.getHeaders().get(headerKey).getValue().equals(headerValue)) {
                 passStep(rsp, "API Request header value for '" + headerKey + "' is '" + headerKey + "'.");
             } else {
                 failStep(rsp, "The API Request header value for '" + headerKey + "' is '" + rsp.getHeaders().get(headerKey).getValue() + "'. Expected '" + headerValue + "'.");
