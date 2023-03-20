@@ -20,9 +20,41 @@ import java.util.List;
 import java.util.Map;
 
 public class TestModellerLogger {
+    public static class ModellerContext {
+        private String lastNodeGuid;
+
+        private Long moduleColId;
+
+        private Long moduleObjId;
+
+        public Long getModuleColId() {
+            return moduleColId;
+        }
+
+        public Long getModuleObjId() {
+            return moduleObjId;
+        }
+
+        public void setModuleColId(Long moduleColId) {
+            this.moduleColId = moduleColId;
+        }
+
+        public void setModuleObjId(Long moduleObjId) {
+            this.moduleObjId = moduleObjId;
+        }
+
+        public String getLastNodeGuid() {
+            return lastNodeGuid;
+        }
+
+        public void setLastNodeGuid(String lastNodeGuid) {
+            this.lastNodeGuid = lastNodeGuid;
+        }
+    }
+
     public static final ThreadLocal<List<TestPathRunStep>> steps = new ThreadLocal<List<TestPathRunStep>>();
 
-    public static final ThreadLocal<String> LastNodeGuid = new ThreadLocal<String>();
+    public static final ThreadLocal<ModellerContext> LastNodeGuid = new ThreadLocal<ModellerContext>();
 
     public static void LogMessage(String name, String description, TestPathRunStatusEnum status)
     {
@@ -31,7 +63,7 @@ public class TestModellerLogger {
         step.setStepName(name);
         step.setStepDescription(description);
         step.setTestStatus(status);
-        step.setNodeGuid(LastNodeGuid.get());
+        step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
 
         addStep(step);
     }
@@ -44,7 +76,7 @@ public class TestModellerLogger {
         step.setStepDescription(description);
         step.setImage(image);
         step.setTestStatus(status);
-        step.setNodeGuid(LastNodeGuid.get());
+        step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
 
         addStep(step);
     }
@@ -61,7 +93,7 @@ public class TestModellerLogger {
         step.setStepName(stepName);
         step.setStepDescription(details);
         step.setTestStatus(TestPathRunStatusEnum.Failed);
-        step.setNodeGuid(LastNodeGuid.get());
+        step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
 
         addStep(step);
 
@@ -74,7 +106,7 @@ public class TestModellerLogger {
 
         step.setStepName(stepName);
         step.setTestStatus(TestPathRunStatusEnum.Passed);
-        step.setNodeGuid(LastNodeGuid.get());
+        step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
 
         addStep(step);
 
@@ -88,7 +120,7 @@ public class TestModellerLogger {
         step.setStepName(stepName);
         step.setStepDescription(details);
         step.setTestStatus(TestPathRunStatusEnum.Passed);
-        step.setNodeGuid(LastNodeGuid.get());
+        step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
 
         addStep(step);
 
@@ -178,7 +210,7 @@ public class TestModellerLogger {
         step.setStepDescription(details);
         step.setImage(GetScreenShot.captureAsByteArray(driver));
         step.setTestStatus(TestPathRunStatusEnum.Passed);
-        step.setNodeGuid(LastNodeGuid.get());
+        step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
 
         addStep(step);
 
@@ -198,7 +230,7 @@ public class TestModellerLogger {
         step.setStepDescription(details);
         step.setImage(GetScreenShot.captureAsByteArray(driver));
         step.setTestStatus(TestPathRunStatusEnum.Failed);
-        step.setNodeGuid(LastNodeGuid.get());
+        step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
 
         addStep(step);
 
@@ -207,7 +239,20 @@ public class TestModellerLogger {
 
     public static void SetLastNodeGuid(String guid)
     {
-        LastNodeGuid.set(guid);
+        ModellerContext moc = new ModellerContext();
+        moc.setLastNodeGuid(guid);
+
+        LastNodeGuid.set(moc);
+    }
+
+    public static void SetModellerContext(String guid, Long moduleColId, Long moduleObjId)
+    {
+        ModellerContext moc = new ModellerContext();
+        moc.setLastNodeGuid(guid);
+        moc.setModuleColId(moduleColId);
+        moc.setModuleObjId(moduleObjId);
+
+        LastNodeGuid.set(moc);
     }
 
     public static void ClearMessages()
