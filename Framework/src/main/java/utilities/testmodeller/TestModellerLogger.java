@@ -129,11 +129,30 @@ public class TestModellerLogger {
         return runStep;
     }
 
+    public static TestPathRunStep PassResponseStep(RequestSpecification req, Response rsp, String stepName, String desc)
+    {
+        TestPathRunStep runStep = PassStep(null, stepName, desc);
+
+        populateAPITestStep(runStep, req, rsp);
+
+        return runStep;
+    }
+
     public static TestPathRunStep FailResponseStep(RequestSpecification req, Response rsp, String stepName)
     {
         TestPathRunStep runStep = FailStep(stepName,
                 "Status Code: " + rsp.getStatusCode() + "\n" +
                         "Status: " + rsp.getStatusLine());
+
+        // Setup
+        populateAPITestStep(runStep, req, rsp);
+
+        return runStep;
+    }
+
+    public static TestPathRunStep FailResponseStep(RequestSpecification req, Response rsp, String stepName, String desc)
+    {
+        TestPathRunStep runStep = FailStep(stepName, desc);
 
         // Setup
         populateAPITestStep(runStep, req, rsp);
