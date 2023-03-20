@@ -64,6 +64,8 @@ public class TestModellerLogger {
         step.setStepDescription(description);
         step.setTestStatus(status);
         step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
+        step.setModuleColId(LastNodeGuid.get().getModuleColId());
+        step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
 
         addStep(step);
     }
@@ -77,6 +79,8 @@ public class TestModellerLogger {
         step.setImage(image);
         step.setTestStatus(status);
         step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
+        step.setModuleColId(LastNodeGuid.get().getModuleColId());
+        step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
 
         addStep(step);
     }
@@ -94,6 +98,8 @@ public class TestModellerLogger {
         step.setStepDescription(details);
         step.setTestStatus(TestPathRunStatusEnum.Failed);
         step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
+        step.setModuleColId(LastNodeGuid.get().getModuleColId());
+        step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
 
         addStep(step);
 
@@ -107,6 +113,8 @@ public class TestModellerLogger {
         step.setStepName(stepName);
         step.setTestStatus(TestPathRunStatusEnum.Passed);
         step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
+        step.setModuleColId(LastNodeGuid.get().getModuleColId());
+        step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
 
         addStep(step);
 
@@ -121,6 +129,8 @@ public class TestModellerLogger {
         step.setStepDescription(details);
         step.setTestStatus(TestPathRunStatusEnum.Passed);
         step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
+        step.setModuleColId(LastNodeGuid.get().getModuleColId());
+        step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
 
         addStep(step);
 
