@@ -88,9 +88,9 @@ public class APIGeneralActions extends BasePage {
         } else {
             String curVal = rsp.getHeaders().get(headerKey).getValue();
             if (curVal.equals(headerValue)) {
-                passStep(rsp, "Assert Response Contains Header with Value", "API Request header value for '" + headerKey + "' is '" + headerKey + "'.");
+                passStep(rsp, "Assert Response Contains Header with Value", "API Request header value for '" + headerKey + "' is '" + curVal + "'.");
             } else {
-                failStep(rsp, "Assert Response Contains Header with Value", "The API Request header value for '" + headerKey + "' is '" + rsp.getHeaders().get(headerKey).getValue() + "'. Expected '" + headerValue + "'.");
+                failStep(rsp, "Assert Response Contains Header with Value", "The API Request header value for '" + headerKey + "' is '" + curVal + "'. Expected '" + headerValue + "'.");
             }
         }
     }
