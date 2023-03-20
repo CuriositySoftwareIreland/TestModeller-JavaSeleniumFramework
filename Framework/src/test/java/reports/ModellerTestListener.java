@@ -27,6 +27,8 @@ public class ModellerTestListener  extends TestBase implements ITestListener {
 
     @Override
     public void onTestSuccess(ITestResult iTestResult) {
+        TestModellerLogger.ClearModellerContext();
+
         Object testClass = iTestResult.getInstance();
 
         if (testClass instanceof TestBase) {
@@ -40,6 +42,8 @@ public class ModellerTestListener  extends TestBase implements ITestListener {
 
     @Override
     public void onTestFailure(ITestResult iTestResult) {
+        TestModellerLogger.ClearModellerContext();
+
         Object testClass = iTestResult.getInstance();
 
         if (testClass instanceof TestBase) {
