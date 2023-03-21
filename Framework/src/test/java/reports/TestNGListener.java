@@ -54,6 +54,8 @@ public class TestNGListener implements ITestListener, IClassListener {
 
     @Override
     public void onTestFailure(ITestResult testResult) {
+        TestModellerLogger.ClearModellerContext();
+
         Object testClass = testResult.getInstance();
 
         if (testClass instanceof TestBase) {
@@ -86,6 +88,8 @@ public class TestNGListener implements ITestListener, IClassListener {
 
     @Override
     public void onTestSuccess(ITestResult testResult) {
+        TestModellerLogger.ClearModellerContext();
+
         Object testClass = testResult.getInstance();
 
         if (testClass instanceof TestBase) {
