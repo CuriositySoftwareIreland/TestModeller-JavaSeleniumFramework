@@ -292,7 +292,7 @@ public class TestModellerLogger {
 
     public static void ClearModellerContext()
     {
-        LastNodeGuid.remove();
+        LastNodeGuid.set(null);
     }
 
     public static void ClearMessages()
