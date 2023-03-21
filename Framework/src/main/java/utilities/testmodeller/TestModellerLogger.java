@@ -280,8 +280,12 @@ public class TestModellerLogger {
     {
         ModellerContext moc = new ModellerContext();
         moc.setLastNodeGuid(guid);
-        moc.setModuleColId(new Long (moduleColId));
-        moc.setModuleObjId(new Long (moduleObjId));
+
+        if (moduleColId != null)
+            moc.setModuleColId(new Long (moduleColId));
+
+        if (moduleObjId != null)
+            moc.setModuleObjId(new Long (moduleObjId));
 
         LastNodeGuid.set(moc);
     }
