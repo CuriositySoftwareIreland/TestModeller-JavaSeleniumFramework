@@ -361,6 +361,9 @@ public class TestModellerLogger {
 
                 Map<String, String> multiFormParams = new HashMap<>();
                 for (MultiPartSpecification spec : req.getMultiPartParams()) {
+                    if (spec.getControlName().equals("file"))
+                        continue;
+
                     multiFormParams.put(spec.getControlName(), spec.getContent().toString());
                 }
 
@@ -391,8 +394,11 @@ public class TestModellerLogger {
             httpResponse.setContentType(rsp.getContentType());
             httpResponse.setTime(rsp.getTime());
 
-            if (rsp.getBody() != null)
-                httpResponse.setBody(rsp.getBody().prettyPrint());
+            if (rsp.getBody() != null) {
+                if (rsp.getContentType().toLowerCase().contains("application/json")) {
+                    httpResponse.setBody(rsp.getBody().asPrettyString());
+                }
+            }
 
             if (rsp.getHeaders() != null) {
                 HashMap<String, String> headers = new HashMap<String, String>();
