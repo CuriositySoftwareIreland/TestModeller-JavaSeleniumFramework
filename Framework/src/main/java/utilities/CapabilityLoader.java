@@ -35,6 +35,8 @@ public class CapabilityLoader
         if (desiredCapabilities == null) {
             desiredCapabilities = new DesiredCapabilities();
 
+            desiredCapabilities.setCapability("browserName", "chrome");
+
             capabilitiesThreadLocal.set(desiredCapabilities);
         }
 
@@ -142,7 +144,7 @@ public class CapabilityLoader
         options.addArguments("--ignore-ssl-errors");
         options.addArguments("--allow-running-insecure-content");
         options.addArguments("--window-size=1920,1080");
-		options.addArguments("--remote-allow-origins=*");
+        options.addArguments("--remote-allow-origins=*");
         options.merge(getDesiredCapabilities());
 
         WebDriver driver = new ChromeDriver(options);
