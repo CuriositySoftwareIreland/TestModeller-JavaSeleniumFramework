@@ -55,4 +55,9 @@ public class PropertiesLoader {
     {
         return new ConnectionProfile(PropertiesLoader.getProperties().getProperty("testModeller.apiHost"), PropertiesLoader.getProperties().getProperty("testModeller.apiKey"));
     }
+
+    public static Long getReleaseId()
+    {
+        return Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.releaseId"));
+    }
 }

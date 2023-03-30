@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestBase {
-    protected ConnectionProfile cp = new ConnectionProfile(PropertiesLoader.getProperties().getProperty("testModeller.apiHost"), PropertiesLoader.getProperties().getProperty("testModeller.apiKey"));
+    protected ConnectionProfile cp = PropertiesLoader.getConnectionProfile();
 
     protected DataAllocationEngine dataAllocationEngine = new DataAllocationEngine(cp);
 
