@@ -3,7 +3,7 @@ Open source repository of Java based selenium tests. For use with [TestModeller.
 
 Follow along with this [Tutorial](https://testmodeller.io/tutorials/selenium-java/)
 
-**NOTE:** Targets Java 8 only out of the box.
+**NOTE:** Targets Java 11 only out of the box.
 
 # Getting started
 1. Clone this repository.
