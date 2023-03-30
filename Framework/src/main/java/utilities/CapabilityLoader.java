@@ -149,8 +149,10 @@ public class CapabilityLoader
         options.merge(getDesiredCapabilities());
 
         try {
-            options.addExtensions(new File("extension\\TestModellerExtension.crx"));
-        } catch (Exception e) {}
+            options.addExtensions(new File("extension/TestModellerExtension.crx"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         WebDriver driver = new ChromeDriver(options);
 

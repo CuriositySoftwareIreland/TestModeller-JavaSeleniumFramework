@@ -11,12 +11,16 @@ import ie.curiositysoftware.modellerstorage.services.ModellerFileService;
 import ie.curiositysoftware.modellerstorage.services.ModellerFolderService;
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import org.apache.http.entity.FileEntity;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import pages.BasePage;
 import utilities.PropertiesLoader;
 import utilities.reports.ExtentReportManager;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -66,6 +70,19 @@ public class TestInsightsRecorder extends BasePage {
                                             "releaseID: " + PropertiesLoader.getReleaseId() + "}});" +
                 "        event.initEvent('upload_session_sync');" +
                 "        document.dispatchEvent(event);");
+
+        // Wait for alert and print the text;
+        try {
+            WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(10));
+            wait.until(ExpectedConditions.alertIsPresent());
+
+            Alert alert = m_Driver.switchTo().alert();
+            System.out.println("Alert text: " + alert.getText());
+
+            alert.accept();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void createNewJourneyPool()
