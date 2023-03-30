@@ -10,6 +10,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import utilities.reports.ExtentReportManager;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -134,7 +135,7 @@ public class CapabilityLoader
 
         if (PropertiesLoader.isHeadless()) {
             options.addArguments("disable-gpu");
-            options.addArguments("--headless");
+            options.addArguments("--headless=new");
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
         }
@@ -146,6 +147,10 @@ public class CapabilityLoader
         options.addArguments("--window-size=1920,1080");
         options.addArguments("--remote-allow-origins=*");
         options.merge(getDesiredCapabilities());
+
+        try {
+            options.addExtensions(new File("extension\\TestModellerExtension.crx"));
+        } catch (Exception e) {}
 
         WebDriver driver = new ChromeDriver(options);
 
