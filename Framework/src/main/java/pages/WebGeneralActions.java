@@ -3,6 +3,9 @@ package pages;
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -668,7 +671,6 @@ public class WebGeneralActions extends BasePage {
      */
     public void MouseOut(String objectLocator)
     {
-// TODO
         WebElement elem = getWebElement(getLocatorFromString(objectLocator));
         if (elem == null) {
             failStep("Mouse Out", "Unable to locate object: " + objectLocator);
@@ -700,6 +702,19 @@ public class WebGeneralActions extends BasePage {
 
         passStepWithScreenshot("Mouse Over");
 
+    }
+
+    /**
+     * Logs all console messages in the browser
+     * @name Log Console Messages
+     */
+    public void LogConsoleMessages()
+    {
+        LogEntries logs = m_Driver.manage().logs().get(LogType.BROWSER);
+
+        for (LogEntry entry : logs) {
+            System.out.println(entry.getLevel() + " " + entry.getMessage());
+        }
     }
 
     /**
