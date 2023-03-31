@@ -85,7 +85,7 @@ public class TestInsightsRecorder extends BasePage {
         }
     }
 
-    private void createNewJourneyPool()
+    private synchronized void createNewJourneyPool()
     {
         if (journey != null)
             return;
@@ -106,6 +106,8 @@ public class TestInsightsRecorder extends BasePage {
 
         // Create pool
         JourneyPoolService journeyPoolService = new JourneyPoolService(cp);
-        journey = journeyPoolService.createJourneyPool(Optional.of(mf.getId()), releaseId, resultName);
+        if (journey != null) {
+            journey = journeyPoolService.createJourneyPool(Optional.of(mf.getId()), releaseId, resultName);
+        }
     }
 }
