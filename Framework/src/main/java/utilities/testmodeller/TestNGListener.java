@@ -87,12 +87,19 @@ public class TestNGListener implements ITestListener, IClassListener {
         if (path == null)
             return;
 
+        TestModellerSuite suite = getTestModellerSuite((ITestClass) testResult.getTestClass());
+
         // Create TestPath run entity
         TestPathRun testPathRun = new TestPathRun();
         testPathRun.setRunTime(toIntExact(testResult.getEndMillis() - testResult.getStartMillis()));
         testPathRun.setRunTimeStamp(new Date(testResult.getStartMillis()));
         testPathRun.setTestPathGuid(path.guid());
         testPathRun.setVipRunId(TestRunIdGenerator.getRunId());
+
+        if (suite != null) {
+            testPathRun.setProfileId(suite.profileId());
+            testPathRun.setTestSuiteId(suite.id());
+        }
 
         try {
             testPathRun.setJobId(Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.jobId")));

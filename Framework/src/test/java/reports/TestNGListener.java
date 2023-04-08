@@ -127,6 +127,8 @@ public class TestNGListener implements ITestListener, IClassListener {
         if (path == null)
             return;
 
+        TestModellerSuite suite = getTestModellerSuite((ITestClass) testResult.getTestClass());
+
         // Create TestPath run entity
         TestPathRun testPathRun = new TestPathRun();
         testPathRun.setRunTime(toIntExact(testResult.getEndMillis() - testResult.getStartMillis()));
@@ -137,6 +139,11 @@ public class TestNGListener implements ITestListener, IClassListener {
         testPathRun.setTestStatus(status);
         testPathRun.setTestPathRunSteps(TestModellerLogger.steps.get());
 
+        if (suite != null) {
+            testPathRun.setProfileId(suite.profileId());
+            testPathRun.setTestSuiteId(suite.id());
+        }
+        
         try {
             testPathRun.setJobId(Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.jobId")));
         } catch (Exception e) {}
