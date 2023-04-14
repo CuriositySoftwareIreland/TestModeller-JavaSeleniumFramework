@@ -106,7 +106,7 @@ public class TestInsightsRecorder extends BasePage {
 
         // Create pool
         JourneyPoolService journeyPoolService = new JourneyPoolService(cp);
-        if (journey != null) {
+        if (journey == null) {
             journey = journeyPoolService.createJourneyPool(Optional.of(mf.getId()), releaseId, resultName);
         }
     }
