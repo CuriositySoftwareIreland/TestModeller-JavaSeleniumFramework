@@ -112,6 +112,22 @@ public class APIGeneralActions extends BasePage {
     }
 
     /**
+     * @name Assert Response JSON Path Not Exists
+     */
+    public void AssertJSONPathNotExists(Response rsp, String jsonPath)
+    {
+        try {
+            if ((JsonPath.read(rsp.getBody().asString(), jsonPath) == null)) {
+                passStep(rsp, "Assert Response JSON Path Exists", "Body does not contain the JSON path '" + jsonPath  + "'.");
+            } else {
+                failStep(rsp, "Assert Response JSON Path Exists", "Body contains the JSON path '" + jsonPath + "'.");
+            }
+        } catch (Exception e) {
+            passStep(rsp, "Assert Response JSON Path Exists", "Unable to extract json path '" + jsonPath + "' from response " + rsp.getBody().asString() + ". " + e.getMessage());
+        }
+    }
+
+    /**
      * @name Assert JSON Data
      */
     public void AssertJSONData(Response rsp)
