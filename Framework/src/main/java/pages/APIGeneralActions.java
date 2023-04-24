@@ -1,11 +1,19 @@
 package pages;
 
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Helper;
+import com.github.jknack.handlebars.Options;
+import com.github.jknack.handlebars.Template;
 import com.jayway.jsonpath.JsonPath;
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import io.restassured.response.Response;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 import org.openqa.selenium.WebDriver;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class APIGeneralActions extends BasePage {
     @TestModellerIgnore
@@ -16,8 +24,7 @@ public class APIGeneralActions extends BasePage {
     /**
      * @name Extract Value by JSON Path
      */
-    public String ExtractValueByJSONPath(Response rsp, String jsonPath)
-    {
+    public String ExtractValueByJSONPath(Response rsp, String jsonPath) {
         try {
             String value = JsonPath.read(rsp.getBody().asString(), jsonPath).toString();
             passStep(rsp, "Extract Value by JSON Path", "Extracted value '" + value + "'");
@@ -33,16 +40,14 @@ public class APIGeneralActions extends BasePage {
     /**
      * @name Extract Value by XPath
      */
-    public String ExtractValueByXMLPath(Response rsp, String xmlPath)
-    {
+    public String ExtractValueByXMLPath(Response rsp, String xmlPath) {
         return rsp.body().xmlPath().get(xmlPath);
     }
 
     /**
      * @name Assert Status Code
      */
-    public void AssertStatusCode(Response rsp, int statusCode)
-    {
+    public void AssertStatusCode(Response rsp, int statusCode) {
         if (rsp.getStatusCode() != statusCode) {
             failStep(rsp, "Assert Status Code", "Status code invalid - expected " + statusCode + " - found " + rsp.getStatusCode());
         } else {
@@ -53,24 +58,22 @@ public class APIGeneralActions extends BasePage {
     /**
      * @name Assert JSON Path
      */
-    public void AssertJsonPath(Response rsp, String jsonPath, String value)
-    {
+    public void AssertJsonPath(Response rsp, String jsonPath, String value) {
         try {
             if (!(JsonPath.read(rsp.getBody().asString(), jsonPath).toString().equals(value))) {
                 failStep(rsp, "Assert JSON Path", "Body didn't contain value '" + value + "' at path '" + jsonPath + "'");
             } else {
-                passStep(rsp, "Assert JSON Path","Body contained value '" + value + "' at path '" + jsonPath + "'");
+                passStep(rsp, "Assert JSON Path", "Body contained value '" + value + "' at path '" + jsonPath + "'");
             }
         } catch (Exception e) {
-            failStep(rsp, "Assert JSON Path","Unable to extract json path '" + jsonPath + "' from response " + rsp.getBody().asString() + ". " + e.getMessage());
+            failStep(rsp, "Assert JSON Path", "Unable to extract json path '" + jsonPath + "' from response " + rsp.getBody().asString() + ". " + e.getMessage());
         }
     }
 
     /**
      * @name Assert Response Contains Header
      */
-    public void AssertHeaderContains(Response rsp, String headerKey)
-    {
+    public void AssertHeaderContains(Response rsp, String headerKey) {
         if (rsp.getHeaders().get(headerKey) == null) {
             failStep(rsp, "Assert Response Contains Header", "Response does not contain a header '" + headerKey + "'.");
         } else {
@@ -81,8 +84,7 @@ public class APIGeneralActions extends BasePage {
     /**
      * @name Assert Response Contains Header with Value
      */
-    public void AssertHeaderValue(Response rsp, String headerKey, String headerValue)
-    {
+    public void AssertHeaderValue(Response rsp, String headerKey, String headerValue) {
         if (rsp.getHeaders().get(headerKey) == null) {
             failStep(rsp, "Assert Response Contains Header with Value", "Response does not contain a header '" + headerKey + "'.");
         } else {
@@ -98,11 +100,10 @@ public class APIGeneralActions extends BasePage {
     /**
      * @name Assert Response JSON Path Exists
      */
-    public void AssertJSONPathExists(Response rsp, String jsonPath)
-    {
+    public void AssertJSONPathExists(Response rsp, String jsonPath) {
         try {
             if (!(JsonPath.read(rsp.getBody().asString(), jsonPath) != null)) {
-                failStep(rsp, "Assert Response JSON Path Exists", "Body does not contain the JSON path '" + jsonPath  + "'.");
+                failStep(rsp, "Assert Response JSON Path Exists", "Body does not contain the JSON path '" + jsonPath + "'.");
             } else {
                 passStep(rsp, "Assert Response JSON Path Exists", "Body contains the JSON path '" + jsonPath + "'.");
             }
@@ -114,11 +115,10 @@ public class APIGeneralActions extends BasePage {
     /**
      * @name Assert Response JSON Path Not Exists
      */
-    public void AssertJSONPathNotExists(Response rsp, String jsonPath)
-    {
+    public void AssertJSONPathNotExists(Response rsp, String jsonPath) {
         try {
             if ((JsonPath.read(rsp.getBody().asString(), jsonPath) == null)) {
-                passStep(rsp, "Assert Response JSON Path Exists", "Body does not contain the JSON path '" + jsonPath  + "'.");
+                passStep(rsp, "Assert Response JSON Path Exists", "Body does not contain the JSON path '" + jsonPath + "'.");
             } else {
                 failStep(rsp, "Assert Response JSON Path Exists", "Body contains the JSON path '" + jsonPath + "'.");
             }
@@ -130,8 +130,7 @@ public class APIGeneralActions extends BasePage {
     /**
      * @name Assert JSON Data
      */
-    public void AssertJSONData(Response rsp)
-    {
+    public void AssertJSONData(Response rsp) {
         try {
             new JSONObject(rsp.getBody().asString());
 
@@ -144,6 +143,41 @@ public class APIGeneralActions extends BasePage {
             } catch (Exception ex1) {
                 failStep(rsp, "Assert JSON Data", "An exception occured while parsing the JSON result: " + ex1.getMessage());
             }
+        }
+    }
+
+    /**
+     * @name Evaluate Message Template
+     */
+    public String EvaluateMessageTemplate(String msg) {
+        Handlebars handlebars = new Handlebars();
+        // Register the custom fixedRange helper
+        handlebars.registerHelper("range", new Helper<Integer>() {
+            @Override
+            public Object apply(Integer from, Options options) {
+                int to = options.param(0);
+                List<Integer> range = new ArrayList<>();
+                for (int i = from; i <= to; i++) {
+                    range.add(i);
+                }
+                return range;
+            }
+        });
+
+        handlebars.registerHelper("equals", new Helper<String>() {
+            @Override
+            public Object apply(String s1, Options options) {
+                String s2 = options.param(0);
+                return s1.equals(s2);
+            }
+        });
+
+        try {
+            Template template = handlebars.compileInline(msg);
+
+            return template.apply(null);
+        } catch (IOException e) {
+            return msg;
         }
     }
 }

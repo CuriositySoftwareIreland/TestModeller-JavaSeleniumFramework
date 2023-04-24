@@ -122,6 +122,11 @@ public class BasePage {
         return null;
     }
 
+    protected String evaluateMessage(String message)
+    {
+        return (new APIGeneralActions(m_Driver).EvaluateMessageTemplate(message));
+    }
+
     protected void printResponse(Response rsp)
     {
         System.out.println("----------- Response Details ----------");
