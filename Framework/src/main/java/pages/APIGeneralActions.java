@@ -151,16 +151,19 @@ public class APIGeneralActions extends BasePage {
      */
     public String EvaluateMessageTemplate(String msg) {
         Handlebars handlebars = new Handlebars();
-        // Register the custom fixedRange helper
+        // Register the range helper
         handlebars.registerHelper("range", new Helper<Integer>() {
             @Override
-            public Object apply(Integer from, Options options) {
-                int to = options.param(0);
-                List<Integer> range = new ArrayList<>();
-                for (int i = from; i <= to; i++) {
-                    range.add(i);
+            public CharSequence apply(Integer context, Options options) throws IOException {
+                int start = (int) context;
+                int end = (int) options.param(0);
+                StringBuilder result = new StringBuilder();
+
+                for (int i = start; i <= end; i++) {
+                    result.append(options.fn(i));
                 }
-                return range;
+
+                return result.toString();
             }
         });
 
@@ -175,7 +178,9 @@ public class APIGeneralActions extends BasePage {
         try {
             Template template = handlebars.compileInline(msg);
 
-            return template.apply(null);
+            String resolvedMsg = template.apply(null);
+
+            return resolvedMsg;
         } catch (IOException e) {
             return msg;
         }
