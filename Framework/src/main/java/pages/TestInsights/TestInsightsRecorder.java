@@ -41,8 +41,8 @@ public class TestInsightsRecorder extends BasePage {
         JavascriptExecutor jsExecutor = (JavascriptExecutor) m_Driver;
 
         jsExecutor.executeScript("var event = new CustomEvent('Event');" +
-                                        "event.initEvent('start_record');" +
-                                        "document.dispatchEvent(event);");
+                "event.initEvent('start_record');" +
+                "document.dispatchEvent(event);");
     }
 
     public void StopRecorder()
@@ -50,8 +50,8 @@ public class TestInsightsRecorder extends BasePage {
         JavascriptExecutor jsExecutor = (JavascriptExecutor) m_Driver;
 
         jsExecutor.executeScript("var event = new CustomEvent('Event');" +
-                                        "event.initEvent('stop_record');" +
-                                        "document.dispatchEvent(event);");
+                "event.initEvent('stop_record');" +
+                "document.dispatchEvent(event);");
     }
 
     public void UploadRecording()
@@ -61,13 +61,13 @@ public class TestInsightsRecorder extends BasePage {
         JavascriptExecutor jsExecutor = (JavascriptExecutor) m_Driver;
 
         jsExecutor.executeScript("var event = new CustomEvent('Event', {detail: {" +
-                                            "name: '" + ExtentReportManager.getTestName() + "', " +
-                                            "poolId: " + journey.getId() + ", " +
-                                            "url: '" + cp.getAPIUrl().substring(0, cp.getAPIUrl().length() -1) + "', " +
-                                            "apiKey: '" + cp.getAPIKey() + "', " +
-                                            "source:' QuickStart Web Framework', " +
-                                            "sourceLocation:'" + "Automation" + "', " +
-                                            "releaseID: " + PropertiesLoader.getReleaseId() + "}});" +
+                "name: '" + ExtentReportManager.getTestName() + "', " +
+                "poolId: " + journey.getId() + ", " +
+                "url: '" + cp.getAPIUrl().substring(0, cp.getAPIUrl().length() -1) + "', " +
+                "apiKey: '" + cp.getAPIKey() + "', " +
+                "source:' QuickStart Web Framework', " +
+                "sourceLocation:'" + "Automation" + "', " +
+                "releaseID: " + PropertiesLoader.getReleaseId() + "}});" +
                 "        event.initEvent('upload_session_sync');" +
                 "        document.dispatchEvent(event);");
 
@@ -78,8 +78,11 @@ public class TestInsightsRecorder extends BasePage {
 
             Alert alert = m_Driver.switchTo().alert();
             System.out.println("Alert text: " + alert.getText());
-
             alert.accept();
+
+            Thread.sleep(1000);
+            m_Driver.switchTo().defaultContent();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
