@@ -175,6 +175,14 @@ public class APIGeneralActions extends BasePage {
             }
         });
 
+        handlebars.registerHelper("ifEq", new Helper<String>() {
+            @Override
+            public Object apply(String s1, Options options) {
+                String s2 = options.param(0);
+                return s1.equals(s2);
+            }
+        });
+
         try {
             Template template = handlebars.compileInline(msg);
 
