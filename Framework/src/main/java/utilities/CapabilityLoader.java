@@ -134,18 +134,17 @@ public class CapabilityLoader
         options.setAcceptInsecureCerts(true);
 
         if (PropertiesLoader.isHeadless()) {
-            options.addArguments("disable-gpu");
             options.addArguments("--headless=new");
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
         }
 
-        options.addArguments("--start-maximized");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--ignore-certificate-errors");
         options.addArguments("--ignore-ssl-errors");
         options.addArguments("--allow-running-insecure-content");
         options.addArguments("--window-size=1920,1080");
         options.addArguments("--remote-allow-origins=*");
+
         options.merge(getDesiredCapabilities());
 
         try {
