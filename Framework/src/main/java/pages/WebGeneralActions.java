@@ -1,5 +1,6 @@
 package pages;
 
+import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -10,7 +11,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.CapabilityLoader;
+import utilities.PropertiesLoader;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -156,6 +167,45 @@ public class WebGeneralActions extends BasePage {
         QuitCurrentBrowser();
 
         setDriver(CapabilityLoader.createChromeDriver());
+    }
+
+    /**
+     * Upload a file from modeller using its ID
+     * @name Upload Modeller File
+     * @param identifier - The identifier of the element to upload the file to
+     * @param fileId - The ID of the file to upload
+     */
+    public void UploadModellerFile(String identifier, String fileId)
+    {
+        // Get file
+        ConnectionProfile connectionProfile = new ConnectionProfile(PropertiesLoader.getProperties().getProperty("testModeller.apiHost"), PropertiesLoader.getProperties().getProperty("testModeller.apiKey"));
+
+        String fileUrl = connectionProfile.getAPIUrl() + "api/apikey/" + connectionProfile.getAPIKey() + "/file-storage/download-file/" + fileId;
+        String targetPath = null;
+        try {
+            URL url = new URL(fileUrl);
+            HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+            String disposition = httpConn.getHeaderField("Content-Disposition");
+            String fileName = disposition.replaceFirst("(?i)^.*filename=\"([^\"]+)\".*$", "$1");
+
+            String currentWorkingDir = System.getProperty("user.dir");
+            Path tempDir = Files.createTempDirectory(Paths.get(currentWorkingDir), "tempDir");
+            Path outputPath = Paths.get(tempDir.toString(), fileName);
+
+            try (InputStream in = httpConn.getInputStream()) {
+                Files.copy(in, outputPath);
+            }
+
+            targetPath = outputPath.toString();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Locate the file input element
+        WebElement fileInput = getWebElement(getLocatorFromString(identifier));
+
+        // Upload the file
+        fileInput.sendKeys(targetPath);
     }
 
     /**
