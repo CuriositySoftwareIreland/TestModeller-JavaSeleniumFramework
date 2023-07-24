@@ -45,6 +45,13 @@ public class APIGeneralActions extends BasePage {
     }
 
     /**
+     * @name Extract Cookie Value by Name
+     */
+    public String ExtractCookieValue(Response rsp, String name) {
+        return rsp.getDetailedCookie(name).getValue();
+    }
+
+    /**
      * @name Assert Status Code
      */
     public void AssertStatusCode(Response rsp, int statusCode) {
