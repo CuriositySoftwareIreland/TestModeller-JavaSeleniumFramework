@@ -3,9 +3,10 @@ package pages.CloudExecution;
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import org.openqa.selenium.WebDriver;
 import pages.BasePage;
+import pages.WebGeneralActions;
 import utilities.CapabilityLoader;
 
-public class SauceLabs extends BasePage {
+public class SauceLabs extends WebGeneralActions {
     @TestModellerIgnore
     public SauceLabs(WebDriver driver) {
         super(driver);
@@ -31,5 +32,48 @@ public class SauceLabs extends BasePage {
         quitCurrentBrowser();
 
         setDriver(CapabilityLoader.createSauceLabsDriver(username, accessKey, "eu"));
+    }
+
+    /**
+     * Sets the browser type
+     * @name Browser Name (chrome, firefox, Safari)
+     */
+    public void SetWebBrowserType(String platformName)
+    {
+        AddCapability("browserName", platformName);
+    }
+    /**
+     * Sets the browser version
+     * @name Browser Version
+     */
+    public void SetWebBrowserVersion(String browserVersion)
+    {
+        AddCapability("browserVersion", browserVersion);
+    }
+    /**
+     * Sets the platform type
+     * @name Platform Name
+     */
+    public void SetWebPlatformName(String platformName)
+    {
+        AddCapability("platformName", platformName);
+    }
+
+    /**
+     * Sets custom capability type
+     * @name Set Custom Capability
+     */
+    public void SetCustomCapability(String capName, String capValue)
+    {
+        AddCapability(capName, capValue);
+    }
+
+    /**
+     * Sets the mobile platform name
+     * @name Set Platform Name
+     */
+    public void SetMobilePlatformName(String platformName)
+    {
+        AddCapability(platformName, platformName);
     }
 }
