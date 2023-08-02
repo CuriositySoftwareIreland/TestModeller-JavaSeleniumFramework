@@ -182,18 +182,10 @@ public class APIGeneralActions extends BasePage {
             }
         });
 
-        handlebars.registerHelper("ifEq", new Helper<String>() {
+        handlebars.registerHelper("ifEq", new Helper<Object>() {
             @Override
-            public Object apply(String s1, Options options) {
-                String s2 = options.param(0);
-                return s1.equals(s2);
-            }
-        });
-
-        handlebars.registerHelper("ifGreaterThan", new Helper<Double>() {
-            @Override
-            public CharSequence apply(Double context, Options options) throws IOException {
-                if (context > (Double) options.param(0)) {
+            public CharSequence apply(Object context, Options options) throws IOException {
+                if (context.equals(options.param(0))) {
                     return options.fn(context);
                 } else {
                     return options.inverse(context);
@@ -201,10 +193,21 @@ public class APIGeneralActions extends BasePage {
             }
         });
 
-        handlebars.registerHelper("ifLessThan", new Helper<Double>() {
+        handlebars.registerHelper("ifGreaterThan", new Helper<Integer>() {
             @Override
-            public CharSequence apply(Double context, Options options) throws IOException {
-                if (context < (Double) options.param(0)) {
+            public CharSequence apply(Integer context, Options options) throws IOException {
+                if (context > (Integer) options.param(0)) {
+                    return options.fn(context);
+                } else {
+                    return options.inverse(context);
+                }
+            }
+        });
+
+        handlebars.registerHelper("ifLessThan", new Helper<Integer>() {
+            @Override
+            public CharSequence apply(Integer context, Options options) throws IOException {
+                if (context < (Integer) options.param(0)) {
                     return options.fn(context);
                 } else {
                     return options.inverse(context);
@@ -223,10 +226,10 @@ public class APIGeneralActions extends BasePage {
             }
         });
 
-        handlebars.registerHelper("ifGreaterThanOrEqualTo", new Helper<Double>() {
+        handlebars.registerHelper("ifGreaterThanOrEqualTo", new Helper<Integer>() {
             @Override
-            public CharSequence apply(Double context, Options options) throws IOException {
-                if (context >= (Double) options.param(0)) {
+            public CharSequence apply(Integer context, Options options) throws IOException {
+                if (context >= (Integer) options.param(0)) {
                     return options.fn(context);
                 } else {
                     return options.inverse(context);
@@ -234,10 +237,10 @@ public class APIGeneralActions extends BasePage {
             }
         });
 
-        handlebars.registerHelper("ifLessThanOrEqualTo", new Helper<Double>() {
+        handlebars.registerHelper("ifLessThanOrEqualTo", new Helper<Integer>() {
             @Override
-            public CharSequence apply(Double context, Options options) throws IOException {
-                if (context <= (Double) options.param(0)) {
+            public CharSequence apply(Integer context, Options options) throws IOException {
+                if (context <= (Integer) options.param(0)) {
                     return options.fn(context);
                 } else {
                     return options.inverse(context);
