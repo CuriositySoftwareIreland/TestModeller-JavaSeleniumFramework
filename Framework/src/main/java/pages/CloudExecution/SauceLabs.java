@@ -67,13 +67,4 @@ public class SauceLabs extends WebGeneralActions {
     {
         AddCapability(capName, capValue);
     }
-
-    /**
-     * Sets the mobile platform name
-     * @name Set Platform Name
-     */
-    public void SetMobilePlatformName(String platformName)
-    {
-        AddCapability(platformName, platformName);
-    }
 }

@@ -190,6 +190,76 @@ public class APIGeneralActions extends BasePage {
             }
         });
 
+        handlebars.registerHelper("ifGreaterThan", new Helper<Double>() {
+            @Override
+            public CharSequence apply(Double context, Options options) throws IOException {
+                if (context > (Double) options.param(0)) {
+                    return options.fn(context);
+                } else {
+                    return options.inverse(context);
+                }
+            }
+        });
+
+        handlebars.registerHelper("ifLessThan", new Helper<Double>() {
+            @Override
+            public CharSequence apply(Double context, Options options) throws IOException {
+                if (context < (Double) options.param(0)) {
+                    return options.fn(context);
+                } else {
+                    return options.inverse(context);
+                }
+            }
+        });
+
+        handlebars.registerHelper("ifNotEqualTo", new Helper<Object>() {
+            @Override
+            public CharSequence apply(Object context, Options options) throws IOException {
+                if (!context.equals(options.param(0))) {
+                    return options.fn(context);
+                } else {
+                    return options.inverse(context);
+                }
+            }
+        });
+
+        handlebars.registerHelper("ifGreaterThanOrEqualTo", new Helper<Double>() {
+            @Override
+            public CharSequence apply(Double context, Options options) throws IOException {
+                if (context >= (Double) options.param(0)) {
+                    return options.fn(context);
+                } else {
+                    return options.inverse(context);
+                }
+            }
+        });
+
+        handlebars.registerHelper("ifLessThanOrEqualTo", new Helper<Double>() {
+            @Override
+            public CharSequence apply(Double context, Options options) throws IOException {
+                if (context <= (Double) options.param(0)) {
+                    return options.fn(context);
+                } else {
+                    return options.inverse(context);
+                }
+            }
+        });
+
+        handlebars.registerHelper("range", new Helper<Integer>() {
+            @Override
+            public CharSequence apply(Integer context, Options options) throws IOException {
+                int start = context;
+                int end = (Integer) options.param(0);
+                StringBuilder sb = new StringBuilder();
+
+                for (int i = start; i <= end; i++) {
+                    sb.append(options.fn(i));
+                }
+
+                return sb.toString();
+            }
+        });
+
         try {
             Template template = handlebars.compileInline(msg);
 
