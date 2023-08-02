@@ -2,6 +2,7 @@ package pages;
 
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import io.restassured.RestAssured;
+import io.restassured.filter.cookie.CookieFilter;
 import io.restassured.http.ContentType;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
@@ -45,6 +46,8 @@ public class BasePage {
 
     public static int LocatorTimeout = 5;
 
+    public static CookieFilter CookieFilter = new CookieFilter();
+
     @TestModellerIgnore
     public BasePage(WebDriver driver)
     {
@@ -60,6 +63,60 @@ public class BasePage {
 
             jsExec = (JavascriptExecutor) this.m_Driver;
         }
+    }
+
+    protected Response performGet(String endPoint, RequestSpecification spec)
+    {
+        applyCookies(spec);
+
+        return spec.get(endPoint);
+    }
+
+    protected Response performPost(String endPoint, RequestSpecification spec)
+    {
+        applyCookies(spec);
+
+        return spec.post(endPoint);
+    }
+
+    protected Response performPut(String endPoint, RequestSpecification spec)
+    {
+        applyCookies(spec);
+
+        return spec.put(endPoint);
+    }
+
+    protected Response performDelete(String endPoint, RequestSpecification spec)
+    {
+        applyCookies(spec);
+
+        return spec.delete(endPoint);
+    }
+
+    protected Response performOptions(String endPoint, RequestSpecification spec)
+    {
+        applyCookies(spec);
+
+        return spec.options(endPoint);
+    }
+
+    protected Response performPatch(String endPoint, RequestSpecification spec)
+    {
+        applyCookies(spec);
+
+        return spec.patch(endPoint);
+    }
+
+    protected Response performHead(String endPoint, RequestSpecification spec)
+    {
+        applyCookies(spec);
+
+        return spec.head(endPoint);
+    }
+
+    protected void applyCookies(RequestSpecification spec)
+    {
+        spec.filter(CookieFilter);
     }
 
     protected File getFileFromURL(String url)
