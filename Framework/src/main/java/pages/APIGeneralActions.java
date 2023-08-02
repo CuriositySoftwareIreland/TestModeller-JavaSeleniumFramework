@@ -6,6 +6,7 @@ import com.github.jknack.handlebars.Options;
 import com.github.jknack.handlebars.Template;
 import com.jayway.jsonpath.JsonPath;
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
+import io.restassured.filter.cookie.CookieFilter;
 import io.restassured.response.Response;
 import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
@@ -16,6 +17,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class APIGeneralActions extends BasePage {
+    public static CookieFilter CookieFilter = new CookieFilter();
+
+    public static Boolean CookieStoreEnabled = true;
+
     @TestModellerIgnore
     public APIGeneralActions(WebDriver driver) {
         super(driver);
@@ -181,6 +186,30 @@ public class APIGeneralActions extends BasePage {
         }
     }
 
+    /**
+     * @name Enable Cookie Store
+     */
+    public void EnableCookieStore()
+    {
+        CookieStoreEnabled = true;
+    }
+
+    /**
+     * @name Disable Cookie Store
+    */
+    public void DisableCookieStore()
+    {
+        CookieStoreEnabled = false;
+    }
+
+    /**
+     * @name Clear Cookie Store
+     */
+    public void ClearCookieStore()
+    {
+        CookieFilter = new CookieFilter();
+    }
+    
     /**
      * @name Evaluate Message Template
      */

@@ -46,8 +46,6 @@ public class BasePage {
 
     public static int LocatorTimeout = 5;
 
-    public static CookieFilter CookieFilter = new CookieFilter();
-
     @TestModellerIgnore
     public BasePage(WebDriver driver)
     {
@@ -116,7 +114,11 @@ public class BasePage {
 
     protected RequestSpecification  applyCookies(RequestSpecification spec)
     {
-        return spec.filter(CookieFilter);
+        if (APIGeneralActions.CookieStoreEnabled) {
+            return spec.filter(APIGeneralActions.CookieFilter);
+        } else {
+            return spec;
+        }
     }
 
     protected File getFileFromURL(String url)
