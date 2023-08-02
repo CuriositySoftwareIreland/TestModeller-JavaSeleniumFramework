@@ -67,56 +67,56 @@ public class BasePage {
 
     protected Response performGet(String endPoint, RequestSpecification spec)
     {
-        applyCookies(spec);
+        spec = applyCookies(spec);
 
         return spec.get(endPoint);
     }
 
     protected Response performPost(String endPoint, RequestSpecification spec)
     {
-        applyCookies(spec);
+        spec = applyCookies(spec);
 
         return spec.post(endPoint);
     }
 
     protected Response performPut(String endPoint, RequestSpecification spec)
     {
-        applyCookies(spec);
+        spec = applyCookies(spec);
 
         return spec.put(endPoint);
     }
 
     protected Response performDelete(String endPoint, RequestSpecification spec)
     {
-        applyCookies(spec);
+        spec = applyCookies(spec);
 
         return spec.delete(endPoint);
     }
 
     protected Response performOptions(String endPoint, RequestSpecification spec)
     {
-        applyCookies(spec);
+        spec = applyCookies(spec);
 
         return spec.options(endPoint);
     }
 
     protected Response performPatch(String endPoint, RequestSpecification spec)
     {
-        applyCookies(spec);
+        spec = applyCookies(spec);
 
         return spec.patch(endPoint);
     }
 
     protected Response performHead(String endPoint, RequestSpecification spec)
     {
-        applyCookies(spec);
+        spec = applyCookies(spec);
 
         return spec.head(endPoint);
     }
 
-    protected void applyCookies(RequestSpecification spec)
+    protected RequestSpecification  applyCookies(RequestSpecification spec)
     {
-        spec.filter(CookieFilter);
+        return spec.filter(CookieFilter);
     }
 
     protected File getFileFromURL(String url)
