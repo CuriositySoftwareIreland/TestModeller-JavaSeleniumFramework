@@ -52,6 +52,34 @@ public class APIGeneralActions extends BasePage {
     }
 
     /**
+     * @name Extract Status Code
+     */
+    public int extractStatusCode(Response rsp) {
+        return rsp.getStatusCode();
+    }
+
+    /**
+     * @name Extract Header Value
+     */
+    public String extractHeaderValue(Response rsp, String headerName) {
+        return rsp.getHeader(headerName);
+    }
+
+    /**
+     * @name Extract Response Time
+     */
+    public long extractResponseTime(Response rsp) {
+        return rsp.time();
+    }
+
+    /**
+     * @name Extract Content Type
+     */
+    public String extractContentType(Response rsp) {
+        return rsp.getContentType();
+    }
+
+    /**
      * @name Assert Status Code
      */
     public void AssertStatusCode(Response rsp, int statusCode) {
