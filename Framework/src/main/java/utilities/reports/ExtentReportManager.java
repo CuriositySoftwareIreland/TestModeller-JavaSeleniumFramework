@@ -21,6 +21,7 @@ import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.MultiPartSpecification;
 import io.restassured.specification.RequestSpecification;
+import org.apache.commons.text.StringEscapeUtils;
 import utilities.PropertiesLoader;
 import utilities.testmodeller.GetScreenShot;
 import com.aventstack.extentreports.ExtentReports;
@@ -136,20 +137,32 @@ public class ExtentReportManager {
 
     public static void passStep(RequestSpecification req, Response rsp, String stepName)
     {
-        ExtentTest passSection = reportThreadLocal.get().log(Status.PASS, stepName + "\n" +
-                "Status Code: " + rsp.getStatusCode() + "\n" +
-                "Status: " + rsp.getStatusLine() + "\n" +
-                "Message: " + rsp.getBody().asString());
+        String bodyContent = StringEscapeUtils.escapeHtml4(rsp.getBody().asString());
+
+        String message = "<h3>" + stepName + "</h3>" +
+                "<ul>" +
+                "<li><b>Status Code:</b> " + rsp.getStatusCode() + "</li>" +
+                "<li><b>Status:</b> " + rsp.getStatusLine() + "</li>" +
+                "<li><b>Message:</b> " + "<pre>" + bodyContent + "</pre></li>" +
+                "</ul>";
+
+        ExtentTest passSection = reportThreadLocal.get().log(Status.PASS, message);
 
         populateAPITestStep(stepName, passSection, Status.PASS, req, rsp);
     }
 
     public static void failStep(RequestSpecification req, Response rsp, String stepName)
     {
-        ExtentTest failSection = reportThreadLocal.get().log(Status.FAIL, stepName + "\n" +
-                "Status Code: " + rsp.getStatusCode() + "\n" +
-                "Status: " + rsp.getStatusLine() + "\n" +
-                "Message: " + rsp.getBody().asString());
+        String bodyContent = StringEscapeUtils.escapeHtml4(rsp.getBody().asString());
+
+        String message = "<h3>" + stepName + "</h3>" +
+                "<ul>" +
+                "<li><b>Status Code:</b> " + rsp.getStatusCode() + "</li>" +
+                "<li><b>Status:</b> " + rsp.getStatusLine() + "</li>" +
+                "<li><b>Message:</b> " + "<pre>" + bodyContent + "</pre></li>" +
+                "</ul>";
+
+        ExtentTest failSection = reportThreadLocal.get().log(Status.FAIL, message);
 
         populateAPITestStep(stepName, failSection, Status.FAIL, req, rsp);
     }
