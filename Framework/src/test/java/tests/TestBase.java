@@ -33,8 +33,6 @@ public class TestBase {
     @BeforeSuite(alwaysRun = true)
     public void setupReporter()
     {
-        WebDriverManager.chromedriver().setup();
-
         ExtentReportManager.setupReporter();
     }
 

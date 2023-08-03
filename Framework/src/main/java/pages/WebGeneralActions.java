@@ -227,7 +227,7 @@ public class WebGeneralActions extends BasePage {
     }
 
     /**
-     * Opens a new instance of chrome
+     * Opens a new instance of firefox
      * @name Open Firefox
      */
     public void OpenFirefox()
@@ -235,6 +235,17 @@ public class WebGeneralActions extends BasePage {
         QuitCurrentBrowser();
 
         setDriver(CapabilityLoader.createFirefoxDriver());
+    }
+
+    /**
+     * Opens a new instance of edge
+     * @name Open Edge
+     */
+    public void OpenEdge()
+    {
+        QuitCurrentBrowser();
+
+        setDriver(CapabilityLoader.createEdgeDriver());
     }
 
     /**

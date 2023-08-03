@@ -1,8 +1,11 @@
 package utilities;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.CapabilityType;
@@ -116,8 +119,24 @@ public class CapabilityLoader
         }
     }
 
+    public static WebDriver createEdgeDriver()
+    {
+        WebDriverManager.edgedriver().setup();
+
+        EdgeOptions edgeOptions = new EdgeOptions();
+        edgeOptions.merge(getDesiredCapabilities());
+
+        WebDriver driver = new EdgeDriver(edgeOptions);
+
+        setDriver(driver);
+
+        return driver;
+    }
+
     public static WebDriver createFirefoxDriver()
     {
+        WebDriverManager.firefoxdriver().setup();
+
         FirefoxOptions firefoxOptions = new FirefoxOptions();
         firefoxOptions.merge(getDesiredCapabilities());
 
@@ -130,6 +149,8 @@ public class CapabilityLoader
 
     public static WebDriver createChromeDriver()
     {
+        WebDriverManager.chromedriver().setup();
+
         ChromeOptions options = new ChromeOptions();
         options.setAcceptInsecureCerts(true);
 
