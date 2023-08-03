@@ -1,6 +1,8 @@
 package utilities.testmodeller;
 
 import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.markuputils.ExtentColor;
+import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
@@ -397,6 +399,8 @@ public class TestModellerLogger {
             if (rsp.getBody() != null) {
                 if (rsp.getContentType().toLowerCase().contains("application/json")) {
                     httpResponse.setBody(rsp.getBody().asPrettyString());
+                } else if (rsp.getBody().asString() != null && rsp.getBody().asString().length() < 100000) {
+                    httpResponse.setBody(rsp.getBody().asString());
                 }
             }
 

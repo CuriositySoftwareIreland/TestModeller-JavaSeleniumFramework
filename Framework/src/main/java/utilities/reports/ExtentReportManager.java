@@ -321,6 +321,9 @@ public class ExtentReportManager {
                 if (rsp.getContentType().toLowerCase().contains("application/json")) {
                     markupText += MarkupHelper.createLabel("Body", ExtentColor.GREY).getMarkup() + "<br>";
                     markupText += MarkupHelper.createCodeBlock(rsp.getBody().asPrettyString()).getMarkup() + "<br><br>";
+                } else if (rsp.getBody().asString() != null && rsp.getBody().asString().length() < 100000) {
+                    markupText += MarkupHelper.createLabel("Body", ExtentColor.GREY).getMarkup() + "<br>";
+                    markupText += MarkupHelper.createCodeBlock(rsp.getBody().asString()).getMarkup() + "<br><br>";
                 }
             }
 
