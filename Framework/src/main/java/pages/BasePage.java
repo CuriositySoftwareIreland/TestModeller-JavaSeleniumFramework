@@ -30,6 +30,7 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.time.Duration;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.concurrent.TimeUnit;
 
 import static io.restassured.RestAssured.when;
@@ -44,7 +45,7 @@ public class BasePage {
 
     public static Boolean StopOnFail = true;
 
-    public static int LocatorTimeout = 5;
+    public static int LocatorTimeout = 30;
 
     @TestModellerIgnore
     public BasePage(WebDriver driver)
@@ -383,40 +384,30 @@ public class BasePage {
     }
 
     protected void waitForLoaded(WebElement elem, final By by, int waitTime) {
-        WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime));
-
-        for (int attempt = 0; attempt < waitTime; attempt++) {
-            try {
-                elem.findElement(by);
-                break;
-            } catch (Exception e) {
-                m_Driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-            }
-        }
+        try {
+            new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime))
+                    .ignoring(NoSuchElementException.class)  // Ignore NoSuchElementExceptions
+                    .until(driver -> elem.findElement(by));  // Wait until the element is found
+        } catch (Exception e) {}
     }
 
     protected void waitForVisible(WebElement selem, final By by, int waitTime)
     {
         try {
-            WebElement elem = selem.findElement(by);
-
             WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime));
 
-            wait.until(ExpectedConditions.visibilityOf(elem));
+            wait.until(ExpectedConditions.visibilityOfElementLocated(by));
         } catch (Exception e) {
 
         }
 
         try {
-            WebElement elem = selem.findElement(by);
-
             WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime));
 
-            wait.until(ExpectedConditions.elementToBeClickable(elem));
+            wait.until(ExpectedConditions.elementToBeClickable(by));
         } catch (Exception e) {
 
         }
-
     }
 
     protected WebElement getWebElement(final By by)
@@ -424,7 +415,8 @@ public class BasePage {
         waitForLoaded(by, LocatorTimeout);
         waitForVisible(by, LocatorTimeout);
 
-        if (m_Driver.getCurrentUrl() == null || m_Driver.getCurrentUrl().isEmpty() || m_Driver.getCurrentUrl().equals("data:,")) {
+        String currentUrl = m_Driver.getCurrentUrl();
+        if (currentUrl == null || currentUrl.isEmpty() || currentUrl.equals("data:,")) {
             failStep("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
         }
 
@@ -437,14 +429,10 @@ public class BasePage {
 
     protected void waitForLoaded(final By by, int waitTime) {
         WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime));
+        try {
+            wait.until(ExpectedConditions.presenceOfElementLocated(by));
+        } catch (Exception e) {
 
-        for (int attempt = 0; attempt < waitTime; attempt++) {
-            try {
-                m_Driver.findElement(by);
-                break;
-            } catch (Exception e) {
-                m_Driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
-            }
         }
     }
 
