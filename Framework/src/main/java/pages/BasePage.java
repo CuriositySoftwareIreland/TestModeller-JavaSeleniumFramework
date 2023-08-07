@@ -271,7 +271,7 @@ public class BasePage {
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
 
         if (BasePage.StopOnFail) {
-            Assert.fail(msg);
+            Assert.fail(msg + " - " + detail);
         }
     }
 
@@ -292,7 +292,7 @@ public class BasePage {
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg + " - " + details);
 
         if (BasePage.StopOnFail) {
-            Assert.fail(msg);
+            Assert.fail(msg + " - " + details);
         }
     }
 

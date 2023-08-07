@@ -167,6 +167,8 @@ public class WebGeneralActions extends BasePage {
         QuitCurrentBrowser();
 
         setDriver(CapabilityLoader.createChromeDriver());
+
+        passStep("Chrome browser opened");
     }
 
     /**
@@ -235,6 +237,8 @@ public class WebGeneralActions extends BasePage {
         QuitCurrentBrowser();
 
         setDriver(CapabilityLoader.createFirefoxDriver());
+
+        passStep("Firefox browser opened");
     }
 
     /**
@@ -246,6 +250,8 @@ public class WebGeneralActions extends BasePage {
         QuitCurrentBrowser();
 
         setDriver(CapabilityLoader.createEdgeDriver());
+
+        passStep("Edge browser opened");
     }
 
     /**
