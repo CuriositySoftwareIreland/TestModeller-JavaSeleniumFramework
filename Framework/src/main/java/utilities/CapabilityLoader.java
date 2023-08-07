@@ -124,6 +124,19 @@ public class CapabilityLoader
         WebDriverManager.edgedriver().setup();
 
         EdgeOptions edgeOptions = new EdgeOptions();
+
+        if (PropertiesLoader.isHeadless()) {
+            edgeOptions.addArguments("headless");
+        }
+
+        edgeOptions.addArguments("--no-sandbox");
+        edgeOptions.addArguments("--disable-dev-shm-usage");
+        edgeOptions.addArguments("--ignore-certificate-errors");
+        edgeOptions.addArguments("--ignore-ssl-errors");
+        edgeOptions.addArguments("--allow-running-insecure-content");
+        edgeOptions.addArguments("--window-size=1920,1080");
+        edgeOptions.addArguments("--remote-allow-origins=*");
+
         edgeOptions.merge(getDesiredCapabilities());
 
         WebDriver driver = new EdgeDriver(edgeOptions);
@@ -138,6 +151,15 @@ public class CapabilityLoader
         WebDriverManager.firefoxdriver().setup();
 
         FirefoxOptions firefoxOptions = new FirefoxOptions();
+
+        if (PropertiesLoader.isHeadless()) {
+            firefoxOptions.addArguments("-headless");
+        }
+
+        firefoxOptions.setAcceptInsecureCerts(true); // For --ignore-certificate-errors and --ignore-ssl-errors
+        firefoxOptions.addArguments("--width=1920");
+        firefoxOptions.addArguments("--height=1080");
+
         firefoxOptions.merge(getDesiredCapabilities());
 
         WebDriver driver = new FirefoxDriver(firefoxOptions);

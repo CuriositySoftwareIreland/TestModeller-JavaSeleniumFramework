@@ -91,6 +91,7 @@ public class TestBase {
                 if (CapabilityLoader.getDriver() != null)
                     CapabilityLoader.getDriver().quit();
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
