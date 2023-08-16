@@ -9,6 +9,7 @@ import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
 import ie.curiositysoftware.runresult.dto.TestPathRunStep;
 import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPRequest;
 import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPResponse;
+import io.restassured.http.Cookie;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
@@ -383,6 +384,14 @@ public class TestModellerLogger {
                 httpRequest.setHeaders(headerParams);
             }
 
+            if (req.getCookies() != null) {
+                HashMap<String, String> cookies = new HashMap<>();
+                for (Cookie cookie : req.getCookies().asList()) {
+                    cookies.put(cookie.getName(), cookie.getValue());
+                }
+                httpRequest.setCookies(cookies);
+            }
+
             runStep.setHttpRequest(httpRequest);
         }
 
@@ -413,6 +422,11 @@ public class TestModellerLogger {
 
                 httpResponse.setHeaders(headers);
             }
+
+            if (rsp.getCookies() != null) {
+                httpResponse.setCookies(new HashMap<>(rsp.getCookies()));
+            }
+
 
             runStep.setHttpResponse(httpResponse);
         }
