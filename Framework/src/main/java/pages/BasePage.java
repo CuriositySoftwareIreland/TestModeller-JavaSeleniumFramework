@@ -115,8 +115,8 @@ public class BasePage {
 
     protected RequestSpecification  applyCookies(RequestSpecification spec)
     {
-        if (APIGeneralActions.CookieStoreEnabled) {
-            return APIGeneralActions.CookieFilter.applyCookies(spec);
+        if (APIGeneralActions.CookieStoreEnabled()) {
+            return APIGeneralActions.CookieFilter().applyCookies(spec);
         }
 
         return spec;
@@ -124,8 +124,8 @@ public class BasePage {
 
     protected Response saveCookies(Response rsp)
     {
-        if (APIGeneralActions.CookieStoreEnabled) {
-            APIGeneralActions.CookieFilter.saveCookies(rsp);
+        if (APIGeneralActions.CookieStoreEnabled()) {
+            APIGeneralActions.CookieFilter().saveCookies(rsp);
         }
 
         return rsp;

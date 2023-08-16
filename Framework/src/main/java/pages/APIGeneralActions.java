@@ -20,13 +20,28 @@ import java.util.HashMap;
 import java.util.List;
 
 public class APIGeneralActions extends BasePage {
-    public static ModellerCookieFilter CookieFilter = new ModellerCookieFilter();
+    public static ThreadLocal<ModellerCookieFilter> CookieFilterTL = new ThreadLocal<ModellerCookieFilter>();
 
-    public static Boolean CookieStoreEnabled = true;
+    public static ThreadLocal<Boolean> CookieStoreEnabledTL = new ThreadLocal<Boolean>();
 
     @TestModellerIgnore
     public APIGeneralActions(WebDriver driver) {
         super(driver);
+    }
+
+    public static ModellerCookieFilter CookieFilter()
+    {
+        if (CookieFilterTL.get() == null)
+            CookieFilterTL.set(new ModellerCookieFilter());
+
+        return CookieFilterTL.get();
+    }
+
+    public static Boolean CookieStoreEnabled() {
+        if (CookieStoreEnabledTL.get() == null)
+            CookieStoreEnabledTL.set(true);
+
+        return CookieStoreEnabledTL.get();
     }
 
     /**
@@ -194,7 +209,7 @@ public class APIGeneralActions extends BasePage {
      */
     public void EnableCookieStore()
     {
-        CookieStoreEnabled = true;
+        CookieStoreEnabledTL.set(true);
     }
 
     /**
@@ -202,7 +217,7 @@ public class APIGeneralActions extends BasePage {
      */
     public void DisableCookieStore()
     {
-        CookieStoreEnabled = false;
+        CookieStoreEnabledTL.set(false);
     }
 
     /**
@@ -210,7 +225,7 @@ public class APIGeneralActions extends BasePage {
      */
     public void ClearCookieStore()
     {
-        CookieFilter = new ModellerCookieFilter();
+        CookieFilterTL.set(new ModellerCookieFilter());
     }
 
     /**
