@@ -12,13 +12,15 @@ import kong.unirest.json.JSONArray;
 import kong.unirest.json.JSONObject;
 import org.openqa.selenium.WebDriver;
 import utilities.testmodeller.JSONTemplateEvaluator;
+import utilities.testmodeller.ModellerCookieFilter;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class APIGeneralActions extends BasePage {
-    public static CookieFilter CookieFilter = new CookieFilter();
+    public static ModellerCookieFilter CookieFilter = new ModellerCookieFilter();
 
     public static Boolean CookieStoreEnabled = true;
 
@@ -197,7 +199,7 @@ public class APIGeneralActions extends BasePage {
 
     /**
      * @name Disable Cookie Store
-    */
+     */
     public void DisableCookieStore()
     {
         CookieStoreEnabled = false;
@@ -208,7 +210,7 @@ public class APIGeneralActions extends BasePage {
      */
     public void ClearCookieStore()
     {
-        CookieFilter = new CookieFilter();
+        CookieFilter = new ModellerCookieFilter();
     }
 
     /**

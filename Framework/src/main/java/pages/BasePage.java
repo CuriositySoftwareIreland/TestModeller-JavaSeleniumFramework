@@ -68,58 +68,67 @@ public class BasePage {
     {
         spec = applyCookies(spec);
 
-        return spec.get(endPoint);
+        return saveCookies(spec.get(endPoint));
     }
 
     protected Response performPost(String endPoint, RequestSpecification spec)
     {
         spec = applyCookies(spec);
 
-        return spec.post(endPoint);
+        return saveCookies(spec.post(endPoint));
     }
 
     protected Response performPut(String endPoint, RequestSpecification spec)
     {
         spec = applyCookies(spec);
 
-        return spec.put(endPoint);
+        return saveCookies(spec.put(endPoint));
     }
 
     protected Response performDelete(String endPoint, RequestSpecification spec)
     {
         spec = applyCookies(spec);
 
-        return spec.delete(endPoint);
+        return saveCookies(spec.delete(endPoint));
     }
 
     protected Response performOptions(String endPoint, RequestSpecification spec)
     {
         spec = applyCookies(spec);
 
-        return spec.options(endPoint);
+        return saveCookies(spec.options(endPoint));
     }
 
     protected Response performPatch(String endPoint, RequestSpecification spec)
     {
         spec = applyCookies(spec);
 
-        return spec.patch(endPoint);
+        return saveCookies(spec.patch(endPoint));
     }
 
     protected Response performHead(String endPoint, RequestSpecification spec)
     {
         spec = applyCookies(spec);
 
-        return spec.head(endPoint);
+        return saveCookies(spec.head(endPoint));
     }
 
     protected RequestSpecification  applyCookies(RequestSpecification spec)
     {
         if (APIGeneralActions.CookieStoreEnabled) {
-            return spec.filter(APIGeneralActions.CookieFilter);
-        } else {
-            return spec;
+            return APIGeneralActions.CookieFilter.applyCookies(spec);
         }
+
+        return spec;
+    }
+
+    protected Response saveCookies(Response rsp)
+    {
+        if (APIGeneralActions.CookieStoreEnabled) {
+            APIGeneralActions.CookieFilter.saveCookies(rsp);
+        }
+
+        return rsp;
     }
 
     protected File getFileFromURL(String url)
