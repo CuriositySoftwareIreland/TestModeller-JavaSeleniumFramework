@@ -234,6 +234,30 @@ public class BasePage {
         }
     }
 
+    protected void failStep(WebDriver driver, String msg)
+    {
+        failStep(driver, msg, "");
+    }
+
+    protected void passStep(WebDriver driver, String msg)
+    {
+        passStep(driver, msg, "");
+    }
+
+    protected void failStep(WebDriver driver, String msg, String desc)
+    {
+        ExtentReportManager.failStepWithScreenshot(m_Driver, msg, desc);
+
+        TestModellerLogger.FailStepWithScreenshot(m_Driver, msg, desc);
+    }
+
+    protected void passStep(WebDriver driver, String msg, String desc)
+    {
+        ExtentReportManager.passStepWithScreenshot(m_Driver, msg, desc);
+
+        TestModellerLogger.PassStepWithScreenshot(m_Driver, msg, desc);
+    }
+
     protected void passStep(Response rsp, String msg)
     {
         ExtentReportManager.passStep(rsp, msg);
