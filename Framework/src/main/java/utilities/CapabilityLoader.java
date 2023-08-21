@@ -121,12 +121,6 @@ public class CapabilityLoader
 
     public static WebDriver createEdgeDriver()
     {
-        try {
-            WebDriverManager.edgedriver().timeout(5).setup();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         EdgeOptions edgeOptions = new EdgeOptions();
 
         if (PropertiesLoader.isHeadless()) {
@@ -152,12 +146,6 @@ public class CapabilityLoader
 
     public static WebDriver createFirefoxDriver()
     {
-        try {
-            WebDriverManager.firefoxdriver().timeout(5).setup();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         FirefoxOptions firefoxOptions = new FirefoxOptions();
 
         if (PropertiesLoader.isHeadless()) {
@@ -179,12 +167,6 @@ public class CapabilityLoader
 
     public static WebDriver createChromeDriver()
     {
-        try {
-            WebDriverManager.chromedriver().timeout(5).setup();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         ChromeOptions options = new ChromeOptions();
         options.setAcceptInsecureCerts(true);
 
