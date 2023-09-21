@@ -27,9 +27,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WebGeneralActions extends BasePage {
+    private WebGeneralActionsFunctions webGeneralActionsFunctions;
+
     @TestModellerIgnore
     public WebGeneralActions(WebDriver driver) {
         super(driver);
+
+        webGeneralActionsFunctions = new WebGeneralActionsFunctions(driver);
 
         SetBrowserType( "chrome");
     }
@@ -103,16 +107,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void CheckboxShouldBeSelected(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Checkbox Should Be Selected", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.isSelected()) {
-            passStepWithScreenshot("Checkbox with locator '" + objectLocator + "' is Selected");
-        } else {
-            failStep("Checkbox with locator '" + objectLocator + "' is Selected");
-        }
+        webGeneralActionsFunctions.CheckboxShouldBeSelected(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -121,16 +116,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void CheckboxShouldNotBeSelected(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("", "Unable to locate object: " + objectLocator);
-        }
-
-        if (!elem.isSelected()) {
-            passStepWithScreenshot("Checkbox with locator '" + objectLocator + "' is not Selected");
-        } else {
-            failStep("Checkbox with locator '" + objectLocator + "' is Selected");
-        }
+        webGeneralActionsFunctions.CheckboxShouldNotBeSelected(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -139,14 +125,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ClearElementText(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Clear Element Text", "Unable to locate object: " + objectLocator);
-        }
-
-        elem.clear();
-
-        passStepWithScreenshot("Clear Element Text");
+        webGeneralActionsFunctions.ClearElementText(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -167,6 +146,7 @@ public class WebGeneralActions extends BasePage {
         QuitCurrentBrowser();
 
         setDriver(CapabilityLoader.createChromeDriver());
+        webGeneralActionsFunctions.setDriver(m_Driver);
 
         passStep("Chrome browser opened");
     }
@@ -237,6 +217,7 @@ public class WebGeneralActions extends BasePage {
         QuitCurrentBrowser();
 
         setDriver(CapabilityLoader.createFirefoxDriver());
+        webGeneralActionsFunctions.setDriver(m_Driver);
 
         passStep("Firefox browser opened");
     }
@@ -250,6 +231,7 @@ public class WebGeneralActions extends BasePage {
         QuitCurrentBrowser();
 
         setDriver(CapabilityLoader.createEdgeDriver());
+        webGeneralActionsFunctions.setDriver(m_Driver);
 
         passStep("Edge browser opened");
     }
@@ -341,16 +323,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void DragAndDropByOffset(String objectLocator, Integer xPos, Integer yPos)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Drag And Drop By Offset", "Unable to locate object: " + objectLocator);
-        }
-
-        Actions action = new Actions(m_Driver);
-        action.dragAndDropBy(elem, xPos, yPos).build().perform();
-
-
-        passStepWithScreenshot("Drag And Drop By Offset");
+        webGeneralActionsFunctions.DragAndDropByOffset(getLocatorFromString(objectLocator), xPos, yPos);
     }
 
     /**
@@ -359,19 +332,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ElementAttributeValueShouldBe(String objectLocator, String elementAttribute, String attributeValue)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Element Attribute Value Should Be", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.getAttribute(elementAttribute) == null)
-            failStep("Element '" + objectLocator + "' does not contain attribute '" + elementAttribute + "'");
-
-        if (elem.getAttribute(elementAttribute).equals(attributeValue)) {
-            passStepWithScreenshot("Element '" + objectLocator + "' Attribute Value '" + elementAttribute + "' Should Be '" + attributeValue + "'");
-        } else {
-            failStep("Element '" + objectLocator + "' Attribute Value '" + elementAttribute + "' Should Be '" + attributeValue + "'. Found '" + elem.getAttribute(elementAttribute) + "'");
-        }
+        webGeneralActionsFunctions.ElementAttributeValueShouldBe(getLocatorFromString(objectLocator), elementAttribute, attributeValue);
     }
 
     /**
@@ -380,16 +341,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ElementShouldBeDisabled(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Element Should Be Disabled", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.isEnabled()) {
-            failStep("Element '" + objectLocator + "' is enabled.");
-        } else {
-            passStepWithScreenshot("Element '" + objectLocator + "' is disabled.");
-        }
+        webGeneralActionsFunctions.ElementShouldBeDisabled(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -398,17 +350,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ElementShouldBeEnabled(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Element Should Be Enabled", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.isEnabled()) {
-            passStepWithScreenshot("Element '" + objectLocator + "' is enabled.");
-        } else {
-            failStep("Element '" + objectLocator + "' is disabled.");
-        }
-
+        webGeneralActionsFunctions.ElementShouldBeEnabled(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -417,16 +359,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ElementShouldBeFocused(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Element Should Be Focused", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.isSelected()) {
-            passStepWithScreenshot("Element '" + objectLocator + "' is focused.");
-        } else {
-            failStep("Element '" + objectLocator + "' is not focused.");
-        }
+        webGeneralActionsFunctions.ElementShouldBeFocused(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -435,16 +368,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ElementShouldBeVisible(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Element Should Be Visible", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.isDisplayed()) {
-            passStepWithScreenshot("Element '" + objectLocator + "' is visible.");
-        } else {
-            failStep("Element '" + objectLocator + "' is not visible.");
-        }
+        webGeneralActionsFunctions.ElementShouldBeVisible(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -453,16 +377,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ElementShouldContain(String objectLocator, String message)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Element Should Contain", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.getText().contains(message)) {
-            passStepWithScreenshot("Element '" + objectLocator + "' contains text '" + message + "'.");
-        } else {
-            failStep("Element '" + objectLocator + "' does not contain text '" + message + "'.");
-        }
+        webGeneralActionsFunctions.ElementShouldContain(getLocatorFromString(objectLocator), message);
     }
 
     /**
@@ -471,16 +386,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ElementShouldNotBeVisible(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Element Should Not Be Visible", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.isDisplayed()) {
-            failStep("Element '" + objectLocator + "' is visible.");
-        } else {
-            passStepWithScreenshot("Element '" + objectLocator + "' is not visible.");
-        }
+        webGeneralActionsFunctions.ElementShouldNotBeVisible(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -489,16 +395,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ElementShouldNotContain(String objectLocator, String message)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Element Should Not Contain", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.getText().contains(message)) {
-            failStep("Element '" + objectLocator + "' contains text '" + message + "'.");
-        } else {
-            passStepWithScreenshot("Element '" + objectLocator + "' does not contains text '" + message + "'.");
-        }
+        webGeneralActionsFunctions.ElementShouldNotContain(getLocatorFromString(objectLocator), message);
     }
 
     /**
@@ -507,16 +404,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ElementTextShouldBe(String objectLocator, String text)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Element Text Should Be", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.getText().equals(text)) {
-            failStep("Element '" + objectLocator + "' text is '" + text + "'.");
-        } else {
-            passStepWithScreenshot("Element '" + objectLocator + "' text is not '" + text + "'.");
-        }
+        webGeneralActionsFunctions.ElementTextShouldBe(getLocatorFromString(objectLocator), text);
     }
 
     /**
@@ -525,16 +413,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void ElementTextShouldNotBe(String objectLocator, String text)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Element Text Should Not Be", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.getText().equals(text)) {
-            failStep("Element '" + objectLocator + "' text is '" + text + "'.");
-        } else {
-            passStepWithScreenshot("Element '" + objectLocator + "' text is not '" + text + "'.");
-        }
+        webGeneralActionsFunctions.ElementTextShouldBe(getLocatorFromString(objectLocator), text);
     }
 
     /**
@@ -579,16 +458,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void FrameShouldContain(String objectLocator, String text)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Frame Should Contain", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.getText().contains(text)) {
-            passStepWithScreenshot("Frame contains value '" + text + "'");
-        } else {
-            failStep("Frame does not contain '" + text + "'");
-        }
+        webGeneralActionsFunctions.FrameShouldContain(getLocatorFromString(objectLocator), text);
     }
 
     /**
@@ -615,12 +485,7 @@ public class WebGeneralActions extends BasePage {
      */
     public String GetElementAttribute(String objectLocator, String attribute)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Get Element Attribute", "Unable to locate object: " + objectLocator);
-        }
-
-        return elem.getAttribute(attribute);
+        return webGeneralActionsFunctions.GetElementAttribute(getLocatorFromString(objectLocator), attribute);
     }
 
     /**
@@ -629,12 +494,7 @@ public class WebGeneralActions extends BasePage {
      */
     public String GetText(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Get Text", "Unable to locate object: " + objectLocator);
-        }
-
-        return elem.getText();
+        return webGeneralActionsFunctions.GetText(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -652,12 +512,7 @@ public class WebGeneralActions extends BasePage {
      */
     public String GetValue(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Get Value", "Unable to locate object: " + objectLocator);
-        }
-
-        return elem.getText();
+        return webGeneralActionsFunctions.GetValue(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -720,16 +575,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void MouseDown(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Mouse Down", "Unable to locate object: " + objectLocator);
-        }
-
-        Actions action = new Actions(m_Driver);
-        action.clickAndHold(elem);
-        action.perform();
-
-        passStepWithScreenshot("Mouse Down");
+        webGeneralActionsFunctions.MouseDown(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -738,17 +584,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void MouseOut(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Mouse Out", "Unable to locate object: " + objectLocator);
-        }
-
-        Actions action = new Actions(m_Driver);
-        action.moveToElement(elem);
-        action.moveByOffset((int) (elem.getSize().getWidth() / 2.0) + 1, (int) (elem.getSize().getHeight() / 2.0) + 1);
-        action.perform();
-
-        passStepWithScreenshot("Mouse Out");
+        webGeneralActionsFunctions.MouseOut(getLocatorFromString(objectLocator));
 
     }
 
@@ -758,16 +594,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void MouseOver(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Mouse Over", "Unable to locate object: " + objectLocator);
-        }
-
-        Actions action = new Actions(m_Driver);
-        action.moveToElement(elem);
-        action.perform();
-
-        passStepWithScreenshot("Mouse Over");
+        webGeneralActionsFunctions.MouseOver(getLocatorFromString(objectLocator));
 
     }
 
@@ -790,16 +617,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void MouseUp(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Mouse Up", "Unable to locate object: " + objectLocator);
-        }
-
-        Actions action = new Actions(m_Driver);
-        action.release(elem);
-        action.perform();
-
-        passStepWithScreenshot("Mouse Up");
+        webGeneralActionsFunctions.MouseUp(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -808,16 +626,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void OpenContextMenu(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Open context menu", "Unable to locate object: " + objectLocator);
-        }
-
-        Actions action = new Actions(m_Driver);
-        action.contextClick(elem);
-        action.perform();
-
-        passStepWithScreenshot("Open context menu");
+        webGeneralActionsFunctions.OpenContextMenu(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -839,12 +648,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void PageShouldContainElement(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Page does not contain element", "Unable to locate object: " + objectLocator);
-        }
-
-        passStepWithScreenshot("Page contains element");
+        webGeneralActionsFunctions.PageShouldContainElement(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -866,12 +670,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void PageShouldNotContainElement(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            passStepWithScreenshot("Page does not contain element '" + objectLocator + "'");
-        }
-
-        failStep("Page contains element '" + objectLocator + "'");
+        webGeneralActionsFunctions.PageShouldNotContainElement(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -946,15 +745,7 @@ public class WebGeneralActions extends BasePage {
      * @name Scroll Element Into View
      */
     public void ScrollElementIntoView(String objectLocator) throws InterruptedException {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Scroll Element Into View", "Unable to locate object: " + objectLocator);
-        }
-
-        ((JavascriptExecutor) m_Driver).executeScript("arguments[0].scrollIntoView(true);", elem);
-        Thread.sleep(500);
-
-        passStepWithScreenshot("Scroll Element Into View");
+        webGeneralActionsFunctions.ScrollElementIntoView(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -963,19 +754,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void SelectAllFromList(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Select All From List", "Unable to locate object: " + objectLocator);
-        }
-
-        Select selectObject = new Select(elem);
-        int index = 0;
-        for (WebElement selectOptions : selectObject.getOptions()) {
-            selectObject.selectByIndex(index);
-            index++;
-        }
-
-        passStepWithScreenshot("Select All From List");
+        webGeneralActionsFunctions.SelectAllFromList(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -985,15 +764,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void SelectCheckbox(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Select Checkbox", "Unable to locate object: " + objectLocator);
-        }
-
-        if (!elem.isSelected())
-            elem.click();
-
-        passStepWithScreenshot("Select Checkbox");
+        webGeneralActionsFunctions.SelectCheckbox(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -1002,15 +773,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void SelectFromListByIndex(String objectLocator, Integer index)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Select From List By Index", "Select From List By Index. Unable to locate object: " + objectLocator);
-        }
-
-        Select dropdown = new Select(elem);
-        dropdown.selectByIndex(index);
-
-        passStepWithScreenshot("Select From List By Index");
+        webGeneralActionsFunctions.SelectFromListByIndex(getLocatorFromString(objectLocator), index);
     }
 
     /**
@@ -1019,15 +782,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void SelectFromListByLabel(String objectLocator, String label)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Select From List By Label", "Select From List By Label. Unable to locate object: " + objectLocator);
-        }
-
-        Select dropdown = new Select(elem);
-        dropdown.selectByVisibleText(label);
-
-        passStepWithScreenshot("Select From List By Label");
+        webGeneralActionsFunctions.SelectFromListByLabel(getLocatorFromString(objectLocator), label);
     }
 
     /**
@@ -1036,15 +791,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void SelectFromListByValue(String objectLocator, String value)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Select From List By Value", "Select From List By Value. Unable to locate object: " + objectLocator);
-        }
-
-        Select dropdown = new Select(elem);
-        dropdown.selectByValue(value);
-
-        passStepWithScreenshot("Select From List By Value");
+        webGeneralActionsFunctions.SelectFromListByValue(getLocatorFromString(objectLocator), value);
     }
 
     /**
@@ -1082,14 +829,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void SubmitForm(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Submit Form", "Unable to locate object: " + objectLocator);
-        }
-
-        elem.submit();;
-
-        passStepWithScreenshot("Submit Form");
+        webGeneralActionsFunctions.SubmitForm(getLocatorFromString(objectLocator));
     }
 
 
@@ -1112,15 +852,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void UnselectAllFromList(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Unselect All From List", "Unable to locate object: " + objectLocator);
-        }
-
-        Select selectObject = new Select(elem);
-        selectObject.deselectAll();
-
-        passStepWithScreenshot("Unselect All From List");
+        webGeneralActionsFunctions.UnselectAllFromList(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -1129,15 +861,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void UnselectCheckbox(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Unselect Checkbox", "Unable to locate object: " + objectLocator);
-        }
-
-        if (elem.isSelected())
-           elem.click();
-
-        passStepWithScreenshot("Unselect Checkbox");
+        webGeneralActionsFunctions.UnselectCheckbox(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -1146,15 +870,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void UnselectFromListByIndex(String objectLocator, Integer index)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Unselect From List By Index", "Unable to locate object: " + objectLocator);
-        }
-
-        Select selectObject = new Select(elem);
-        selectObject.deselectByIndex(index);
-
-        passStepWithScreenshot("Unselect from list");
+        webGeneralActionsFunctions.UnselectFromListByIndex(getLocatorFromString(objectLocator), index);
     }
 
     /**
@@ -1163,15 +879,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void UnselectFromListByLabel(String objectLocator, String label)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Unselect From List By Label", "Unable to locate object: " + objectLocator);
-        }
-
-        Select selectObject = new Select(elem);
-        selectObject.deselectByVisibleText(label);
-
-        passStepWithScreenshot("Unselect from list");
+        webGeneralActionsFunctions.UnselectFromListByLabel(getLocatorFromString(objectLocator), label);
     }
 
     /**
@@ -1180,15 +888,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void UnselectFromListByValue(String objectLocator, String value)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Unselect From List By Value", "Unable to locate object: " + objectLocator);
-        }
-
-        Select selectObject = new Select(elem);
-        selectObject.deselectByValue(value);
-
-        passStepWithScreenshot("Unselect from list");
+        webGeneralActionsFunctions.UnselectFromListByValue(getLocatorFromString(objectLocator), value);
     }
 
     /**
@@ -1197,20 +897,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void WaitUntilElementIsEnabled(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Wait Until Element Is Enabled", "Unable to locate object: " + objectLocator);
-        }
-
-        try {
-            WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(15));
-
-            wait.until(ExpectedConditions.elementToBeClickable(elem));
-        } catch (Exception e) {
-
-        }
-
-        passStepWithScreenshot("Wait until element is enabled");
+        webGeneralActionsFunctions.WaitUntilElementIsEnabled(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -1219,20 +906,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void WaitUntilElementIsNotVisible(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-        if (elem == null) {
-            failStep("Wait Until Element Is Not Visible", "Unable to locate object: " + objectLocator);
-        }
-
-        try {
-            WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(10));
-
-            wait.until(ExpectedConditions.invisibilityOf(elem));
-        } catch (Exception e) {
-
-        }
-
-        passStepWithScreenshot("Wait until element is not visible");
+        webGeneralActionsFunctions.WaitUntilElementIsNotVisible(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -1241,9 +915,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void WaitUntilElementIsVisible(String objectLocator)
     {
-        waitForVisible(getLocatorFromString(objectLocator), 10);
-
-        passStepWithScreenshot("Wait until element '" + objectLocator + "' is visible");
+        webGeneralActionsFunctions.WaitUntilElementIsVisible(getLocatorFromString(objectLocator));
     }
 
 
@@ -1253,9 +925,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void WaitUntilPageContainsElement(String objectLocator)
     {
-        waitForLoaded(getLocatorFromString(objectLocator), 10);
-
-        passStepWithScreenshot("Wait until page contains element '" + objectLocator + "'");
+        webGeneralActionsFunctions.WaitUntilPageContainsElement(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -1322,15 +992,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void Click(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-
-        if (elem == null) {
-            failStep("Click", "Click failed. Unable to locate object: " + objectLocator);
-        }
-
-        elem.click();
-
-        passStepWithScreenshot("Click");
+        webGeneralActionsFunctions.Click(getLocatorFromString(objectLocator));
     }
 
     /**
@@ -1357,15 +1019,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void EnterText(String objectLocator, String text)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-
-        if (elem == null) {
-            failStep("EnterText", "EnterText failed. Unable to locate object: " + objectLocator);
-        }
-
-        elem.sendKeys(text);
-
-        passStepWithScreenshot("EnterText " + text);
+        webGeneralActionsFunctions.EnterText(getLocatorFromString(objectLocator), text);
     }
 
     /**
@@ -1374,16 +1028,7 @@ public class WebGeneralActions extends BasePage {
      */
     public void DoubleClick(String objectLocator)
     {
-        WebElement elem = getWebElement(getLocatorFromString(objectLocator));
-
-        if (elem == null) {
-            failStep("Double Click", "Double Click failed. Unable to locate object: " + objectLocator);
-        }
-
-        Actions act = new Actions(m_Driver);
-        act.doubleClick(elem).perform();
-
-        passStepWithScreenshot("Double Click");
+        webGeneralActionsFunctions.DoubleClick(getLocatorFromString(objectLocator));
     }
 
     private By getLocatorFromString(String objectLocator)
