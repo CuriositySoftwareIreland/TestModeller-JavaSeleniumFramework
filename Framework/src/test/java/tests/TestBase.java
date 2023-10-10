@@ -1,6 +1,5 @@
 package tests;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import utilities.CapabilityLoader;
 import utilities.PropertiesLoader;
 import utilities.reports.ExtentReportManager;
