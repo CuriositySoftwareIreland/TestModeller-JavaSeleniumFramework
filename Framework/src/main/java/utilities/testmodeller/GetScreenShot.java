@@ -4,9 +4,14 @@ import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.sikuli.script.Screen;
+import org.sikuli.script.ScreenImage;
 
+import javax.imageio.ImageIO;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Base64;
 
 public class GetScreenShot {
 
@@ -38,5 +43,36 @@ public class GetScreenShot {
 			return null;
 
         return ((TakesScreenshot) driver).getScreenshotAs(OutputType.BYTES);
+    }
+
+    public static String captureAsBase64(Screen screen) {
+        try {
+            // Capture the screenshot with SikuliX
+            ScreenImage screenshot = screen.capture();
+
+            // Convert the screenshot to base64
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(screenshot.getImage(), "png", baos);
+            byte[] bytes = baos.toByteArray();
+            return "data:image/png;base64," + Base64.getEncoder().encodeToString(bytes);
+        } catch (IOException e) {
+            System.err.println("Error converting screenshot to base64: " + e.getMessage());
+            return "";
+        }
+    }
+
+    public static byte[] captureAsByteArray(Screen screen) {
+        try {
+            // Capture the screenshot with SikuliX
+            ScreenImage screenshot = screen.capture();
+
+            // Convert the screenshot to a byte array
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ImageIO.write(screenshot.getImage(), "png", baos);
+            return baos.toByteArray();
+        } catch (IOException e) {
+            System.err.println("Error converting screenshot to byte array: " + e.getMessage());
+            return null;
+        }
     }
 }

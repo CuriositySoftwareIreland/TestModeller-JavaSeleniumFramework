@@ -16,6 +16,7 @@ import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.MultiPartSpecification;
 import io.restassured.specification.RequestSpecification;
 import org.openqa.selenium.WebDriver;
+import org.sikuli.script.Screen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -247,6 +248,30 @@ public class TestModellerLogger {
         return step;
     }
 
+    public static TestPathRunStep PassStepWithScreenshot(Screen screen, String stepName)
+    {
+        return PassStepWithScreenshot(screen, stepName, stepName);
+    }
+
+    public static TestPathRunStep PassStepWithScreenshot(Screen screen, String stepName, String details)
+    {
+        TestPathRunStep step = new TestPathRunStep();
+
+        step.setStepName(stepName);
+        step.setStepDescription(details);
+        step.setImage(GetScreenShot.captureAsByteArray(screen));
+        step.setTestStatus(TestPathRunStatusEnum.Passed);
+        if (LastNodeGuid.get() != null) {
+            step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
+            step.setModuleColId(LastNodeGuid.get().getModuleColId());
+            step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
+        }
+
+        addStep(step);
+
+        return step;
+    }
+
     public static TestPathRunStep FailStepWithScreenshot(WebDriver driver, String stepName)
     {
         return FailStepWithScreenshot(driver, stepName, stepName);
@@ -259,6 +284,30 @@ public class TestModellerLogger {
         step.setStepName(stepName);
         step.setStepDescription(details);
         step.setImage(GetScreenShot.captureAsByteArray(driver));
+        step.setTestStatus(TestPathRunStatusEnum.Failed);
+        if (LastNodeGuid.get() != null) {
+            step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
+            step.setModuleColId(LastNodeGuid.get().getModuleColId());
+            step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
+        }
+
+        addStep(step);
+
+        return step;
+    }
+
+    public static TestPathRunStep FailStepWithScreenshot(Screen screen, String stepName)
+    {
+        return FailStepWithScreenshot(screen, stepName, stepName);
+    }
+
+    public static TestPathRunStep FailStepWithScreenshot(Screen screen, String stepName, String details)
+    {
+        TestPathRunStep step = new TestPathRunStep();
+
+        step.setStepName(stepName);
+        step.setStepDescription(details);
+        step.setImage(GetScreenShot.captureAsByteArray(screen));
         step.setTestStatus(TestPathRunStatusEnum.Failed);
         if (LastNodeGuid.get() != null) {
             step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
