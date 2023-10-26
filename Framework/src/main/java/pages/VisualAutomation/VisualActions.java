@@ -400,6 +400,47 @@ public class VisualActions extends BasePage {
         }
     }
 
+    /**
+     * Enters text on a specified image on the screen with an offset.
+     * @name Enter text with offset
+     * @param imageId Id of the image to enter text.
+     * @param text text of the image to be entered.
+     * @param offsetX X offset from the center of the image.
+     * @param offsetY Y offset from the center of the image.
+     */
+    public void enterTextWithOffset(String text, String imageId, int offsetX, int offsetY) {
+        String imagePath = null;
+        try {
+            imagePath = downloadImageToTempFile(imageId);
+            enterTextWithOffsetImage(text, imagePath, offsetX, offsetY);
+        } catch (IOException e) {
+            failStep("Click image with offset failed", "Error downloading or writing image from URL: " + e.getMessage());
+        } finally {
+            // Clean up by deleting the temporary image file
+            if (imagePath != null) {
+                new File(imagePath).delete();
+            }
+        }
+    }
+
+    private void enterTextWithOffsetImage(String text, String imagePath, int offsetX, int offsetY) {
+        try {
+            performWithRetry(() -> {
+                Pattern imagePattern = new Pattern(imagePath).targetOffset(offsetX, offsetY);
+                if (screen.exists(imagePattern, WAIT_TIME) != null) {
+                    try {
+                        screen.type(imagePattern, text);
+                    } catch (FindFailed e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    throw new RuntimeException("Unable to locate object: " + imagePath);
+                }
+            }, "Click Image With Offset");
+        } catch (Exception e) {
+            failStep("Click image with offset failed", e.getMessage());
+        }
+    }
 
     /**
      * Waits for a specified image to appear on the screen.
