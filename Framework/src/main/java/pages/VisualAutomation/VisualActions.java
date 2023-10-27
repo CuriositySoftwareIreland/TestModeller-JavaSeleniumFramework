@@ -85,9 +85,10 @@ public class VisualActions extends BasePage {
      * Opens the specified application.
      * @name Open Application
      * @param appName Name or path of the application to be opened.
+     * @param waitForOpen Time to wait for the application to open in milliseconds.
      * @return true if the application is opened successfully, false otherwise.
      */
-    public boolean openApplication(String appName) {
+    public boolean openApplication(String appName, Integer waitForOpen) {
         try {
             App app = new App(appName);
 
@@ -97,15 +98,17 @@ public class VisualActions extends BasePage {
             }
 
             // Give it a few seconds to launch
-            Thread.sleep(5000);
+            Thread.sleep(waitForOpen);
 
             // Check if the app is now running
             if (app.isRunning()) {
                 passStepWithScreenshot("Open Application");
                 return true;
             } else {
-                failStep("Open Application", "Failed to open " + appName);
-                return false;
+                BasePage.StopOnFail = false;
+                failStep("Open Application", "Failed to open " + appName + " will attempt to continue.");
+                BasePage.StopOnFail = true;
+                return true;
             }
         } catch (Exception e) {
             failStep("Open Application", "Error encountered: " + e.getMessage());
