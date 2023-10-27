@@ -18,9 +18,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VisualActions extends BasePage {
     private Screen screen;
+    private static List<App> appList = new ArrayList<App>();
     private static final int MAX_RETRIES = 3;  // Maximum number of retry attempts
     private static final int RETRY_DELAY = 2000;  // Delay between retries in milliseconds
     private static final int WAIT_TIME = 5;  // Maximum wait time for an image to appear in seconds
@@ -91,7 +94,8 @@ public class VisualActions extends BasePage {
     public boolean openApplication(String appName, Integer waitForOpen) {
         try {
             App app = new App(appName);
-
+            appList.add(app);
+            
             // Check if the app is running; if not, open it
             if (!app.isRunning()) {
                 app.open();
@@ -115,6 +119,21 @@ public class VisualActions extends BasePage {
             return false;
         }
     }
+
+    /**
+     * Closes all open application.
+     * @name Close Application
+     */
+    public static void closeApplication() {
+        for (App app : appList) {
+            try {
+                app.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     /**
      * Clicks on a specified image on the screen.

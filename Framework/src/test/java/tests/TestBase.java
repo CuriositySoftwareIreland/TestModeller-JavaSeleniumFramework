@@ -1,5 +1,6 @@
 package tests;
 
+import pages.VisualAutomation.VisualActions;
 import utilities.CapabilityLoader;
 import utilities.PropertiesLoader;
 import utilities.reports.ExtentReportManager;
@@ -93,6 +94,9 @@ public class TestBase {
                 e.printStackTrace();
             }
         }
+
+        // Close all apps open through visual inspector
+        VisualActions.closeApplication();
     }
 
     @AfterSuite
