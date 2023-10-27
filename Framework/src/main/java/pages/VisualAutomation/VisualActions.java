@@ -184,7 +184,7 @@ public class VisualActions extends BasePage {
 
     /**
      * Clicks on a specified image on the screen using an image URL.
-     * @name Click Image From URL
+     * @name Click Image
      * @param imageId Id of the image to be clicked.
      */
     public void clickImageFromId(String imageId) {
