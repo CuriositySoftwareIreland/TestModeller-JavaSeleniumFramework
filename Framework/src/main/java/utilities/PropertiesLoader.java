@@ -23,7 +23,6 @@ public class PropertiesLoader {
         return prop;
     }
 
-
     private static void readProperties() throws IOException
     {
         Properties defaults = new Properties();
@@ -35,9 +34,18 @@ public class PropertiesLoader {
 
         prop = new Properties(defaults);
 
+        // Load properties from project.properties
         try (InputStream inputStream = PropertiesLoader.class.getResourceAsStream("/project.properties"))
         {
             prop.load(inputStream);
+        }
+
+        // Override with System properties (command-line properties)
+        for (String key : prop.stringPropertyNames()) {
+            String systemPropertyValue = System.getProperty(key);
+            if (systemPropertyValue != null) {
+                prop.setProperty(key, systemPropertyValue);
+            }
         }
     }
 
