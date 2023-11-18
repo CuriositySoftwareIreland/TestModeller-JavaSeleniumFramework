@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.CapabilityLoader;
 import utilities.PropertiesLoader;
+import utilities.selenium.WebIdentifier;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,7 +35,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies checkbox locator is selected/checked.
      * @name Checkbox Should Be Selected
      */
-    public void CheckboxShouldBeSelected(By objectLocator)
+    public void CheckboxShouldBeSelected(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -52,7 +53,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies checkbox locator is not selected/checked.
      * @name Checkbox Should Not Be Selected
      */
-    public void CheckboxShouldNotBeSelected(By objectLocator)
+    public void CheckboxShouldNotBeSelected(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -70,7 +71,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Clears the value of the text-input-element identified by locator.
      * @name Clear Element Text
      */
-    public void ClearElementText(By objectLocator)
+    public void ClearElementText(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -87,7 +88,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * The element will be moved by xPos and yPos, each of which is a negative or positive number specifying the offset.
      * @name Drag And Drop By Offset
      */
-    public void DragAndDropByOffset(By objectLocator, Integer xPos, Integer yPos)
+    public void DragAndDropByOffset(WebIdentifier objectLocator, Integer xPos, Integer yPos)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -105,7 +106,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies element identified by locator contains expected attribute value.
      * @name Element Attribute Value Should Be
      */
-    public void ElementAttributeValueShouldBe(By objectLocator, String elementAttribute, String attributeValue)
+    public void ElementAttributeValueShouldBe(WebIdentifier objectLocator, String elementAttribute, String attributeValue)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -126,7 +127,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that element identified by locator is disabled.
      * @name Element Should Be Disabled
      */
-    public void ElementShouldBeDisabled(By objectLocator)
+    public void ElementShouldBeDisabled(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -144,7 +145,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that element identified by locator is enabled.
      * @name Element Should Be Enabled
      */
-    public void ElementShouldBeEnabled(By objectLocator)
+    public void ElementShouldBeEnabled(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -163,7 +164,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that element identified by locator is focused.
      * @name Element Should Be Focused
      */
-    public void ElementShouldBeFocused(By objectLocator)
+    public void ElementShouldBeFocused(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -181,7 +182,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that the element identified by locator is visible.
      * @name Element Should Be Visible
      */
-    public void ElementShouldBeVisible(By objectLocator)
+    public void ElementShouldBeVisible(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -199,7 +200,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that element locator contains text expected.
      * @name Element Should Contain
      */
-    public void ElementShouldContain(By objectLocator, String message)
+    public void ElementShouldContain(WebIdentifier objectLocator, String message)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -217,7 +218,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that the element identified by locator is NOT visible.
      * @name Element Should Not Be Visible
      */
-    public void ElementShouldNotBeVisible(By objectLocator)
+    public void ElementShouldNotBeVisible(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -235,7 +236,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that element locator does not contain text expected.
      * @name Element Should Not Contain
      */
-    public void ElementShouldNotContain(By objectLocator, String message)
+    public void ElementShouldNotContain(WebIdentifier objectLocator, String message)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -253,7 +254,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that element locator contains exact the text expected.
      * @name Element Text Should Be
      */
-    public void ElementTextShouldBe(By objectLocator, String text)
+    public void ElementTextShouldBe(WebIdentifier objectLocator, String text)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -271,7 +272,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that element locator does not contain exact the text not_expected.
      * @name Element Text Should Not Be
      */
-    public void ElementTextShouldNotBe(By objectLocator, String text)
+    public void ElementTextShouldNotBe(WebIdentifier objectLocator, String text)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -289,7 +290,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that frame identified by locator contains text.
      * @name Frame Should Contain
      */
-    public void FrameShouldContain(By objectLocator, String text)
+    public void FrameShouldContain(WebIdentifier objectLocator, String text)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -307,7 +308,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Returns the value of attribute from the element locator.
      * @name Get Element Attribute
      */
-    public String GetElementAttribute(By objectLocator, String attribute)
+    public String GetElementAttribute(WebIdentifier objectLocator, String attribute)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -321,7 +322,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Returns the text value of the element identified by locator.
      * @name Get Text
      */
-    public String GetText(By objectLocator)
+    public String GetText(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -335,7 +336,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Returns the value attribute of the element identified by locator.
      * @name Get Value
      */
-    public String GetValue(By objectLocator)
+    public String GetValue(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -349,7 +350,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Simulates pressing the left mouse button on the element locator.
      * @name Mouse Down
      */
-    public void MouseDown(By objectLocator)
+    public void MouseDown(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -367,7 +368,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Simulates moving the mouse away from the element locator.
      * @name Mouse Out
      */
-    public void MouseOut(By objectLocator)
+    public void MouseOut(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -387,7 +388,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Simulates hovering the mouse over the element locator.
      * @name Mouse Over
      */
-    public void MouseOver(By objectLocator)
+    public void MouseOver(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -406,7 +407,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Simulates releasing the left mouse button on the element locator.
      * @name Mouse Up
      */
-    public void MouseUp(By objectLocator)
+    public void MouseUp(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -424,7 +425,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Opens the context menu on the element identified by locator.
      * @name Open Context Menu
      */
-    public void OpenContextMenu(By objectLocator)
+    public void OpenContextMenu(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -442,7 +443,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that element locator is found on the current page.
      * @name Page Should Contain Element
      */
-    public void PageShouldContainElement(By objectLocator)
+    public void PageShouldContainElement(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -456,7 +457,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Verifies that element locator is not found on the current page.
      * @name Page Should Not Contain Element
      */
-    public void PageShouldNotContainElement(By objectLocator)
+    public void PageShouldNotContainElement(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -470,7 +471,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Scrolls the element identified by locator into view.
      * @name Scroll Element Into View
      */
-    public void ScrollElementIntoView(By objectLocator) throws InterruptedException {
+    public void ScrollElementIntoView(WebIdentifier objectLocator) throws InterruptedException {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
             failStep("Scroll Element Into View", "Unable to locate object: " + objectLocator);
@@ -486,7 +487,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Selects all options from multi-selection list locator.
      * @name Select All From List
      */
-    public void SelectAllFromList(By objectLocator)
+    public void SelectAllFromList(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -508,7 +509,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Does nothing if checkbox is already selected.
      * @name Select Checkbox
      */
-    public void SelectCheckbox(By objectLocator)
+    public void SelectCheckbox(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -525,7 +526,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Selects options from selection list locator by indexes.
      * @name Select From List By Index
      */
-    public void SelectFromListByIndex(By objectLocator, Integer index)
+    public void SelectFromListByIndex(WebIdentifier objectLocator, Integer index)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -542,7 +543,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Selects options from selection list locator by labels.
      * @name Select From List By Label
      */
-    public void SelectFromListByLabel(By objectLocator, String label)
+    public void SelectFromListByLabel(WebIdentifier objectLocator, String label)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -559,7 +560,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Selects options from selection list locator by values.
      * @name Select From List By Value
      */
-    public void SelectFromListByValue(By objectLocator, String value)
+    public void SelectFromListByValue(WebIdentifier objectLocator, String value)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -576,7 +577,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Submits a form identified by locator.
      * @name Submit Form
      */
-    public void SubmitForm(By objectLocator)
+    public void SubmitForm(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -592,7 +593,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Unselects all options from multi-selection list locator.
      * @name Unselect All From List
      */
-    public void UnselectAllFromList(By objectLocator)
+    public void UnselectAllFromList(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -609,7 +610,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Removes the selection of checkbox identified by locator.
      * @name Unselect Checkbox
      */
-    public void UnselectCheckbox(By objectLocator)
+    public void UnselectCheckbox(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -626,7 +627,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Unselects options from selection list locator by indexes.
      * @name Unselect From List By Index
      */
-    public void UnselectFromListByIndex(By objectLocator, Integer index)
+    public void UnselectFromListByIndex(WebIdentifier objectLocator, Integer index)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -643,7 +644,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Unselects options from selection list locator by labels.
      * @name Unselect From List By Label
      */
-    public void UnselectFromListByLabel(By objectLocator, String label)
+    public void UnselectFromListByLabel(WebIdentifier objectLocator, String label)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -660,7 +661,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Unselects options from selection list locator by values.
      * @name Unselect From List By Value
      */
-    public void UnselectFromListByValue(By objectLocator, String value)
+    public void UnselectFromListByValue(WebIdentifier objectLocator, String value)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -677,7 +678,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Waits until the element locator is enabled.
      * @name Wait Until Element Is Enabled
      */
-    public void WaitUntilElementIsEnabled(By objectLocator)
+    public void WaitUntilElementIsEnabled(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -699,7 +700,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Waits until the element locator is not visible.
      * @name Wait Until Element Is Not Visible
      */
-    public void WaitUntilElementIsNotVisible(By objectLocator)
+    public void WaitUntilElementIsNotVisible(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
         if (elem == null) {
@@ -721,7 +722,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Waits until the element locator is visible.
      * @name Wait Until Element Is Visible
      */
-    public void WaitUntilElementIsVisible(By objectLocator)
+    public void WaitUntilElementIsVisible(WebIdentifier objectLocator)
     {
         waitForVisible(objectLocator, 10);
 
@@ -733,7 +734,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Waits until the element locator appears on the current page.
      * @name Wait Until Page Contains Element
      */
-    public void WaitUntilPageContainsElement(By objectLocator)
+    public void WaitUntilPageContainsElement(WebIdentifier objectLocator)
     {
         waitForLoaded(objectLocator, 10);
 
@@ -744,7 +745,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Click the element identified by locator.
      * @name Click
      */
-    public void Click(By objectLocator)
+    public void Click(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
 
@@ -761,7 +762,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Types the given text into the element identified by locator.
      * @name Enter Text
      */
-    public void EnterText(By objectLocator, String text)
+    public void EnterText(WebIdentifier objectLocator, String text)
     {
         WebElement elem = getWebElement(objectLocator);
 
@@ -778,7 +779,7 @@ public class WebGeneralActionsFunctions extends BasePage {
      * Double clicks the element identified by locator.
      * @name Double Click
      */
-    public void DoubleClick(By objectLocator)
+    public void DoubleClick(WebIdentifier objectLocator)
     {
         WebElement elem = getWebElement(objectLocator);
 

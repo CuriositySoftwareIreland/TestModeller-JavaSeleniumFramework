@@ -20,7 +20,9 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import utilities.PropertiesLoader;
 import utilities.reports.ExtentReportManager;
+import utilities.selenium.WebIdentifier;
 import utilities.testmodeller.TestModellerLogger;
 
 import java.io.File;
@@ -443,6 +445,24 @@ public class BasePage {
         }
     }
 
+    protected WebElement getWebElement(final WebIdentifier webElement)
+    {
+        WebElement elem = getWebElement(webElement.getElementBy());
+        if (elem != null) return elem; // Found the element
+
+        // Try the other identifiers
+        List<By> identifers = webElement.getElementBys(PropertiesLoader.getConnectionProfile());
+        if (identifers != null) {
+            for (int i = 1; i < identifers.size(); i++) {
+                elem = getWebElement(identifers.get(i));
+
+                if (elem != null) return elem;
+            }
+        }
+
+        return null;
+    }
+
     protected WebElement getWebElement(final By by)
     {
         waitForLoaded(by, LocatorTimeout);
@@ -460,6 +480,10 @@ public class BasePage {
         }
     }
 
+    protected void waitForLoaded(final WebIdentifier by, int waitTime) {
+        waitForLoaded(by.getElementBy(), waitTime);
+    }
+
     protected void waitForLoaded(final By by, int waitTime) {
         WebDriverWait wait = new WebDriverWait(m_Driver, Duration.ofSeconds(waitTime));
         try {
@@ -467,6 +491,11 @@ public class BasePage {
         } catch (Exception e) {
 
         }
+    }
+
+    protected void waitForVisible(final WebIdentifier by, int waitTime)
+    {
+        waitForVisible(by.getElementBy(), waitTime);
     }
 
     protected void waitForVisible(final By by, int waitTime)

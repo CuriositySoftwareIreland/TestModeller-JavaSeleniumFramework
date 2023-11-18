@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.CapabilityLoader;
 import utilities.PropertiesLoader;
+import utilities.selenium.WebIdentifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -1031,26 +1032,26 @@ public class WebGeneralActions extends BasePage {
         webGeneralActionsFunctions.DoubleClick(getLocatorFromString(objectLocator));
     }
 
-    private By getLocatorFromString(String objectLocator)
+    private WebIdentifier getLocatorFromString(String objectLocator)
     {
         if (objectLocator.startsWith("id:")) {
-            return By.id(objectLocator.replace("id:", ""));
+            return new WebIdentifier(By.id(objectLocator.replace("id:", "")));
         } else if (objectLocator.startsWith("name:")) {
-            return By.name(objectLocator.replace("name:", ""));
+            return new WebIdentifier(By.name(objectLocator.replace("name:", "")));
         } else if (objectLocator.startsWith("class:")) {
-            return By.className(objectLocator.replace("class:", ""));
+            return new WebIdentifier(By.className(objectLocator.replace("class:", "")));
         }  else if (objectLocator.startsWith("tagname:")) {
-            return By.tagName(objectLocator.replace("tagname:", ""));
+            return new WebIdentifier(By.tagName(objectLocator.replace("tagname:", "")));
         } else if (objectLocator.startsWith("xpath:")) {
-            return By.xpath(objectLocator.replace("xpath:", ""));
+            return new WebIdentifier(By.xpath(objectLocator.replace("xpath:", "")));
         } else if (objectLocator.startsWith("css:")) {
-            return By.cssSelector(objectLocator.replace("css:", ""));
+            return new WebIdentifier(By.cssSelector(objectLocator.replace("css:", "")));
         } else if (objectLocator.startsWith("linktext:")) {
-            return By.linkText(objectLocator.replace("linktext:", ""));
+            return new WebIdentifier(By.linkText(objectLocator.replace("linktext:", "")));
         } else if (objectLocator.startsWith("text:")) {
-            return By.xpath("//*[text()=\"" + objectLocator.replace("text:", "") + "\"]");
+            return new WebIdentifier(By.xpath("//*[text()=\"" + objectLocator.replace("text:", "") + "\"]"));
         } else {
-            return By.xpath(objectLocator);
+            return new WebIdentifier(By.xpath(objectLocator));
         }
     }
 
