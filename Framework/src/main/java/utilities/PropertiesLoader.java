@@ -54,6 +54,16 @@ public class PropertiesLoader {
         return Boolean.parseBoolean(getProperties().getProperty("testModeller.debug"));
     }
 
+    public static Boolean isSmartLocators()
+    {
+        return Boolean.parseBoolean(getProperties().getProperty("testModeller.smartLocators"));
+    }
+
+    public static Boolean isGPTLocators()
+    {
+        return Boolean.parseBoolean(getProperties().getProperty("testModeller.gptLocators"));
+    }
+
     public static Boolean isHeadless()
     {
         return Boolean.parseBoolean(getProperties().getProperty("testModeller.headless"));

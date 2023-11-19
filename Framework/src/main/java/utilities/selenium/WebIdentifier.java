@@ -17,6 +17,8 @@ public class WebIdentifier {
 
     private List<By> elementBys;
 
+    private PageObjectEntity pageObject;
+
     public WebIdentifier(By elementBy, Long pageObjectId) {
         this.elementBy = elementBy;
         this.pageObjectId = pageObjectId;
@@ -48,8 +50,7 @@ public class WebIdentifier {
         if (elementBys == null) {
             elementBys = new ArrayList<By>();
 
-            PageObjectService pageObjectService = new PageObjectService(connectionProfile);
-            PageObjectEntity pageObjectEntity = pageObjectService.GetPageObject(this.pageObjectId);
+            PageObjectEntity pageObjectEntity = getPageObject(connectionProfile);
             if (pageObjectEntity != null && pageObjectEntity.getParameters() != null) {
                 for (PageObjectParameterEntity poParam : pageObjectEntity.getParameters()) {
                     if (poParam.getConfidence() < 1)
@@ -75,5 +76,18 @@ public class WebIdentifier {
         }
 
         return elementBys;
+    }
+
+    public void setPageObject(PageObjectEntity pageObject) {
+        this.pageObject = pageObject;
+    }
+
+    public PageObjectEntity getPageObject(ConnectionProfile connectionProfile) {
+        if (pageObject == null) {
+            PageObjectService pageObjectService = new PageObjectService(connectionProfile);
+            pageObject = pageObjectService.GetPageObject(this.pageObjectId);
+        }
+
+        return pageObject;
     }
 }

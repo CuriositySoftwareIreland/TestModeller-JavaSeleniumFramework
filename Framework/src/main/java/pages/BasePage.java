@@ -22,6 +22,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 import utilities.PropertiesLoader;
 import utilities.reports.ExtentReportManager;
+import utilities.selenium.GPTWebLocatorService;
 import utilities.selenium.WebIdentifier;
 import utilities.testmodeller.TestModellerLogger;
 
@@ -447,17 +448,38 @@ public class BasePage {
 
     protected WebElement getWebElement(final WebIdentifier webElement)
     {
+        // Try main identifier
         WebElement elem = getWebElement(webElement.getElementBy());
         if (elem != null) return elem; // Found the element
+        System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Element not found: " + webElement.getElementBy().toString());
 
-        // Try the other identifiers
-        List<By> identifers = webElement.getElementBys(PropertiesLoader.getConnectionProfile());
-        if (identifers != null) {
-            for (int i = 1; i < identifers.size(); i++) {
-                elem = getWebElement(identifers.get(i));
+        // Try the other identifiers from page object
+        if (PropertiesLoader.isSmartLocators()) {
+            System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Attempting smart locators");
 
-                if (elem != null) return elem;
+            List<By> identifers = webElement.getElementBys(PropertiesLoader.getConnectionProfile());
+            if (identifers != null) {
+                for (int i = 1; i < identifers.size(); i++) {
+                    elem = getWebElement(identifers.get(i));
+
+                    if (elem != null) return elem;
+
+                    System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Element not found: " + identifers.get(i).toString());
+                }
             }
+        }
+
+        // Finally try gpt identifier as a last resort
+        if (PropertiesLoader.isGPTLocators()) {
+            System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Attempting LLM locator");
+
+            GPTWebLocatorService gptWebLocatorService = new GPTWebLocatorService(PropertiesLoader.getConnectionProfile());
+            By gptLocator = gptWebLocatorService.getGPTLocator(webElement);
+            elem = getWebElement(gptLocator);
+
+            if (elem != null) return elem;
+
+            System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Element not found: " + gptLocator.toString());
         }
 
         return null;
@@ -465,6 +487,8 @@ public class BasePage {
 
     protected WebElement getWebElement(final By by)
     {
+        if (by == null) return null;
+
         waitForLoaded(by, LocatorTimeout);
         waitForVisible(by, LocatorTimeout);
 
