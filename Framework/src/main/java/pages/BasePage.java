@@ -460,7 +460,7 @@ public class BasePage {
             List<By> identifers = webElement.getElementBys(PropertiesLoader.getConnectionProfile());
             if (identifers != null) {
                 for (int i = 1; i < identifers.size(); i++) {
-                    elem = getWebElement(identifers.get(i));
+                    elem = getWebElement(identifers.get(i), false);
 
                     if (elem != null) return elem;
 
@@ -474,8 +474,11 @@ public class BasePage {
             System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Attempting LLM locator");
 
             GPTWebLocatorService gptWebLocatorService = new GPTWebLocatorService(PropertiesLoader.getConnectionProfile());
-            By gptLocator = gptWebLocatorService.getGPTLocator(webElement);
-            elem = getWebElement(gptLocator);
+            By gptLocator = gptWebLocatorService.getGPTLocator(m_Driver, webElement);
+            if (gptLocator != null)
+                System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Attempting LLM locator result " + gptLocator.toString());
+
+            elem = getWebElement(gptLocator, true);
 
             if (elem != null) return elem;
 
@@ -487,10 +490,17 @@ public class BasePage {
 
     protected WebElement getWebElement(final By by)
     {
+        return getWebElement(by, true);
+    }
+
+    protected WebElement getWebElement(final By by, Boolean waitForElement)
+    {
         if (by == null) return null;
 
-        waitForLoaded(by, LocatorTimeout);
-        waitForVisible(by, LocatorTimeout);
+        if (waitForElement) {
+            waitForLoaded(by, LocatorTimeout);
+            waitForVisible(by, LocatorTimeout);
+        }
 
         String currentUrl = m_Driver.getCurrentUrl();
         if (currentUrl == null || currentUrl.isEmpty() || currentUrl.equals("data:,")) {
