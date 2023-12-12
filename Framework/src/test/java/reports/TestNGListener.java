@@ -129,11 +129,13 @@ public class TestNGListener implements ITestListener, IClassListener
         // Set status to running
         TestRunService runService1 = new TestRunService(PropertiesLoader.getConnectionProfile());
         TestPathRun testPathRun = TestModellerLogger.CurrentRun.get();
-        testPathRun.setTestStatus(TestPathRunStatusEnum.Running);
+        if (testPathRun != null) {
+            testPathRun.setTestStatus(TestPathRunStatusEnum.Running);
 
-        // Post it
-        if (runService1.saveTestPathRun(testPathRun) == null) {
-            System.out.println("Error posting path run " + runService1.getErrorMessage());
+            // Post it
+            if (runService1.saveTestPathRun(testPathRun) == null) {
+                System.out.println("Error posting path run " + runService1.getErrorMessage());
+            }
         }
     }
 
@@ -180,20 +182,23 @@ public class TestNGListener implements ITestListener, IClassListener
 
         // Create TestPath run entity
         TestPathRun testPathRun = TestModellerLogger.CurrentRun.get();
-        testPathRun.setRunTime(toIntExact(testResult.getEndMillis() - testResult.getStartMillis()));
-        testPathRun.setTestStatus(status);
-//        testPathRun.setTestPathRunSteps(TestModellerLogger.steps.get());
-        if (suite != null) {
-            testPathRun.setProfileId(suite.profileId());
-            testPathRun.setTestSuiteId(suite.id());
-        }
-        
-        if(testResult.getThrowable() != null)
-            testPathRun.setMessage(testResult.getThrowable().getMessage());
 
-        // Post it
-        if (runService.updateTestPathRun(testPathRun) == null) {
-            System.out.println("Error posting path run " + runService.getErrorMessage());
+        if (testPathRun != null) {
+            testPathRun.setRunTime(toIntExact(testResult.getEndMillis() - testResult.getStartMillis()));
+            testPathRun.setTestStatus(status);
+//        testPathRun.setTestPathRunSteps(TestModellerLogger.steps.get());
+            if (suite != null) {
+                testPathRun.setProfileId(suite.profileId());
+                testPathRun.setTestSuiteId(suite.id());
+            }
+
+            if (testResult.getThrowable() != null)
+                testPathRun.setMessage(testResult.getThrowable().getMessage());
+
+            // Post it
+            if (runService.updateTestPathRun(testPathRun) == null) {
+                System.out.println("Error posting path run " + runService.getErrorMessage());
+            }
         }
     }
 

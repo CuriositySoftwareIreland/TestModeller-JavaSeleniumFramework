@@ -377,14 +377,20 @@ public class TestModellerLogger {
 
     private static TestPathRunStep SaveStep(TestPathRunStep step)
     {
-        TestRunService runService1 = new TestRunService(PropertiesLoader.getConnectionProfile());
+        TestPathRun curRun = CurrentRun.get();
 
-        step.setTestPathRun(CurrentRun.get().getId());
-        step.setRunTimeStamp(new Date());
+        if (curRun != null) {
+            TestRunService runService1 = new TestRunService(PropertiesLoader.getConnectionProfile());
 
-        TestPathRunStep curRunStep = runService1.saveTestPathRunStep(step);
+            step.setTestPathRun(curRun.getId());
+            step.setRunTimeStamp(new Date());
 
-        return curRunStep;
+            TestPathRunStep curRunStep = runService1.saveTestPathRunStep(step);
+
+            return curRunStep;
+        } else {
+            return step;
+        }
     }
 
     private static void populateAPITestStep(TestPathRunStep runStep, RequestSpecification rawReq, Response rsp)
