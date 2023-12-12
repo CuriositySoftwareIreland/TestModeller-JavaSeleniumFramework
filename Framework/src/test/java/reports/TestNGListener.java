@@ -132,7 +132,7 @@ public class TestNGListener implements ITestListener, IClassListener
         testPathRun.setTestStatus(TestPathRunStatusEnum.Running);
 
         // Post it
-        if (runService1.saveTestPathRun(testPathRun) != null) {
+        if (runService1.saveTestPathRun(testPathRun) == null) {
             System.out.println("Error posting path run " + runService1.getErrorMessage());
         }
     }
@@ -192,7 +192,7 @@ public class TestNGListener implements ITestListener, IClassListener
             testPathRun.setMessage(testResult.getThrowable().getMessage());
 
         // Post it
-        if (runService.updateTestPathRun(testPathRun) != null) {
+        if (runService.updateTestPathRun(testPathRun) == null) {
             System.out.println("Error posting path run " + runService.getErrorMessage());
         }
     }
