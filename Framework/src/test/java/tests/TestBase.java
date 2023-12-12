@@ -1,6 +1,8 @@
 package tests;
 
+import org.testng.annotations.*;
 import pages.VisualAutomation.VisualActions;
+import reports.TestNGListener;
 import utilities.CapabilityLoader;
 import utilities.PropertiesLoader;
 import utilities.reports.ExtentReportManager;
@@ -11,10 +13,6 @@ import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -50,15 +48,18 @@ public class TestBase {
 
                 Method testMethod = method.getConstructorOrMethod().getMethod();
 
-                if (testMethod != null && testMethod.isAnnotationPresent(DataAllocation.class))
-                {
-                    DataAllocation dataAllocation = testMethod.getAnnotation(DataAllocation.class);
+                if (testMethod != null) {
+                    if (testMethod.isAnnotationPresent(DataAllocation.class)) {
+                        DataAllocation dataAllocation = testMethod.getAnnotation(DataAllocation.class);
 
-                    for (String testType : dataAllocation.groups()) {
-                        AllocationType allocationType = new AllocationType(dataAllocation.poolName(), dataAllocation.suiteName(), testType);
+                        for (String testType : dataAllocation.groups()) {
+                            AllocationType allocationType = new AllocationType(dataAllocation.poolName(), dataAllocation.suiteName(), testType);
 
-                        allocationTypes.add(allocationType);
+                            allocationTypes.add(allocationType);
+                        }
                     }
+
+                    TestNGListener.StartTestRunInQueue(testMethod);
                 }
             }
         } catch (Throwable e) {
@@ -77,6 +78,8 @@ public class TestBase {
         ExtentReportManager.createNewTest(method);
 
         CapabilityLoader.setDriver(CapabilityLoader.createWebDriver());
+
+        TestNGListener.StartTestRun(method);
 
         System.out.println("Creating test: " + ExtentReportManager.getTestName());
     }

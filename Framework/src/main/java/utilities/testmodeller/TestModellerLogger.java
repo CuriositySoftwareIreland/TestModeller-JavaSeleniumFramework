@@ -5,10 +5,8 @@ import com.aventstack.extentreports.markuputils.ExtentColor;
 import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
-import ie.curiositysoftware.runresult.dto.TestPathRunStep;
-import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPRequest;
-import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPResponse;
+import ie.curiositysoftware.runresult.dto.*;
+import ie.curiositysoftware.runresult.services.TestRunService;
 import io.restassured.http.Cookie;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
@@ -17,11 +15,9 @@ import io.restassured.specification.MultiPartSpecification;
 import io.restassured.specification.RequestSpecification;
 import org.openqa.selenium.WebDriver;
 import org.sikuli.script.Screen;
+import utilities.PropertiesLoader;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TestModellerLogger {
     public static class ModellerContext {
@@ -59,6 +55,8 @@ public class TestModellerLogger {
     public static final ThreadLocal<List<TestPathRunStep>> steps = new ThreadLocal<List<TestPathRunStep>>();
 
     public static final ThreadLocal<ModellerContext> LastNodeGuid = new ThreadLocal<ModellerContext>();
+
+    public static final ThreadLocal<TestPathRun> CurrentRun = new ThreadLocal<TestPathRun>();
 
     public static void LogMessage(String name, String description, TestPathRunStatusEnum status)
     {
@@ -129,6 +127,9 @@ public class TestModellerLogger {
             step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
         }
 
+        if (driver != null) {
+            step.setPageSource(driver.getPageSource());
+        }
 
         addStep(step);
 
@@ -148,6 +149,9 @@ public class TestModellerLogger {
             step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
         }
 
+        if (driver != null) {
+            step.setPageSource(driver.getPageSource());
+        }
 
         addStep(step);
 
@@ -243,6 +247,10 @@ public class TestModellerLogger {
             step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
         }
 
+        if (driver != null) {
+            step.setPageSource(driver.getPageSource());
+        }
+
         addStep(step);
 
         return step;
@@ -289,6 +297,10 @@ public class TestModellerLogger {
             step.setNodeGuid(LastNodeGuid.get().getLastNodeGuid());
             step.setModuleColId(LastNodeGuid.get().getModuleColId());
             step.setModuleObjId(LastNodeGuid.get().getModuleObjId());
+        }
+
+        if (driver != null) {
+            step.setPageSource(driver.getPageSource());
         }
 
         addStep(step);
@@ -358,7 +370,21 @@ public class TestModellerLogger {
         if (steps.get() == null)
             steps.set(new ArrayList<>());
 
-        steps.get().add(step);
+        TestPathRunStep savedStep = SaveStep(step);
+
+        steps.get().add(savedStep);
+    }
+
+    private static TestPathRunStep SaveStep(TestPathRunStep step)
+    {
+        TestRunService runService1 = new TestRunService(PropertiesLoader.getConnectionProfile());
+
+        step.setTestPathRun(CurrentRun.get().getId());
+        step.setRunTimeStamp(new Date());
+
+        TestPathRunStep curRunStep = runService1.saveTestPathRunStep(step);
+
+        return curRunStep;
     }
 
     private static void populateAPITestStep(TestPathRunStep runStep, RequestSpecification rawReq, Response rsp)

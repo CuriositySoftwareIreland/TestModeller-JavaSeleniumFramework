@@ -5,6 +5,7 @@ import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import ie.curiositysoftware.jobengine.services.job.FailureAnalysisService;
 import ie.curiositysoftware.runresult.dto.TestPathRun;
 import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
+import ie.curiositysoftware.runresult.dto.TestPathRunStep;
 import ie.curiositysoftware.runresult.services.TestRunIdGenerator;
 import ie.curiositysoftware.runresult.services.TestRunService;
 import ie.curiositysoftware.testmodeller.TestModellerPath;
@@ -12,8 +13,10 @@ import ie.curiositysoftware.testmodeller.TestModellerSuite;
 import org.openqa.selenium.WebDriver;
 import org.testng.*;
 import tests.TestBase;
+import utilities.CapabilityLoader;
 import utilities.PropertiesLoader;
 import utilities.testmodeller.TestModellerLogger;
+import utilities.testmodeller.TestModellerMethodExtractor;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -22,8 +25,8 @@ import java.util.List;
 
 import static java.lang.Math.toIntExact;
 
-public class TestNGListener implements ITestListener, IClassListener {
-
+public class TestNGListener implements ITestListener, IClassListener
+{
     private final TestRunService runService;
 
     private final FailureAnalysisService failureService;
@@ -121,72 +124,87 @@ public class TestNGListener implements ITestListener, IClassListener {
         testsClassesToAnalyse.forEach(this::postAnalysisJob);
     }
 
-    private void postRunResult(ITestResult testResult, TestPathRunStatusEnum status) {
-        // Get guid
-        TestModellerPath path = getTestModellerPath(testResult);
+    public static void StartTestRun(Method method)
+    {
+        // Set status to running
+        TestRunService runService1 = new TestRunService(PropertiesLoader.getConnectionProfile());
+        TestPathRun testPathRun = TestModellerLogger.CurrentRun.get();
+        testPathRun.setTestStatus(TestPathRunStatusEnum.Running);
+
+        // Post it
+        if (runService1.saveTestPathRun(testPathRun) != null) {
+            System.out.println("Error posting path run " + runService1.getErrorMessage());
+        }
+    }
+
+    public static void StartTestRunInQueue(Method method)
+    {
+        TestModellerPath path = TestModellerMethodExtractor.getTestModellerPath(method);
         if (path == null)
             return;
 
-        TestModellerSuite suite = getTestModellerSuite((ITestClass) testResult.getTestClass());
-
         // Create TestPath run entity
         TestPathRun testPathRun = new TestPathRun();
-        testPathRun.setRunTime(toIntExact(testResult.getEndMillis() - testResult.getStartMillis()));
-        testPathRun.setRunTimeStamp(new Date(testResult.getStartMillis()));
+        testPathRun.setRunTimeStamp(new Date());
         testPathRun.setTestPathGuid(path.guid());
         testPathRun.setRunSource("Selenium");
         testPathRun.setVipRunId(TestRunIdGenerator.getRunId());
-        testPathRun.setTestStatus(status);
-        testPathRun.setTestPathRunSteps(TestModellerLogger.steps.get());
+        testPathRun.setTestStatus(TestPathRunStatusEnum.Queue);
 
+        try {
+            testPathRun.setJobId(Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.jobId")));
+        } catch (Exception e) {}
+
+        // Post it
+        TestRunService runService1 = new TestRunService(PropertiesLoader.getConnectionProfile());
+        TestPathRun run = runService1.saveTestPathRun(testPathRun);
+        if (run == null) {
+            System.out.println("Error posting path run " + runService1.getErrorMessage());
+        } else {
+            TestModellerLogger.CurrentRun.set(run);
+        }
+    }
+
+    public static void AddStep(TestPathRunStep step)
+    {
+
+    }
+
+    private void postRunResult(ITestResult testResult, TestPathRunStatusEnum status) {
+        // Get guid
+        TestModellerPath path = TestModellerMethodExtractor.getTestModellerPath(testResult);
+        if (path == null && TestModellerLogger.CurrentRun.get() != null)
+            return;
+
+        TestModellerSuite suite = TestModellerMethodExtractor.getTestModellerSuite((ITestClass) testResult.getTestClass());
+
+        // Create TestPath run entity
+        TestPathRun testPathRun = TestModellerLogger.CurrentRun.get();
+        testPathRun.setRunTime(toIntExact(testResult.getEndMillis() - testResult.getStartMillis()));
+        testPathRun.setTestStatus(status);
+//        testPathRun.setTestPathRunSteps(TestModellerLogger.steps.get());
         if (suite != null) {
             testPathRun.setProfileId(suite.profileId());
             testPathRun.setTestSuiteId(suite.id());
         }
         
-        try {
-            testPathRun.setJobId(Long.parseLong(PropertiesLoader.getProperties().getProperty("testModeller.jobId")));
-        } catch (Exception e) {}
-
         if(testResult.getThrowable() != null)
             testPathRun.setMessage(testResult.getThrowable().getMessage());
 
         // Post it
-        if (!runService.saveTestPathRun(testPathRun)) {
+        if (runService.updateTestPathRun(testPathRun) != null) {
             System.out.println("Error posting path run " + runService.getErrorMessage());
         }
     }
 
     private void postAnalysisJob(ITestClass testClass) {
-        TestModellerSuite suite = getTestModellerSuite(testClass);
+        TestModellerSuite suite = TestModellerMethodExtractor.getTestModellerSuite(testClass);
         if(suite != null && suite.profileId() > 0) {
             if(failureService.analyseFailures(suite.profileId())) {
                 executeNewTests(failureService.getNewTests());
             } else {
                 System.out.println(failureService.getErrorMessage());
             }
-        }
-    }
-
-    private TestModellerPath getTestModellerPath(ITestResult testResult) {
-        Method testMethod = testResult.getMethod().getConstructorOrMethod().getMethod();
-        if (testMethod != null && testMethod.isAnnotationPresent(TestModellerPath.class)) {
-            TestModellerPath path = testMethod.getAnnotation(TestModellerPath.class);
-            System.out.println("Test Modeller Path GUID = " + path.guid());
-            return path;
-        } else {
-            return null;
-        }
-    }
-
-    private TestModellerSuite getTestModellerSuite(ITestClass testClass) {
-        Class<?> realClass = testClass.getRealClass();
-        if(realClass != null && realClass.isAnnotationPresent(TestModellerSuite.class)) {
-            TestModellerSuite suite = realClass.getAnnotation(TestModellerSuite.class);
-            System.out.println("Test Modeller Suite ID = " + suite.id());
-            return suite;
-        } else {
-            return null;
         }
     }
 
