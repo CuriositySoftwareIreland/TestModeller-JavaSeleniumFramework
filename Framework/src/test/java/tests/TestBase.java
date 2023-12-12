@@ -26,7 +26,7 @@ public class TestBase {
 
     protected DataAllocationEngine dataAllocationEngine = new DataAllocationEngine(cp);
 
-    protected HashMap<String, TestPathRun> testRunMap = new HashMap<String, TestPathRun>();
+    protected static HashMap<String, TestPathRun> testRunMap = new HashMap<String, TestPathRun>();
 
     public WebDriver getDriver()
     {
