@@ -1,5 +1,6 @@
 package tests;
 
+import ie.curiositysoftware.runresult.dto.TestPathRun;
 import org.testng.annotations.*;
 import pages.VisualAutomation.VisualActions;
 import reports.TestNGListener;
@@ -13,15 +14,19 @@ import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
+import utilities.testmodeller.TestModellerLogger;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TestBase {
     protected ConnectionProfile cp = PropertiesLoader.getConnectionProfile();
 
     protected DataAllocationEngine dataAllocationEngine = new DataAllocationEngine(cp);
+
+    protected HashMap<String, TestPathRun> testRunMap = new HashMap<String, TestPathRun>();
 
     public WebDriver getDriver()
     {
@@ -45,7 +50,6 @@ public class TestBase {
 
             for (int i = 0; i < methods.length; i++) {
                 ITestNGMethod method = methods[i];
-
                 Method testMethod = method.getConstructorOrMethod().getMethod();
 
                 if (testMethod != null) {
@@ -59,7 +63,10 @@ public class TestBase {
                         }
                     }
 
-                    TestNGListener.StartTestRunInQueue(testMethod);
+                    // Store test path run
+                    TestPathRun r = TestNGListener.StartTestRunInQueue(testMethod);
+                    String methodKey = testMethod.getDeclaringClass().getName() + "." + testMethod.getName();
+                    testRunMap.put(methodKey, r);
                 }
             }
         } catch (Throwable e) {
@@ -78,6 +85,9 @@ public class TestBase {
         ExtentReportManager.createNewTest(method);
 
         CapabilityLoader.setDriver(CapabilityLoader.createWebDriver());
+
+        String methodKey = method.getDeclaringClass().getName() + "." + method.getName();
+        TestModellerLogger.CurrentRun.set(testRunMap.get(methodKey));
 
         TestNGListener.StartTestRun(method);
 

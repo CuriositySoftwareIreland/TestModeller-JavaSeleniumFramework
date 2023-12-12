@@ -139,11 +139,11 @@ public class TestNGListener implements ITestListener, IClassListener
         }
     }
 
-    public static void StartTestRunInQueue(Method method)
+    public static TestPathRun StartTestRunInQueue(Method method)
     {
         TestModellerPath path = TestModellerMethodExtractor.getTestModellerPath(method);
         if (path == null)
-            return;
+            return null;
 
         // Create TestPath run entity
         TestPathRun testPathRun = new TestPathRun();
@@ -162,9 +162,9 @@ public class TestNGListener implements ITestListener, IClassListener
         TestPathRun run = runService1.saveTestPathRun(testPathRun);
         if (run == null) {
             System.out.println("Error posting path run " + runService1.getErrorMessage());
-        } else {
-            TestModellerLogger.CurrentRun.set(run);
         }
+
+        return run;
     }
 
     public static void AddStep(TestPathRunStep step)
@@ -183,6 +183,7 @@ public class TestNGListener implements ITestListener, IClassListener
         // Create TestPath run entity
         TestPathRun testPathRun = TestModellerLogger.CurrentRun.get();
 
+        System.out.println("here");
         if (testPathRun != null) {
             testPathRun.setRunTime(toIntExact(testResult.getEndMillis() - testResult.getStartMillis()));
             testPathRun.setTestStatus(status);
