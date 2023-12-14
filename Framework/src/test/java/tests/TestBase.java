@@ -64,9 +64,11 @@ public class TestBase {
                     }
 
                     // Store test path run
-                    TestPathRun r = TestNGListener.StartTestRunInQueue(testMethod);
                     String methodKey = testMethod.getDeclaringClass().getName() + "." + testMethod.getName();
-                    testRunMap.put(methodKey, r);
+                    if (!testRunMap.containsKey(methodKey)) {
+                        TestPathRun r = TestNGListener.StartTestRunInQueue(testMethod);
+                        testRunMap.put(methodKey, r);
+                    }
                 }
             }
         } catch (Throwable e) {
