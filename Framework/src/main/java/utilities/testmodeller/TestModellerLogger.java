@@ -58,6 +58,8 @@ public class TestModellerLogger {
 
     public static final ThreadLocal<TestPathRun> CurrentRun = new ThreadLocal<TestPathRun>();
 
+    public static HashMap<String, TestPathRun> TestRunMap = new HashMap<String, TestPathRun>();
+
     public static void LogMessage(String name, String description, TestPathRunStatusEnum status)
     {
         TestPathRunStep step = new TestPathRunStep();

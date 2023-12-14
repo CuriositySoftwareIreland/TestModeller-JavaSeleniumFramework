@@ -29,8 +29,6 @@ public class APITestBase {
 
     protected DataAllocationEngine dataAllocationEngine = new DataAllocationEngine(cp);
 
-    protected static HashMap<String, TestPathRun> testRunMap = new HashMap<String, TestPathRun>();
-
     public WebDriver getDriver()
     {
         return CapabilityLoader.getDriver();
@@ -69,9 +67,9 @@ public class APITestBase {
 
                     // Store test path run
                     String methodKey = testMethod.getDeclaringClass().getName() + "." + testMethod.getName();
-                    if (!testRunMap.containsKey(methodKey)) {
+                    if (!TestModellerLogger.TestRunMap.containsKey(methodKey)) {
                         TestPathRun r = TestNGListener.StartTestRunInQueue(testMethod);
-                        testRunMap.put(methodKey, r);
+                        TestModellerLogger.TestRunMap.put(methodKey, r);
                     }
 
                 }
@@ -92,7 +90,7 @@ public class APITestBase {
         ExtentReportManager.createNewTest(method);
 
         String methodKey = method.getDeclaringClass().getName() + "." + method.getName();
-        TestModellerLogger.CurrentRun.set(testRunMap.get(methodKey));
+        TestModellerLogger.CurrentRun.set(TestModellerLogger.TestRunMap.get(methodKey));
 
         TestNGListener.StartTestRun(method);
     }
