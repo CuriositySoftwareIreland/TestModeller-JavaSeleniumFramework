@@ -1,5 +1,7 @@
 package pages;
 
+import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
+import ie.curiositysoftware.runresult.dto.TestPathRunStep;
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import io.restassured.RestAssured;
 import io.restassured.filter.cookie.CookieFilter;
@@ -259,6 +261,21 @@ public class BasePage {
         ExtentReportManager.passStepWithScreenshot(m_Driver, msg, desc);
 
         TestModellerLogger.PassStepWithScreenshot(m_Driver, msg, desc);
+    }
+
+    protected void addStep(RequestSpecification req, Response rsp, TestPathRunStep step)
+    {
+        TestModellerLogger.addStep(step);
+
+        if (step.getTestStatus().equals(TestPathRunStatusEnum.Failed)) {
+            ExtentReportManager.failStep(req, rsp, step.getStepName() + step.getStepDescription(), String.join("<br>", step.getAssertionString()));
+
+            if (BasePage.StopOnFail) {
+                Assert.fail(step.getStepName() + step.getStepDescription());
+            }
+        } else {
+            ExtentReportManager.passStep(req, rsp, step.getStepName() + step.getStepDescription(), String.join("<br>", step.getAssertionString()));
+        }
     }
 
     protected void passStep(Response rsp, String msg)

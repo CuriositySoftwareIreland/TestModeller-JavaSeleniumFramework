@@ -182,6 +182,17 @@ public class TestModellerLogger {
         return runStep;
     }
 
+    public static TestPathRunStep CreateAPIStep(RequestSpecification req, Response rsp, String stepName)
+    {
+        TestPathRunStep runStep = createPassStep(null, stepName,
+                "Status Code: " + rsp.getStatusCode() + "\n" +
+                        "Status: " + rsp.getStatusLine());
+
+        populateAPITestStep(runStep, req, rsp);
+
+        return runStep;
+    }
+
     public static TestPathRunStep FailResponseStep(Response rsp, String stepName)
     {
         TestPathRunStep runStep = createFailStep(stepName,
@@ -381,7 +392,7 @@ public class TestModellerLogger {
             steps.get().clear();
     }
 
-    private static void addStep(TestPathRunStep step)
+    public static void addStep(TestPathRunStep step)
     {
         if (steps.get() == null)
             steps.set(new ArrayList<>());

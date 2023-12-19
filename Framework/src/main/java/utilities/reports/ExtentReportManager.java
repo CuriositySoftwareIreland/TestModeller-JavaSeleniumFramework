@@ -172,7 +172,7 @@ public class ExtentReportManager {
 
     public static void passStep(RequestSpecification req, Response rsp, String stepName, String message)
     {
-        ExtentTest passSection = reportThreadLocal.get().log(Status.PASS, stepName + "\n" +
+        ExtentTest passSection = reportThreadLocal.get().log(Status.PASS, stepName + "<br>" +
                 message);
 
         populateAPITestStep(stepName, passSection,Status.PASS, req, rsp);
@@ -180,7 +180,7 @@ public class ExtentReportManager {
 
     public static void failStep(RequestSpecification req, Response rsp, String stepName, String message)
     {
-        ExtentTest failSection = reportThreadLocal.get().log(Status.FAIL, stepName + "\n" +
+        ExtentTest failSection = reportThreadLocal.get().log(Status.FAIL, stepName + "<br>" +
                 message);
 
         populateAPITestStep(stepName, failSection, Status.FAIL, req, rsp);
