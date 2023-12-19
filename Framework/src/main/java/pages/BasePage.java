@@ -269,7 +269,7 @@ public class BasePage {
 
         if (step.getTestStatus().equals(TestPathRunStatusEnum.Failed)) {
             ExtentReportManager.failStep(req, rsp, step.getStepName() + step.getStepDescription(), String.join("<br>", step.getAssertionString()));
-
+            step.setStepDescription(step.getStepDescription() + "\n" + String.join("\n", step.getAssertionString()));
             if (BasePage.StopOnFail) {
                 Assert.fail(step.getStepName() + step.getStepDescription());
             }
