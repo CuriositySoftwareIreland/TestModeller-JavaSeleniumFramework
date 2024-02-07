@@ -1,5 +1,8 @@
 package pages;
 
+import ie.curiositysoftware.pageobjects.dto.PageObjectParameterEntity;
+import ie.curiositysoftware.pageobjects.dto.PageObjectParameterStateEnum;
+import ie.curiositysoftware.pageobjects.services.PageObjectService;
 import ie.curiositysoftware.runresult.dto.TestPathRunStatusEnum;
 import ie.curiositysoftware.runresult.dto.TestPathRunStep;
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
@@ -465,6 +468,8 @@ public class BasePage {
 
     protected WebElement getWebElement(final WebIdentifier webElement)
     {
+        PageObjectService poService = new PageObjectService(PropertiesLoader.getConnectionProfile());
+
         // Try main identifier
         WebElement elem = getWebElement(webElement.getElementBy());
         if (elem != null) return elem; // Found the element
@@ -474,14 +479,28 @@ public class BasePage {
         if (PropertiesLoader.isSmartLocators()) {
             System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Attempting smart locators");
 
-            List<By> identifers = webElement.getElementBys(PropertiesLoader.getConnectionProfile());
+            List<PageObjectParameterEntity> identifers = webElement.getPageObjectParameters(PropertiesLoader.getConnectionProfile());
             if (identifers != null) {
-                for (int i = 1; i < identifers.size(); i++) {
-                    elem = getWebElement(identifers.get(i), false);
+                for (int i = 0; i < identifers.size(); i++) {
+                    elem = getWebElement(WebIdentifier.ConvertPageObjectIdentifierToLocator(identifers.get(i)), false);
 
-                    if (elem != null) return elem;
+                    if (elem != null){
+                        // Mark as active
+                        if (identifers.get(i).getParameterState() != PageObjectParameterStateEnum.Active) {
+                            identifers.get(i).setParameterState(PageObjectParameterStateEnum.Active);
+                            poService.UpdatePageObjectParameter(identifers.get(i));
+                        }
+
+                        return elem;
+                    }
 
                     System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Element not found: " + identifers.get(i).toString());
+
+                    // Mark as failed
+                    if (identifers.get(i).getParameterState() != PageObjectParameterStateEnum.Fail) {
+                        identifers.get(i).setParameterState(PageObjectParameterStateEnum.Fail);
+                        poService.UpdatePageObjectParameter(identifers.get(i));
+                    }
                 }
             }
         }

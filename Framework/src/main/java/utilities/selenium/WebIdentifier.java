@@ -56,26 +56,51 @@ public class WebIdentifier {
                     if (poParam.getConfidence() < 1)
                         continue;
 
-                    if (poParam.getParamType() == VipAutomationSelectorEnum.ClassName) {
-                        elementBys.add(By.className(poParam.getParamValue()));
-                    } else if (poParam.getParamType() == VipAutomationSelectorEnum.Id) {
-                        elementBys.add(By.id(poParam.getParamValue()));
-                    } else if (poParam.getParamType() == VipAutomationSelectorEnum.XPath) {
-                        elementBys.add(By.xpath(poParam.getParamValue()));
-                    } else if (poParam.getParamType() == VipAutomationSelectorEnum.TagName) {
-                        elementBys.add(By.tagName(poParam.getParamValue()));
-                    } else if (poParam.getParamType() == VipAutomationSelectorEnum.CssSelector) {
-                        elementBys.add(By.cssSelector(poParam.getParamValue()));
-                    } else if (poParam.getParamType() == VipAutomationSelectorEnum.LinkText) {
-                        elementBys.add(By.linkText(poParam.getParamValue()));
-                    } else if (poParam.getParamType() == VipAutomationSelectorEnum.PartialLinkText) {
-                        elementBys.add(By.partialLinkText(poParam.getParamValue()));
-                    }
+                    elementBys.add(ConvertPageObjectIdentifierToLocator(poParam));
                 }
             }
         }
 
         return elementBys;
+    }
+
+    public List<PageObjectParameterEntity> getPageObjectParameters(ConnectionProfile connectionProfile) {
+        if (this.pageObjectId == null) return new ArrayList<>();
+
+        List<PageObjectParameterEntity> pageObjectParams = new ArrayList<PageObjectParameterEntity>();
+
+        PageObjectEntity pageObjectEntity = getPageObject(connectionProfile);
+        if (pageObjectEntity != null && pageObjectEntity.getParameters() != null) {
+            for (PageObjectParameterEntity poParam : pageObjectEntity.getParameters()) {
+                if (poParam.getConfidence() < 1)
+                    continue;
+
+                pageObjectParams.add(poParam);
+            }
+        }
+
+        return pageObjectParams;
+    }
+
+    public static By ConvertPageObjectIdentifierToLocator(PageObjectParameterEntity poParam)
+    {
+        if (poParam.getParamType() == VipAutomationSelectorEnum.ClassName) {
+            return (By.className(poParam.getParamValue()));
+        } else if (poParam.getParamType() == VipAutomationSelectorEnum.Id) {
+            return (By.id(poParam.getParamValue()));
+        } else if (poParam.getParamType() == VipAutomationSelectorEnum.XPath) {
+            return (By.xpath(poParam.getParamValue()));
+        } else if (poParam.getParamType() == VipAutomationSelectorEnum.TagName) {
+            return (By.tagName(poParam.getParamValue()));
+        } else if (poParam.getParamType() == VipAutomationSelectorEnum.CssSelector) {
+            return (By.cssSelector(poParam.getParamValue()));
+        } else if (poParam.getParamType() == VipAutomationSelectorEnum.LinkText) {
+            return (By.linkText(poParam.getParamValue()));
+        } else if (poParam.getParamType() == VipAutomationSelectorEnum.PartialLinkText) {
+            return (By.partialLinkText(poParam.getParamValue()));
+        }
+
+        return null;
     }
 
     public void setPageObject(PageObjectEntity pageObject) {
