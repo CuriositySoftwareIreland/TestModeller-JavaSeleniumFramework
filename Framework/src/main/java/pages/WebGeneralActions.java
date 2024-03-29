@@ -26,6 +26,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class WebGeneralActions extends BasePage {
     private WebGeneralActionsFunctions webGeneralActionsFunctions;
@@ -1030,6 +1031,21 @@ public class WebGeneralActions extends BasePage {
     public void DoubleClick(String objectLocator)
     {
         webGeneralActionsFunctions.DoubleClick(getLocatorFromString(objectLocator));
+    }
+
+    /**
+     * Generates and returns a unique GUID string.
+     *
+     * @return A string representation of a UUID.
+     */
+    public String GenerateGUID() {
+        // Generate a random UUID
+        UUID uuid = UUID.randomUUID();
+
+        // Convert UUID to string
+        String guidString = uuid.toString();
+
+        return guidString;
     }
 
     private WebIdentifier getLocatorFromString(String objectLocator)
