@@ -124,13 +124,18 @@ public class TestModellerLogger {
         return step;
     }
 
-    public static TestPathRunStep PassStep(WebDriver driver, String stepName)
+    public static TestPathRunStep PassStep(WebDriver driver, WebElement elem, String stepName)
     {
-        TestPathRunStep step = createPassStep(driver, null, stepName, null);
+        TestPathRunStep step = createPassStep(driver, elem, stepName, null);
 
         addStep(step);
 
         return step;
+    }
+
+    public static TestPathRunStep PassStep(WebDriver driver, String stepName)
+    {
+        return PassStep(driver, (WebElement) null, stepName);
     }
 
     public static TestPathRunStep PassStep(WebDriver driver, String stepName, String details)
@@ -168,6 +173,7 @@ public class TestModellerLogger {
             try {
                 step.setElementSource(webElement.getAttribute("outerHTML"));
             } catch (Exception e) {
+                System.out.println("here");
             }
         }
 

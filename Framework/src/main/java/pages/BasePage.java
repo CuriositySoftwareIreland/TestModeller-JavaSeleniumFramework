@@ -377,7 +377,7 @@ public class BasePage
     protected void passStep(String msg)
     {
         ExtentReportManager.passStep(msg);
-        TestModellerLogger.PassStep(msg);
+        TestModellerLogger.PassStep(m_Driver, m_LastWebElement, msg);
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Pass Step: " + msg);
     }
