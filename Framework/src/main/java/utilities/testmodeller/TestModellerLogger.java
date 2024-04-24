@@ -14,6 +14,7 @@ import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.MultiPartSpecification;
 import io.restassured.specification.RequestSpecification;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.sikuli.script.Screen;
 import utilities.PropertiesLoader;
 
@@ -125,7 +126,7 @@ public class TestModellerLogger {
 
     public static TestPathRunStep PassStep(WebDriver driver, String stepName)
     {
-        TestPathRunStep step = createPassStep(driver, stepName, null);
+        TestPathRunStep step = createPassStep(driver, null, stepName, null);
 
         addStep(step);
 
@@ -134,14 +135,19 @@ public class TestModellerLogger {
 
     public static TestPathRunStep PassStep(WebDriver driver, String stepName, String details)
     {
-        TestPathRunStep step = createPassStep(driver, stepName, details);
+        return PassStep(driver, null, stepName, details);
+    }
+
+    public static TestPathRunStep PassStep(WebDriver driver, WebElement elem, String stepName, String details)
+    {
+        TestPathRunStep step = createPassStep(driver, elem, stepName, details);
 
         addStep(step);
 
         return step;
     }
 
-    private static TestPathRunStep createPassStep(WebDriver driver, String stepName, String details)
+    private static TestPathRunStep createPassStep(WebDriver driver, WebElement webElement, String stepName, String details)
     {
         TestPathRunStep step = new TestPathRunStep();
 
@@ -158,20 +164,34 @@ public class TestModellerLogger {
             step.setPageSource(driver.getPageSource());
         }
 
+        if (webElement != null) {
+            try {
+                step.setElementSource(webElement.getAttribute("outerHTML"));
+            } catch (Exception e) {
+            }
+        }
+
+
         return step;
     }
 
-    private static TestPathRunStep createPassStepWithScreenshot(WebDriver driver, String stepName, String details)
+    private static TestPathRunStep createPassStepWithScreenshot(WebDriver driver, WebElement elem, String stepName, String details)
     {
-        TestPathRunStep step = createPassStep(driver, stepName, details);
+        TestPathRunStep step = createPassStep(driver, elem, stepName, details);
 
         step.setImage(GetScreenShot.captureAsByteArray(driver));
 
         return step;
     }
+
+    private static TestPathRunStep createPassStepWithScreenshot(WebDriver driver, String stepName, String details)
+    {
+        return createPassStepWithScreenshot(driver, null, stepName, details);
+    }
+
     public static TestPathRunStep PassResponseStep(Response rsp, String stepName)
     {
-        TestPathRunStep runStep = createPassStep(null, stepName,
+        TestPathRunStep runStep = createPassStep(null, null, stepName,
                 "Status Code: " + rsp.getStatusCode() + "\n" +
                         "Status: " + rsp.getStatusLine());
 
@@ -184,7 +204,7 @@ public class TestModellerLogger {
 
     public static TestPathRunStep CreateAPIStep(RequestSpecification req, Response rsp, String stepName)
     {
-        TestPathRunStep runStep = createPassStep(null, stepName,
+        TestPathRunStep runStep = createPassStep(null, null, stepName,
                 "Status Code: " + rsp.getStatusCode() + "\n" +
                         "Status: " + rsp.getStatusLine());
 
@@ -209,7 +229,7 @@ public class TestModellerLogger {
 
     public static TestPathRunStep PassResponseStep(RequestSpecification req, Response rsp, String stepName)
     {
-        TestPathRunStep runStep = createPassStep(null, stepName,
+        TestPathRunStep runStep = createPassStep(null, null, stepName,
                 "Status Code: " + rsp.getStatusCode() + "\n" +
                         "Status: " + rsp.getStatusLine());
 
@@ -222,7 +242,7 @@ public class TestModellerLogger {
 
     public static TestPathRunStep PassResponseStep(RequestSpecification req, Response rsp, String stepName, String desc)
     {
-        TestPathRunStep runStep = createPassStep(null, stepName, desc);
+        TestPathRunStep runStep = createPassStep(null, null, stepName, desc);
 
         populateAPITestStep(runStep, req, rsp);
 
@@ -269,7 +289,12 @@ public class TestModellerLogger {
 
     public static TestPathRunStep PassStepWithScreenshot(WebDriver driver, String stepName, String details)
     {
-        TestPathRunStep step = createPassStepWithScreenshot(driver, stepName, details);
+        return PassStepWithScreenshot(driver, null, stepName, details);
+    }
+
+    public static TestPathRunStep PassStepWithScreenshot(WebDriver driver, WebElement elem, String stepName, String details)
+    {
+        TestPathRunStep step = createPassStepWithScreenshot(driver, elem, stepName, details);
 
         addStep(step);
 
@@ -305,16 +330,24 @@ public class TestModellerLogger {
         return FailStepWithScreenshot(driver, stepName, stepName);
     }
 
+    public static TestPathRunStep FailStepWithScreenshot(WebDriver driver, WebElement elem, String stepName, String details)
+    {
+        TestPathRunStep step = createFailStepWithScreenshot(driver, elem, stepName, details);
+
+        addStep(step);
+
+        return step;
+    }
     public static TestPathRunStep FailStepWithScreenshot(WebDriver driver, String stepName, String details)
     {
-        TestPathRunStep step = createFailStepWithScreenshot(driver, stepName, details);
+        TestPathRunStep step = createFailStepWithScreenshot(driver, null, stepName, details);
 
         addStep(step);
 
         return step;
     }
 
-    private static TestPathRunStep createFailStepWithScreenshot(WebDriver driver, String stepName, String details)
+    private static TestPathRunStep createFailStepWithScreenshot(WebDriver driver, WebElement webElement, String stepName, String details)
     {
         TestPathRunStep step = new TestPathRunStep();
 
@@ -330,6 +363,13 @@ public class TestModellerLogger {
 
         if (driver != null) {
             step.setPageSource(driver.getPageSource());
+        }
+
+        if (webElement != null) {
+            try {
+                step.setElementSource(webElement.getAttribute("outerHTML"));
+            } catch (Exception e) {
+            }
         }
 
         return step;

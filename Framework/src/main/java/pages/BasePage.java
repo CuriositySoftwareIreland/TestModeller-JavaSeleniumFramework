@@ -44,7 +44,10 @@ import java.util.concurrent.TimeUnit;
 import static io.restassured.RestAssured.when;
 
 @TestModellerIgnore
-public class BasePage {
+public class BasePage
+{
+    protected WebElement m_LastWebElement;
+
     protected WebDriver m_Driver;
 
     protected WebDriverWait jsWait;
@@ -234,6 +237,7 @@ public class BasePage {
     {
         ExtentReportManager.failStep(rsp, msg);
         TestModellerLogger.FailResponseStep(rsp, msg);
+        m_LastWebElement = null;
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
 
@@ -256,14 +260,18 @@ public class BasePage {
     {
         ExtentReportManager.failStepWithScreenshot(m_Driver, msg, desc);
 
-        TestModellerLogger.FailStepWithScreenshot(m_Driver, msg, desc);
+        TestModellerLogger.FailStepWithScreenshot(m_Driver, m_LastWebElement, msg, desc);
+
+        m_LastWebElement = null;
     }
 
     protected void passStep(WebDriver driver, String msg, String desc)
     {
         ExtentReportManager.passStepWithScreenshot(m_Driver, msg, desc);
 
-        TestModellerLogger.PassStepWithScreenshot(m_Driver, msg, desc);
+        TestModellerLogger.PassStepWithScreenshot(m_Driver, m_LastWebElement, msg, desc);
+
+        m_LastWebElement = null;
     }
 
     protected void addStep(RequestSpecification req, Response rsp, TestPathRunStep step)
@@ -343,7 +351,8 @@ public class BasePage {
     {
         ExtentReportManager.failStepWithScreenshot(m_Driver, msg, details);
 
-        TestModellerLogger.FailStepWithScreenshot(m_Driver, msg, details);
+        TestModellerLogger.FailStepWithScreenshot(m_Driver, m_LastWebElement, msg, details);
+        m_LastWebElement = null;
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg + " - " + details);
 
@@ -355,7 +364,8 @@ public class BasePage {
     protected void failStep(String msg)
     {
         ExtentReportManager.failStepWithScreenshot(m_Driver, msg);
-        TestModellerLogger.FailStepWithScreenshot(m_Driver, msg);
+        TestModellerLogger.FailStepWithScreenshot(m_Driver, m_LastWebElement, msg, "");
+        m_LastWebElement = null;
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Fail Step: " + msg);
 
@@ -375,7 +385,8 @@ public class BasePage {
     protected void passStepWithScreenshot(String msg)
     {
         ExtentReportManager.passStepWithScreenshot(m_Driver, msg);
-        TestModellerLogger.PassStepWithScreenshot(m_Driver, msg);
+        TestModellerLogger.PassStepWithScreenshot(m_Driver, m_LastWebElement, msg, "");
+        m_LastWebElement = null;
 
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Pass Step: " + msg);
     }
@@ -472,7 +483,10 @@ public class BasePage {
 
         // Try main identifier
         WebElement elem = getWebElement(webElement.getElementBy());
-        if (elem != null) return elem; // Found the element
+        if (elem != null) {
+            m_LastWebElement = elem;
+            return m_LastWebElement;
+        }
         System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Element not found: " + webElement.getElementBy().toString());
 
         // Try the other identifiers from page object
@@ -491,7 +505,8 @@ public class BasePage {
                             poService.UpdatePageObjectParameter(identifers.get(i));
                         }
 
-                        return elem;
+                        m_LastWebElement = elem;
+                        return m_LastWebElement;
                     }
 
                     System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Element not found: " + identifers.get(i).toString());
@@ -516,7 +531,10 @@ public class BasePage {
 
             elem = getWebElement(gptLocator, true);
 
-            if (elem != null) return elem;
+            if (elem != null) {
+                m_LastWebElement = elem;
+                return m_LastWebElement;
+            }
 
             System.out.println("Test (" + ExtentReportManager.getTestName() + ") - Element not found: " + gptLocator.toString());
         }
@@ -526,7 +544,8 @@ public class BasePage {
 
     protected WebElement getWebElement(final By by)
     {
-        return getWebElement(by, true);
+        m_LastWebElement =  getWebElement(by, true);;
+        return m_LastWebElement;
     }
 
     protected WebElement getWebElement(final By by, Boolean waitForElement)
