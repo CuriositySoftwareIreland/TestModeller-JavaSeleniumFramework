@@ -16,10 +16,7 @@ import io.restassured.specification.RequestSender;
 import io.restassured.specification.RequestSpecification;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -402,18 +399,18 @@ public class BasePage
         }
     }
 
-    protected RemoteWebElement expandRootElement(WebElement element) {
-        RemoteWebElement ele = (RemoteWebElement) ((JavascriptExecutor) m_Driver).executeScript("return arguments[0].shadowRoot", element);
+    protected SearchContext expandRootElement(WebElement element) {
+        SearchContext ele = (SearchContext) ((JavascriptExecutor) m_Driver).executeScript("return arguments[0].shadowRoot", element);
 
         return ele;
     }
 
-    protected RemoteWebElement expandShadowRoots(List<By> elems)
+    protected SearchContext expandShadowRoots(List<By> elems)
     {
         if (elems.isEmpty())
             return null;
 
-        RemoteWebElement element = expandRootElement(getWebElement(elems.get(0)));
+        SearchContext element = expandRootElement(getWebElement(elems.get(0)));
 
         for (int i = 1; i < elems.size(); i++) {
             element = expandRootElement(getWebElement(element, elems.get(i)));
@@ -431,6 +428,11 @@ public class BasePage
             failStep("No webpage loaded. Add a 'Go To URL' action prior to trying to interact with a web element.");
         }
 
+        return elem.findElement(by);
+    }
+
+    protected WebElement getWebElement(SearchContext elem, final By by)
+    {
         return elem.findElement(by);
     }
 
