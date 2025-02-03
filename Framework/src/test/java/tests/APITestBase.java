@@ -8,6 +8,7 @@ import ie.curiositysoftware.runresult.dto.TestPathRun;
 import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestNGMethod;
+import org.testng.Reporter;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
@@ -41,8 +42,10 @@ public class APITestBase {
     }
 
     @BeforeSuite(alwaysRun = true)
-    public void allocateData(ITestContext testContext)
+    public void allocateData()
     {
+        ITestContext testContext = Reporter.getCurrentTestResult().getTestContext();
+
         // Create a list of all the pools that need allocating
         List<AllocationType> allocationTypes = new ArrayList<AllocationType>();
 

@@ -2,11 +2,8 @@
 
 <suite name="TestAll">
     <test name="All" parallel="methods">
-        <groups>
-            <run></run>
-        </groups>
         <packages>
-            <package name=".*" />
+            <package name="tests" />
         </packages>
     </test>
 

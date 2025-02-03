@@ -16,7 +16,11 @@ public class ExtentTestListener extends TestBase implements ITestListener {
 
     @Override
     public void onStart(ITestContext iTestContext) {
-        iTestContext.setAttribute("WebDriver", getDriver());
+        WebDriver driver = getDriver();
+
+        if (driver != null) {
+            iTestContext.setAttribute("WebDriver", driver);
+        }
     }
 
     @Override

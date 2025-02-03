@@ -10,15 +10,11 @@ import ie.curiositysoftware.jobengine.dto.job.settings.VIPAutomationExecutionJob
 import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import ie.curiositysoftware.jobengine.utils.JobExecutor;
 import ie.curiositysoftware.utils.UnirestHelper;
-import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.Row;
 import utilities.PropertiesLoader;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +24,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class TDADataParser {
     private static HashMap<String, HashMap<String, String>> TestCaseData;
@@ -84,9 +82,8 @@ public class TDADataParser {
         String destination = System.getProperty("user.dir") +"/data/" + testName;
         FileUtils.deleteDirectory(new File(destination));
         try {
-            ZipFile zipFile = new ZipFile(dataDir);
-            zipFile.extractAll(destination);
-        } catch (ZipException e) {
+            extract(dataDir, destination);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -132,6 +129,33 @@ public class TDADataParser {
                 for (String colHeader : columnHeaders) {
                     TestCaseData.get(currentName).put(colHeader, records.get(j).get(columnHeaders.indexOf(colHeader)));
                 }
+            }
+        }
+    }
+
+    public static void extract(String zipFilePath, String destinationDir) throws IOException {
+        File destDir = new File(destinationDir);
+        if (!destDir.exists()) {
+            destDir.mkdirs();
+        }
+
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath))) {
+            ZipEntry entry;
+            while ((entry = zis.getNextEntry()) != null) {
+                File entryDestination = new File(destinationDir, entry.getName());
+                if (entry.isDirectory()) {
+                    entryDestination.mkdirs();
+                } else {
+                    entryDestination.getParentFile().mkdirs();
+                    try (FileOutputStream fos = new FileOutputStream(entryDestination)) {
+                        byte[] buffer = new byte[1024];
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                    }
+                }
+                zis.closeEntry();
             }
         }
     }
