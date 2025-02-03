@@ -6,8 +6,8 @@ import ie.curiositysoftware.pageobjects.dto.PageObjectParameterEntity;
 import ie.curiositysoftware.runresult.dto.TestPathRunStep;
 import ie.curiositysoftware.testmodeller.TestModellerIgnore;
 import io.restassured.response.Response;
-import kong.unirest.json.JSONArray;
-import kong.unirest.json.JSONObject;
+import kong.unirest.core.json.JSONArray;
+import kong.unirest.core.json.JSONObject;
 import org.openqa.selenium.WebDriver;
 import pages.BasePage;
 

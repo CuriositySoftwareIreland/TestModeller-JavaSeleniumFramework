@@ -1,6 +1,7 @@
 package tests;
 
 import ie.curiositysoftware.runresult.dto.TestPathRun;
+import org.testng.Reporter;
 import org.testng.annotations.*;
 import pages.VisualAutomation.VisualActions;
 import reports.TestNGListener;
@@ -38,8 +39,10 @@ public class TestBase {
     }
 
     @BeforeSuite(alwaysRun = true)
-    public void allocateData(ITestContext testContext)
+    public void allocateData()
     {
+        ITestContext testContext = Reporter.getCurrentTestResult().getTestContext();
+
         // Create a list of all the pools that need allocating
         List<AllocationType> allocationTypes = new ArrayList<AllocationType>();
 

@@ -778,7 +778,7 @@ public class VisualActions extends BasePage {
     }
 
     @Override
-    protected void passStepWithScreenshot(String msg)
+    public void passStepWithScreenshot(String msg)
     {
         ExtentReportManager.passStepWithScreenshot(screen, msg);
         TestModellerLogger.PassStepWithScreenshot(screen, msg);
