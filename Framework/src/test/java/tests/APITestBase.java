@@ -13,7 +13,7 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
-import pages.VisualAutomation.VisualActions;
+//import pages.VisualAutomation.VisualActions;
 import reports.TestNGListener;
 import utilities.CapabilityLoader;
 import utilities.PropertiesLoader;
@@ -113,7 +113,7 @@ public class APITestBase {
         }
 
         // Close all apps open through visual inspector
-        VisualActions.closeApplication();
+//        VisualActions.closeApplication();
     }
 
     @AfterSuite

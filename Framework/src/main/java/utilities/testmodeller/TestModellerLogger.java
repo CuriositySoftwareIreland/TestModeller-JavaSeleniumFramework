@@ -1,8 +1,5 @@
 package utilities.testmodeller;
 
-import com.aventstack.extentreports.ExtentTest;
-import com.aventstack.extentreports.markuputils.ExtentColor;
-import com.aventstack.extentreports.markuputils.MarkupHelper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import ie.curiositysoftware.runresult.dto.*;
@@ -15,7 +12,7 @@ import io.restassured.specification.MultiPartSpecification;
 import io.restassured.specification.RequestSpecification;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.sikuli.script.Screen;
+//import org.sikuli.script.Screen;
 import utilities.PropertiesLoader;
 
 import java.util.*;
@@ -307,12 +304,12 @@ public class TestModellerLogger {
         return step;
     }
 
-    public static TestPathRunStep PassStepWithScreenshot(Screen screen, String stepName)
+    public static TestPathRunStep PassStepWithScreenshot(Object screen, String stepName)
     {
         return PassStepWithScreenshot(screen, stepName, stepName);
     }
 
-    public static TestPathRunStep PassStepWithScreenshot(Screen screen, String stepName, String details)
+    public static TestPathRunStep PassStepWithScreenshot(Object screen, String stepName, String details)
     {
         TestPathRunStep step = new TestPathRunStep();
 
@@ -381,12 +378,12 @@ public class TestModellerLogger {
         return step;
     }
 
-    public static TestPathRunStep FailStepWithScreenshot(Screen screen, String stepName)
+    public static TestPathRunStep FailStepWithScreenshot(Object screen, String stepName)
     {
         return FailStepWithScreenshot(screen, stepName, stepName);
     }
 
-    public static TestPathRunStep FailStepWithScreenshot(Screen screen, String stepName, String details)
+    public static TestPathRunStep FailStepWithScreenshot(Object screen, String stepName, String details)
     {
         TestPathRunStep step = new TestPathRunStep();
 

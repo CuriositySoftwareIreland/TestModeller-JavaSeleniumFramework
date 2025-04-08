@@ -3,7 +3,7 @@ package tests;
 import ie.curiositysoftware.runresult.dto.TestPathRun;
 import org.testng.Reporter;
 import org.testng.annotations.*;
-import pages.VisualAutomation.VisualActions;
+//import pages.VisualAutomation.VisualActions;
 import reports.TestNGListener;
 import utilities.CapabilityLoader;
 import utilities.PropertiesLoader;
@@ -112,7 +112,7 @@ public class TestBase {
         }
 
         // Close all apps open through visual inspector
-        VisualActions.closeApplication();
+//        VisualActions.closeApplication();
     }
 
     @AfterSuite

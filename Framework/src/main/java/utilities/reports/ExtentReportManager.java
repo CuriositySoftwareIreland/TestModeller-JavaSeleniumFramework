@@ -10,20 +10,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import ie.curiositysoftware.jobengine.services.ConnectionProfile;
 import ie.curiositysoftware.runresult.dto.TestPathRunCollectionEntity;
-import ie.curiositysoftware.runresult.dto.TestPathRunStep;
-import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPRequest;
-import ie.curiositysoftware.runresult.dto.TestPathRunStepHTTPResponse;
 import ie.curiositysoftware.runresult.services.TestPathRunCollectionService;
 import ie.curiositysoftware.runresult.services.TestRunIdGenerator;
-import ie.curiositysoftware.runresult.services.TestRunService;
 import io.restassured.http.Header;
 import io.restassured.response.Response;
 import io.restassured.specification.FilterableRequestSpecification;
 import io.restassured.specification.MultiPartSpecification;
 import io.restassured.specification.RequestSpecification;
 import org.apache.commons.text.StringEscapeUtils;
-import org.sikuli.script.Screen;
-import org.sikuli.script.ScreenImage;
 import utilities.PropertiesLoader;
 import utilities.testmodeller.GetScreenShot;
 import com.aventstack.extentreports.ExtentReports;
@@ -31,7 +25,6 @@ import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.Status;
 import org.openqa.selenium.WebDriver;
 
-import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -64,6 +57,7 @@ public class ExtentReportManager {
             extentReport = new ExtentReports();
             extentReport.attachReporter(avent);
         }
+        System.out.println("MODIFIED FRAMEWORK");
 
         runColPosted = false;
     }
@@ -215,17 +209,17 @@ public class ExtentReportManager {
     {
         passStepWithScreenshot(driver, stepName, stepName);
     }
-    public static void passStepWithScreenshot(Screen screen, String stepName)
-    {
-        passStepWithScreenshot(screen, stepName, stepName);
-    }
-
-    public static void passStepWithScreenshot(Screen screen, String stepName, String details)
-    {
-        Media m = ScreenCapture.builder().base64(GetScreenShot.captureAsBase64(screen)).title(stepName).build();
-
-        reportThreadLocal.get().log(Status.PASS, stepName + "\n" + details, m);
-    }
+//    public static void passStepWithScreenshot(Screen screen, String stepName)
+//    {
+//        passStepWithScreenshot(screen, stepName, stepName);
+//    }
+//
+//    public static void passStepWithScreenshot(Screen screen, String stepName, String details)
+//    {
+//        Media m = ScreenCapture.builder().base64(GetScreenShot.captureAsBase64(screen)).title(stepName).build();
+//
+//        reportThreadLocal.get().log(Status.PASS, stepName + "\n" + details, m);
+//    }
 
 
     public static void passStepWithScreenshot(WebDriver driver, String stepName, String details)
@@ -247,17 +241,17 @@ public class ExtentReportManager {
         reportThreadLocal.get().log(Status.FAIL, stepName + "\n" + details, m);
     }
 
-    public static void failStepWithScreenshot(Screen screen, String stepName)
-    {
-        failStepWithScreenshot(screen, stepName, stepName);
-    }
-
-    public static void failStepWithScreenshot(Screen screen, String stepName, String details)
-    {
-        Media m = ScreenCapture.builder().base64(GetScreenShot.captureAsBase64(screen)).title(stepName).build();
-
-        reportThreadLocal.get().log(Status.FAIL, stepName + "\n" + details, m);
-    }
+//    public static void failStepWithScreenshot(Screen screen, String stepName)
+//    {
+//        failStepWithScreenshot(screen, stepName, stepName);
+//    }
+//
+//    public static void failStepWithScreenshot(Screen screen, String stepName, String details)
+//    {
+//        Media m = ScreenCapture.builder().base64(GetScreenShot.captureAsBase64(screen)).title(stepName).build();
+//
+//        reportThreadLocal.get().log(Status.FAIL, stepName + "\n" + details, m);
+//    }
 
     private static void populateAPITestStep(String stepName, ExtentTest section, Status status, RequestSpecification rawReq, Response rsp)
     {
