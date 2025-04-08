@@ -200,6 +200,11 @@
             <artifactId>commons-codec</artifactId>
             <version>1.18.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-object-mappers-gson</artifactId>
+            <version>4.2.9</version>
+        </dependency>
         <!-- END OVERRIDE VERSIONS -->
     </dependencies>
 
