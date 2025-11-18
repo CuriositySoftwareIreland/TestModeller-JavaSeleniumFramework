@@ -262,9 +262,9 @@ public class WebGeneralActionsFunctions extends BasePage {
         }
 
         if (elem.getText().equals(text)) {
-            failStep("Element '" + objectLocator + "' text is '" + text + "'.");
+            passStepWithScreenshot("Element '" + objectLocator + "' text is '" + text + "'.");
         } else {
-            passStepWithScreenshot("Element '" + objectLocator + "' text is not '" + text + "'.");
+            failStep("Element '" + objectLocator + "' text is not '" + text + "'.");
         }
     }
 
